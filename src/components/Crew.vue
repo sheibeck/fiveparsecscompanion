@@ -4,7 +4,7 @@
     
     <ul id="example-1">
       <li v-for="crew in crewList" :key="crew.id">
-        {{ crew.name }}: {{ crew.notes }} <button @click="deleteCrew(crew.id)">Delete</button> <button @click="updateCrew(crew.id)">Update</button>
+        {{ crew.name }}: {{ crew.notes }} <button @click="deleteCrew(crew.id)">Delete</button>
       </li>
     </ul>
     
@@ -57,15 +57,15 @@ export default {
       DataStore.delete(modelToDelete);
       this.crewList = this.fetchCrew();
     },
-    async updateCrew(id) {
-      /* Models in DataStore are immutable. To update a record you must use the copyOf function
-        to apply updates to the item’s fields rather than mutating the instance directly */
+    /*async updateCrew(id) {
+      // Models in DataStore are immutable. To update a record you must use the copyOf function
+      //  to apply updates to the item’s fields rather than mutating the instance directly
       await DataStore.save(Crew.copyOf(CURRENT_ITEM, item => {
           // Update the values on {item} variable to update DataStore entry
           item.name = "bob"
       }));
       this.crewList = this.fetchCrew();
-    }
+    }*/
   }
 }
 </script>
