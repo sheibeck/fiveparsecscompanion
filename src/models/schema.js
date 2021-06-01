@@ -1,7 +1,7 @@
 export const schema = {
     "models": {
-        "Crew": {
-            "name": "Crew",
+        "CrewMember": {
+            "name": "CrewMember",
             "fields": {
                 "id": {
                     "name": "id",
@@ -10,108 +10,17 @@ export const schema = {
                     "isRequired": true,
                     "attributes": []
                 },
-                "story_points": {
-                    "name": "story_points",
-                    "isArray": false,
-                    "type": "Int",
-                    "isRequired": false,
-                    "attributes": []
-                },
-                "notes": {
-                    "name": "notes",
+                "user": {
+                    "name": "user",
                     "isArray": false,
                     "type": "String",
-                    "isRequired": false,
-                    "attributes": []
-                },
-                "stash": {
-                    "name": "stash",
-                    "isArray": false,
-                    "type": "String",
-                    "isRequired": false,
-                    "attributes": []
-                },               
-                "credits": {
-                    "name": "credits",
-                    "isArray": false,
-                    "type": "Int",
-                    "isRequired": false,
-                    "attributes": []
-                },
-                "patrons": {
-                    "name": "patrons",
-                    "isArray": false,
-                    "type": "Int",
-                    "isRequired": false,
-                    "attributes": []
-                },
-                "rivals": {
-                    "name": "rivals",
-                    "isArray": false,
-                    "type": "Int",
-                    "isRequired": false,
-                    "attributes": []
-                },
-                "story_track": {
-                    "name": "story_track",
-                    "isArray": false,
-                    "type": "String",
-                    "isRequired": false,
-                    "attributes": []
-                },
-                "event": {
-                    "name": "event",
-                    "isArray": false,
-                    "type": "Int",
-                    "isRequired": false,
-                    "attributes": []
-                },
-                "clock": {
-                    "name": "clock",
-                    "isArray": false,
-                    "type": "Int",
-                    "isRequired": false,
-                    "attributes": []
-                },
-                "rumors": {
-                    "name": "rumors",
-                    "isArray": false,
-                    "type": "Int",
-                    "isRequired": false,
+                    "isRequired": true,
                     "attributes": []
                 },
                 "name": {
                     "name": "name",
                     "isArray": false,
                     "type": "String",
-                    "isRequired": false,
-                    "attributes": []
-                },
-                "pk": {
-                    "name": "pk",
-                    "isArray": false,
-                    "type": "String",
-                    "isRequired": true,
-                    "attributes": []
-                },
-                "sk": {
-                    "name": "sk",
-                    "isArray": false,
-                    "type": "String",
-                    "isRequired": true,
-                    "attributes": []
-                },
-                "record_type": {
-                    "name": "record_type",
-                    "isArray": false,
-                    "type": "String",
-                    "isRequired": false,
-                    "attributes": []
-                },
-                "user": {
-                    "name": "user",
-                    "isArray": false,
-                    "type": "AWSEmail",
                     "isRequired": true,
                     "attributes": []
                 },
@@ -122,8 +31,8 @@ export const schema = {
                     "isRequired": false,
                     "attributes": []
                 },
-                "reaction": {
-                    "name": "reaction",
+                "reactions": {
+                    "name": "reactions",
                     "isArray": false,
                     "type": "Int",
                     "isRequired": false,
@@ -164,13 +73,6 @@ export const schema = {
                     "isRequired": false,
                     "attributes": []
                 },
-                "xp": {
-                    "name": "xp",
-                    "isArray": false,
-                    "type": "Int",
-                    "isRequired": false,
-                    "attributes": []
-                },
                 "gear": {
                     "name": "gear",
                     "isArray": false,
@@ -178,33 +80,242 @@ export const schema = {
                     "isRequired": false,
                     "attributes": []
                 },
-                "hull_points": {
-                    "name": "hull_points",
-                    "isArray": false,
-                    "type": "Int",
-                    "isRequired": false,
-                    "attributes": []
-                },
-                "debt": {
-                    "name": "debt",
-                    "isArray": false,
-                    "type": "Int",
-                    "isRequired": false,
-                    "attributes": []
-                },
-                "traits": {
-                    "name": "traits",
+                "notes": {
+                    "name": "notes",
                     "isArray": false,
                     "type": "String",
                     "isRequired": false,
                     "attributes": []
                 },
-                "upgrades": {
-                    "name": "upgrades",
+                "weapons": {
+                    "name": "weapons",
+                    "isArray": true,
+                    "type": "AWSJSON",
+                    "isRequired": false,
+                    "attributes": [],
+                    "isArrayNullable": true
+                },
+                "xp": {
+                    "name": "xp",
+                    "isArray": false,
+                    "type": "Int",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "kia": {
+                    "name": "kia",
+                    "isArray": false,
+                    "type": "Boolean",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "leader": {
+                    "name": "leader",
+                    "isArray": false,
+                    "type": "Boolean",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "crewID": {
+                    "name": "crewID",
+                    "isArray": false,
+                    "type": "ID",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "createdAt": {
+                    "name": "createdAt",
+                    "isArray": false,
+                    "type": "AWSDateTime",
+                    "isRequired": false,
+                    "attributes": [],
+                    "isReadOnly": true
+                },
+                "updatedAt": {
+                    "name": "updatedAt",
+                    "isArray": false,
+                    "type": "AWSDateTime",
+                    "isRequired": false,
+                    "attributes": [],
+                    "isReadOnly": true
+                }
+            },
+            "syncable": true,
+            "pluralName": "CrewMembers",
+            "attributes": [
+                {
+                    "type": "model",
+                    "properties": {}
+                },
+                {
+                    "type": "key",
+                    "properties": {
+                        "name": "byCrew",
+                        "fields": [
+                            "crewID"
+                        ]
+                    }
+                },
+                {
+                    "type": "auth",
+                    "properties": {
+                        "rules": [
+                            {
+                                "allow": "public",
+                                "operations": [
+                                    "create",
+                                    "update",
+                                    "delete",
+                                    "read"
+                                ]
+                            }
+                        ]
+                    }
+                }
+            ]
+        },
+        "Crew": {
+            "name": "Crew",
+            "fields": {
+                "id": {
+                    "name": "id",
+                    "isArray": false,
+                    "type": "ID",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "user": {
+                    "name": "user",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "name": {
+                    "name": "name",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "notes": {
+                    "name": "notes",
                     "isArray": false,
                     "type": "String",
                     "isRequired": false,
                     "attributes": []
+                },
+                "story_points": {
+                    "name": "story_points",
+                    "isArray": false,
+                    "type": "Int",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "stash": {
+                    "name": "stash",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "credits": {
+                    "name": "credits",
+                    "isArray": false,
+                    "type": "Int",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "patrons": {
+                    "name": "patrons",
+                    "isArray": false,
+                    "type": "Int",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "rivals": {
+                    "name": "rivals",
+                    "isArray": false,
+                    "type": "Int",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "ship_name": {
+                    "name": "ship_name",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "ship_hull_points": {
+                    "name": "ship_hull_points",
+                    "isArray": false,
+                    "type": "Int",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "ship_debt": {
+                    "name": "ship_debt",
+                    "isArray": false,
+                    "type": "Int",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "ship_traits": {
+                    "name": "ship_traits",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "ship_upgrades": {
+                    "name": "ship_upgrades",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "story_track": {
+                    "name": "story_track",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "event": {
+                    "name": "event",
+                    "isArray": false,
+                    "type": "Int",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "clock": {
+                    "name": "clock",
+                    "isArray": false,
+                    "type": "Int",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "quest_rumors": {
+                    "name": "quest_rumors",
+                    "isArray": false,
+                    "type": "Int",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "CrewMembers": {
+                    "name": "CrewMembers",
+                    "isArray": true,
+                    "type": {
+                        "model": "CrewMember"
+                    },
+                    "isRequired": false,
+                    "attributes": [],
+                    "isArrayNullable": true,
+                    "association": {
+                        "connectionType": "HAS_MANY",
+                        "associatedWith": "crewID"
+                    }
                 },
                 "createdAt": {
                     "name": "createdAt",
@@ -251,5 +362,5 @@ export const schema = {
     },
     "enums": {},
     "nonModels": {},
-    "version": "0ed37c9ff8cd1865907b8cafb92910a1"
+    "version": "b5e5a3a418f69b35b4349e0742e90b8c"
 };

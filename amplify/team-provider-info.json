@@ -10,6 +10,11 @@
       "StackName": "amplify-fiveparsecscompanion-staging-13958",
       "StackId": "arn:aws:cloudformation:us-east-1:210120940769:stack/amplify-fiveparsecscompanion-staging-13958/464e0910-c27a-11eb-b18e-0a292b885373",
       "AmplifyAppId": "d1tp5cd86hfjxz"
+    },
+    "categories": {
+      "auth": {
+        "fiveparsecscompanion": {}
+      }
     }
   }
 }
