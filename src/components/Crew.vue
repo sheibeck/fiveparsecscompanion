@@ -2,71 +2,90 @@
   <div>
     <h1>Crew</h1>
     
-    <ul id="example-1">
-      <li v-for="crew in crewList" :key="crew.id">
-        {{ crew.name }}: {{ crew.notes }} <button @click="deleteCrew(crew.id)">Delete</button>
-      </li>
-    </ul>
+
+    <div v-for="crew in crewList" :key="crew.pk" class="d-flex flex-row bd-highlight mb-3">
+      <div>
+        <strong>Name:</strong> {{crew.name}} ({{crew.pk}})  
+        <ul v-for="member in crewMembers" :key="member.name" class="d-flex flex-row bd-highlight mb-3">
+          <li>
+            {{member.name}}  
+          </li>
+        </ul>
+      </div>
+    </div>
+   
     
-    <button @click="createCrew">Create Crew</button>
-    <button @click="refreshCrew">Refresh</button>
+    <button type="button" class="btn btn-success" @click="createCrew">Create Crew</button>
+    <button type="button" class="btn btn-success" @click="createCrewMember">Create Member</button>
+    <button type="button" class="btn btn-danger" @click="refreshCrew">Refresh</button>
   </div>
 </template>
 
 <script>
-//import { ref } from "vue";
 import { DataStore } from '@aws-amplify/datastore';
 import { Crew } from '../models';
 
 export default {
   name: 'Crew',  
   mounted() {
-    this.crewList = this.fetchCrew();
+    this.fetchCrew();
+    this.fetchCrewMembers();
   }, 
   data() {
     return {
-      crewList: null,
+      crewList: [],
+      crewMembers: [],
     }
   },
   methods: {    
     async fetchCrew() {
-      const models = await DataStore.query(Crew);
+      const models = await DataStore.query(Crew, c => c.record_type("eq", "CREW").pk("eq", "USER#test12346789@testemailtestemail.com"));
       this.crewList = models;      
+    },
+     async fetchCrewMembers() { 
+      const members = await DataStore.query(Crew, c => c.record_type("eq", "CREWMEMBER").sk("eq","CREW#abc123"));
+      this.crewMembers = members;      
     },
     async createCrew() {
       await DataStore.save(
           new Crew({
-          "story_points": 1020,
-          "notes": "Lorem ipsum dolor sit amet",
-          "stash": "Lorem ipsum dolor sit amet",
-          "credits": 1020,
-          "patrons": 1020,
-          "rivals": 1020,
-          "story_track": "Lorem ipsum dolor sit amet",
-          "event": 1020,
-          "clock": 1020,
-          "rumors": 1020,
-          "name": "Lorem ipsum dolor sit amet",
-          "pk": "Lorem ipsum dolor sit amet",
-          "sk": "Lorem ipsum dolor sit amet",
-          "record_type": "Lorem ipsum dolor sit amet",
+          "story_points": 1,
+          "notes": "A crew of peeps.",
+          "stash": "Some weapons in the stash",
+          "credits": 8,
+          "patrons": 1,
+          "rivals": 1,
+          "rumors": 1,
+          "name": "Cool Crew",
+          "pk": "USER#test12346789@testemailtestemail.com",
+          "sk": "CREW#abc123",          
+          "record_type": "CREW",
           "user": "test12346789@testemailtestemail.com",
-          "species": "Lorem ipsum dolor sit amet",
-          "reaction": 1020,
-          "speed": 1020,
-          "combat": 1020,
-          "toughness": 1020,
-          "savvy": 1020,
-          "luck": 1020,
-          "xp": 1020,
-          "gear": "Lorem ipsum dolor sit amet",
-          "hull_points": 1020,
-          "debt": 1020,
-          "traits": "Lorem ipsum dolor sit amet",
-          "upgrades": "Lorem ipsum dolor sit amet"
         })
       );
-      this.crewList = this.fetchCrew();
+      this.fetchCrew();
+    },
+    async createCrewMember() {
+      await DataStore.save(
+          new Crew({         
+          "notes": "In it for the money",          
+          "name": "Bob Dobbs",
+          "pk": "USER#test12346789@testemailtestemail.com",
+          "sk": "CREW#abc123",
+          "record_type": "CREWMEMBER",
+          "user": "test12346789@testemailtestemail.com",
+          "species": "Human",
+          "reaction": 2,
+          "speed": 4,
+          "combat": 0,
+          "toughness": 3,
+          "savvy": 2,
+          "luck": 1,
+          "xp": 0,
+          "gear": "Stim pack"         
+        })
+      );
+      this.fetchCrewMembers();       
     },
     async deleteCrew(id) {
       const modelToDelete = await DataStore.query(Crew, id);

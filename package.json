@@ -10,7 +10,9 @@
         "amplify-push": "node amplify\\scripts\\amplify-push.js"
     },
     "dependencies": {
+        "@popperjs/core": "^2.9.2",
         "aws-amplify": "^4.0.3",
+        "bootstrap": "^5.0.1",
         "core-js": "^3.6.5",
         "shortid": "^2.2.16",
         "vue": "^2.6.11",
