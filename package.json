@@ -12,6 +12,7 @@
     "dependencies": {
         "aws-amplify": "^4.0.3",
         "core-js": "^3.6.5",
+        "shortid": "^2.2.16",
         "vue": "^2.6.11",
         "yarn": "^1.22.10"
     },

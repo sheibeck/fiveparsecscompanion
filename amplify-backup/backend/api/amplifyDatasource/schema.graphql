@@ -3,7 +3,8 @@ type Crew @model @auth(rules: [{allow: public}]) {
   story_points: Int
   notes: String
   stash: String
-  credits: Int
+  equipment: String
+  credit: Int
   patrons: Int
   rivals: Int
   story_track: String
