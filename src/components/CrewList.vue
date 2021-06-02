@@ -36,7 +36,7 @@ import { Crew } from '../models';
 import { CrewMember } from '../models';
 
 export default {
-  name: 'Crew',  
+  name: 'CrewList',  
   mounted() {
     this.fetchCrew();    
   }, 

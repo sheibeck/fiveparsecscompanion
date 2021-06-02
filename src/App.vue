@@ -22,7 +22,7 @@
           <div class="text-end">
             <div v-if="authState !== 'signedin'">You are signed out.</div>
             <div v-if="authState === 'signedin' && user">
-              <amplify-authenticator>              
+              <amplify-authenticator username-alias="email">              
                 <amplify-sign-out></amplify-sign-out>
               </amplify-authenticator>
             </div>
@@ -32,10 +32,15 @@
     </header>
 
     <div class="container responsive" v-if="authState === 'signedin' && user">  
-      <Crew />
+      <CrewList />
     </div>
     <div v-else>
-      <amplify-authenticator>              
+      <amplify-authenticator username-alias="email">
+         <amplify-sign-up
+            slot="sign-up"
+            username-alias="email"
+            :form-fields.prop="formFields"
+          ></amplify-sign-up>
         <amplify-sign-out></amplify-sign-out>
       </amplify-authenticator> 
     </div>
@@ -44,12 +49,12 @@
 
 <script>
 import { onAuthUIStateChange } from '@aws-amplify/ui-components'
-import Crew from './components/Crew.vue'
+import CrewList from './components/CrewList.vue'
 
 export default {
   name: 'App',
   components: {
-    Crew
+    CrewList
   },
   created() {
     this.unsubscribeAuth = onAuthUIStateChange((authState, authData) => {
@@ -61,7 +66,21 @@ export default {
     return {
       user: undefined,
       authState: undefined,
-      unsubscribeAuth: undefined
+      unsubscribeAuth: undefined,
+      formFields: [
+        {
+          type: 'email',
+          label: 'Email Address',
+          placeholder: 'Email Address',
+          inputProps: { required: true, autocomplete: 'email' },
+        },
+        {
+          type: 'password',
+          label: 'Password',
+          placeholder: 'Password',
+          inputProps: { required: true, autocomplete: 'new-password' },
+        }      
+      ]
     }
   },
   beforeDestroy() {
