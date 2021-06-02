@@ -1,7 +1,7 @@
 {
     "identityPoolName": "testAuthIdentityPool",
     "allowUnauthenticatedIdentities": false,
-    "resourceNameTruncated": "fivepa88772ebb",
+    "resourceNameTruncated": "fivepa4469d7ce",
     "userPoolName": "fiveparsecscompanion",
     "autoVerifiedAttributes": [
         "phone_number"
@@ -11,7 +11,7 @@
         "SMS Text Message"
     ],
     "smsAuthenticationMessage": "Your authentication code is {####}",
-    "smsVerificationMessage": "Body {####}",
+    "smsVerificationMessage": "Forgot password code: {####}",
     "emailVerificationSubject": "Your verification code",
     "emailVerificationMessage": "Your verification code is {####}",
     "defaultPasswordPolicy": false,
@@ -28,10 +28,10 @@
     "userpoolClientGenerateSecret": false,
     "userpoolClientRefreshTokenValidity": 30,
     "userpoolClientWriteAttributes": [],
-    "userpoolClientReadAttributes": ["email_verified"],
-    "userpoolClientLambdaRole": "fivepa88772ebb_userpoolclient_lambda_role",
+    "userpoolClientReadAttributes": [],
+    "userpoolClientLambdaRole": "fivepa4469d7ce_userpoolclient_lambda_role",
     "userpoolClientSetAttributes": false,
-    "sharedId": "88772ebb",
+    "sharedId": "4469d7ce",
     "resourceName": "fiveparsecscompanion",
     "authSelections": "identityPoolAndUserPool",
     "authRoleArn": {
@@ -57,7 +57,7 @@
     "thirdPartyAuth": false,
     "authProviders": [],
     "hostedUI": true,
-    "hostedUIDomainName": "cdvbvbeao4g0",
+    "hostedUIDomainName": "voziukm6hgui",
     "authProvidersUserPool": [
         "Google"
     ],
