@@ -7,17 +7,9 @@
             <img src="./assets/logo.png" alt="5 Parsecs Companion" />
           </a>
 
-          <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
-            <li><a href="/" class="nav-link px-2 text-secondary">5 Parsecs Companion</a></li>
-            <!--<li><a href="#" class="nav-link px-2 text-white">Features</a></li>
-            <li><a href="#" class="nav-link px-2 text-white">Pricing</a></li>
-            <li><a href="#" class="nav-link px-2 text-white">FAQs</a></li>
-            <li><a href="#" class="nav-link px-2 text-white">About</a></li>-->
+          <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">            
+            <router-link to="/" class="nav-link px-2 text-secondary">5 Parsecs Companion</router-link>           
           </ul>
-
-          <!--<form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3">
-            <input type="search" class="form-control form-control-dark" placeholder="Search..." aria-label="Search">
-          </form>-->
 
           <div class="text-end">
             <div v-if="authState !== 'signedin'">You are signed out.</div>
@@ -32,7 +24,7 @@
     </header>
 
     <div class="container responsive" v-if="authState === 'signedin' && user">  
-      <CrewList />
+      <router-view/>
     </div>
     <div v-else>
       <amplify-authenticator username-alias="email">
@@ -49,17 +41,14 @@
 
 <script>
 import { onAuthUIStateChange } from '@aws-amplify/ui-components'
-import CrewList from './components/CrewList.vue'
 
 export default {
-  name: 'App',
-  components: {
-    CrewList
-  },
+  name: 'App',  
   created() {
-    this.unsubscribeAuth = onAuthUIStateChange((authState, authData) => {
+    this.unsubscribeAuth = onAuthUIStateChange((authState, authData) => {      
       this.authState = authState;
       this.user = authData;
+      this.$store.commit('user', authData);
     })
   },
   data() {
@@ -85,6 +74,7 @@ export default {
   },
   beforeDestroy() {
     this.unsubscribeAuth();
+    this.$store.commit('user', null);
   }
 }
 </script>

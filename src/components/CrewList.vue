@@ -12,15 +12,12 @@
           <div class="align-bottom mt-1">
             <h5>{{crew.name}}</h5>
           </div>
-          <button type="button" class="btn btn-primary btn-sm mx-1"> Edit Crew <i class="fas fa-pen"></i></button>
-          <button type="button" class="btn btn-secondary btn-sm mx-1"> Print Crew <i class="fas fa-print"></i></button>
-          <button type="button" class="btn btn-success btn-sm mx-1" @click="createCrewMember(crew.id)">Add Member <i class="fas fa-plus"></i></button>
+          <a :href="'/crew/'+crew.id" class="btn-link btn btn-primary btn-sm mx-1"> Edit Crew <i class="fas fa-pen"></i></a>
+          <button type="button" class="btn btn-secondary btn-sm mx-1"> Print Crew <i class="fas fa-print"></i></button>          
         </div>         
         <ul v-for="member in crew.CrewMembers" :key="member.name" class="d-flex flex-col">
           <li>
             {{member.name}} 
-            <button type="button" class="btn btn-primary btn-sm mx-1"><i class="fas fa-pen"></i></button>
-            <button type="button" class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></button>
           </li>
         </ul>
         
@@ -30,7 +27,7 @@
   </div>
 </template>
 
-<script type="ts">
+<script>
 import { DataStore } from '@aws-amplify/datastore';
 import { Crew } from '../models';
 import { CrewMember } from '../models';
@@ -42,11 +39,13 @@ export default {
   }, 
   data() {
     return {      
-      crewList: []      
+      crewList: []
     }
   },
   computed : {
-    username : function() { return this.$parent.$data.user.username; }
+    username : function() {       
+      return this.$store.state.user.username;
+    }
   },
   methods: {
     async fetchCrew() {
@@ -54,7 +53,7 @@ export default {
 
       this.crewList = [];
       crews.forEach( async (crew) => { 
-        let members = (await DataStore.query(CrewMember)).filter(c => c.crewID === crew.id);
+        let members = await DataStore.query(CrewMember, c => c.crewID === crew.id);
         let crewObj = JSON.parse(JSON.stringify(crew));
         crewObj.CrewMembers = members;
         this.crewList.push(crewObj);
@@ -85,18 +84,7 @@ export default {
       );          
 
       this.fetchCrew();
-    },
-    async createCrewMember(crewId) {
-      await DataStore.save(
-          new CrewMember({
-          "user": this.username,
-          "name": "Bob Dobbs",
-          "species": "Human",         
-          "crewID": crewId
-        })
-      );
-      this.fetchCrew();    
-    },
+    },    
     async deleteCrew(id) {
       const modelToDelete = await DataStore.query(Crew, id);
       DataStore.delete(modelToDelete);
