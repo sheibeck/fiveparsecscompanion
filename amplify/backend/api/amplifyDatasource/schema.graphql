@@ -38,5 +38,8 @@ type Crew @model @auth(rules: [{allow: public}]) {
   clock: Int
   quest_rumors: Int
   CrewMembers: [CrewMember] @connection(keyName: "byCrew", fields: ["id"])
+  campaign_turn: Int
+  campaign_difficulty: String
+  campaign_victory: String
 }
  

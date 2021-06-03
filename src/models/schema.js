@@ -317,6 +317,27 @@ export const schema = {
                         "associatedWith": "crewID"
                     }
                 },
+                "campaign_turn": {
+                    "name": "campaign_turn",
+                    "isArray": false,
+                    "type": "Int",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "campaign_difficulty": {
+                    "name": "campaign_difficulty",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "campaign_victory": {
+                    "name": "campaign_victory",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
                 "createdAt": {
                     "name": "createdAt",
                     "isArray": false,
@@ -362,5 +383,5 @@ export const schema = {
     },
     "enums": {},
     "nonModels": {},
-    "version": "b5e5a3a418f69b35b4349e0742e90b8c"
+    "version": "d362266205b082642f5eaaa185c506c2"
 };

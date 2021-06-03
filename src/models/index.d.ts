@@ -48,6 +48,9 @@ export declare class Crew {
   readonly clock?: number;
   readonly quest_rumors?: number;
   readonly CrewMembers?: (CrewMember | null)[];
+  readonly campaign_turn?: number;
+  readonly campaign_difficulty?: string;
+  readonly campaign_victory?: string;
   readonly createdAt?: string;
   readonly updatedAt?: string;
   constructor(init: ModelInit<Crew>);

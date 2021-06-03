@@ -22,7 +22,15 @@
               <a :href="'/crew/'+crew.id" class="btn btn-primary btn-sm mx-1"> <div class="mt-1">Edit Crew <i class="fas fa-pen"></i></div></a>
               <button type="button" class="btn btn-secondary btn-sm mx-1"> Print Crew <i class="fas fa-print"></i></button>
             </div>
-          </div>        
+          </div>
+          <div class="card-footer d-flex justify-content-between">
+            <div>
+              <label>Campaign Turn:</label> {{crew.campaign_turn}}
+            </div>
+            <div>
+              <label>Difficulty:</label> {{crew.campaign_difficulty}}
+            </div>
+          </div>       
         </div>
       </div>
     </div>
@@ -77,7 +85,7 @@ export default {
           "clock": 0,
           "quest_rumors": 0,
           "campaign_turn": 0,
-          "campaign_difficulty": "",
+          "campaign_difficulty": "Normal",
           "campaign_victory": "",
           "CrewMembers": []
         })
@@ -110,4 +118,10 @@ export default {
 </script>
 
 <style scoped>  
+  label {
+    font-style: italic;
+    font-weight: 700;
+    padding-bottom: 0px;
+    margin-bottom: 0px;
+  }
 </style>

@@ -16,7 +16,7 @@
         </div>
          <div class="row">
           <div class="col-3">
-            <label for="campaignTurn" class="form-label small">Turn</label>
+            <label for="campaignTurn" class="form-label small">Camp Turn</label>
             <input v-model.number="crew.campaign_turn" type="number" class="form-control" id="campaignTurn" placeholder="Turn" />     
           </div>
           <div class="col-4">
@@ -109,7 +109,7 @@
           <button type="button" class="btn btn-primary btn-sm mx-1" @click="addCrewMember()">Add Member <i class="fas fa-plus"></i></button>
         </div>
         
-          <div class="card" v-for="member in crewMembers" :key="member.id">
+          <div class="card" :class="{ 'bg-dead': member.kia, 'bg-leader': member.leader }" v-for="member in crewMembers" :key="member.id">
             <div class="card-body">
               <div class="row">
                 <div class="col d-flex">
@@ -158,6 +158,23 @@
                 <div>
                   <div class="form-text">Notes</div>
                   <p class="card-text"><textarea v-model="member.notes" type="text" class="form-control" placeholder="Notes"></textarea></p>                
+                </div>
+              </div>
+
+              <div class="row mt-1">
+                <div class="col d-flex">
+                  <div class="form-check">
+                    <input v-model="member.leader" class="form-check-input" type="checkbox" value="" id="leader">
+                    <label class="form-check-label small" for="leader">
+                      Leader
+                    </label>
+                  </div>
+                  <div class="form-check ms-4">
+                    <input v-model="member.kia" class="form-check-input" type="checkbox" value="" id="kia" checked>
+                    <label class="form-check-label small" for="kia">
+                      KIA
+                    </label>
+                  </div>
                 </div>
               </div>
             </div>
@@ -297,5 +314,13 @@ export default {
 
   h4, .h4 {
     background-color: #ccc;
+  }
+
+  .bg-dead {
+    background-color: #fff0f0 !important;
+  }
+
+  .bg-leader {
+    background-color: #f0f0ff;
   }
 </style>
