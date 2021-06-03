@@ -133,19 +133,45 @@
             <div class="card-body">
               <div class="row">
                 <div class="col d-flex">
-                  <div class="w-100">
-                    <div class="d-flex">
-                      <div class="form-text">Name</div>
-                      <span :class="{ 'd-none': isEditingCrew(member.id) }">: {{member.name}}</span>
+                  <div class="row">
+                    <div class="w-100">
+                      <div class="d-flex">
+                        <div class="form-text">Name</div>
+                        <span :class="{ 'd-none': isEditingCrew(member.id) }">: {{member.name}}</span>
+                      </div>
+                      <input v-model="member.name" type="text" class="form-control" :class="{ 'd-none': !isEditingCrew(member.id) }" placeholder="Name" />                    
                     </div>
-                    <input v-model="member.name" type="text" class="form-control" :class="{ 'd-none': !isEditingCrew(member.id) }" placeholder="Name" />                    
+                    <div class="w-100 ms-1">
+                      <div class="d-flex">
+                        <div class="form-text">Species/Type</div>
+                        <span :class="{ 'd-none': isEditingCrew(member.id) }">: {{member.species}}</span>
+                      </div>
+                      <input v-model="member.species" type="text" class="form-control" :class="{ 'd-none': !isEditingCrew(member.id) }" placeholder="Species" />                            
+                    </div>
                   </div>
-                  <div class="w-100 ms-1">
-                    <div class="d-flex">
-                      <div class="form-text">Species/Type</div>
-                      <span :class="{ 'd-none': isEditingCrew(member.id) }">: {{member.species}}</span>
+
+                  <div class="row">
+                    <div class="w-100">
+                      <div class="d-flex">
+                        <div class="form-text">Background</div>
+                        <span :class="{ 'd-none': isEditingCrew(member.id) }">: {{member.background}}</span>
+                      </div>
+                      <input v-model="member.background" type="text" class="form-control" :class="{ 'd-none': !isEditingCrew(member.id) }" placeholder="Background" />                    
                     </div>
-                    <input v-model="member.species" type="text" class="form-control" :class="{ 'd-none': !isEditingCrew(member.id) }" placeholder="Species" />                            
+                    <div class="w-100 ms-1">
+                      <div class="d-flex">
+                        <div class="form-text">Motivation</div>
+                        <span :class="{ 'd-none': isEditingCrew(member.id) }">: {{member.motivation}}</span>
+                      </div>
+                      <input v-model="member.motivation" type="text" class="form-control" :class="{ 'd-none': !isEditingCrew(member.id) }" placeholder="Motivation" />                            
+                    </div>
+                    <div class="w-100 ms-1">
+                      <div class="d-flex">
+                        <div class="form-text">Class</div>
+                        <span :class="{ 'd-none': isEditingCrew(member.id) }">: {{member.clas}}</span>
+                      </div>
+                      <input v-model="member.clas" type="text" class="form-control" :class="{ 'd-none': !isEditingCrew(member.id) }" placeholder="Class" />                            
+                    </div>
                   </div>
                 </div>
                 <div class="col d-flex">
@@ -410,7 +436,7 @@ export default {
         for (const key of Object.keys(UPDATED_MEMBER)) {
           try {
             let updatedVal = UPDATED_MEMBER[key];
-            //handle weapons//
+            //handle weapons
             if (key === "weapons") {
               updatedVal = JSON.stringify(updatedVal);
             }

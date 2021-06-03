@@ -22,6 +22,9 @@ export declare class CrewMember {
   readonly kia?: boolean;
   readonly leader?: boolean;
   readonly crewID?: string;
+  readonly background?: string;
+  readonly motivation?: string;
+  readonly clas?: string;
   readonly createdAt?: string;
   readonly updatedAt?: string;
   constructor(init: ModelInit<CrewMember>);

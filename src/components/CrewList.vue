@@ -66,7 +66,7 @@ export default {
       this.crewMembers = await DataStore.query(CrewMember, c => c.user("eq", this.username));
     },
     async createCrew() {
-      await DataStore.save(
+      var crew = await DataStore.save(
         new Crew({
           "user": this.username,
           "name": "New Crew",
@@ -91,7 +91,8 @@ export default {
           "CrewMembers": []
         })
       );          
-
+      console.log(crew);
+      
       this.fetchCrew();
     },    
     async deleteCrew(id) {
