@@ -132,8 +132,8 @@
           <div class="card" :class="{ 'bg-dead': member.kia, 'bg-leader': member.leader }" v-for="member in crewMembers" :key="member.id">
             <div class="card-body">
               <div class="row">
-                <div class="col d-flex">
-                  <div class="row">
+                <div class="col">
+                   <div class="d-flex">
                     <div class="w-100">
                       <div class="d-flex">
                         <div class="form-text">Name</div>
@@ -150,7 +150,7 @@
                     </div>
                   </div>
 
-                  <div class="row">
+                  <div class="d-flex">
                     <div class="w-100">
                       <div class="d-flex">
                         <div class="form-text">Background</div>
@@ -173,120 +173,130 @@
                       <input v-model="member.clas" type="text" class="form-control" :class="{ 'd-none': !isEditingCrew(member.id) }" placeholder="Class" />                            
                     </div>
                   </div>
-                </div>
-                <div class="col d-flex">
-                  <div class="">
-                    <div class="d-flex">
-                      <div class="form-text">Reactions</div>                    
-                      <span class="border border-3 px-2 ms-1 rounded" :class="{ 'd-none': isEditingCrew(member.id) }">{{member.reactions}}</span>
-                    </div>
-                    <input v-model.number="member.reactions" type="number" class="form-control" :class="{ 'd-none': !isEditingCrew(member.id) }" placeholder="" />                    
-                  </div>
-                  <div class="ms-1">
-                    <div class="d-flex">
-                      <div class="form-text">Speed</div>
-                      <span class="border border-3 px-2 ms-1 rounded" :class="{ 'd-none': isEditingCrew(member.id) }"> {{member.speed}}</span>
-                    </div>
-                    <input v-model.number="member.speed" type="number" class="form-control" :class="{ 'd-none': !isEditingCrew(member.id) }" placeholder="" />                    
-                  </div>
-                  <div class="ms-1">
-                    <div class="d-flex">
-                      <div class="form-text">Combat</div>
-                      <span class="border border-3 px-2 ms-1 rounded" :class="{ 'd-none': isEditingCrew(member.id) }">{{member.combat}}</span>
-                    </div>
-                    <input v-model.number="member.combat" type="number" class="form-control" :class="{ 'd-none': !isEditingCrew(member.id) }" placeholder="" />
-                  </div>
-                  <div class="ms-1">
-                    <div class="d-flex">
-                      <div class="form-text">Toughness</div>
-                      <span class="border border-3 px-2 ms-1 rounded" :class="{ 'd-none': isEditingCrew(member.id) }">{{member.toughness}}</span>
-                    </div>
-                    <input v-model.number="member.toughness" type="number" class="form-control" :class="{ 'd-none': !isEditingCrew(member.id) }" placeholder="" />                    
-                  </div>
-                  <div class="ms-1">
-                    <div class="d-flex">
-                      <div class="form-text">Savvy</div>
-                      <span class="border border-3 px-2 ms-1 rounded" :class="{ 'd-none': isEditingCrew(member.id) }">{{member.savvy}}</span>
-                    </div>
-                    <input v-model.number="member.savvy" type="number" class="form-control" :class="{ 'd-none': !isEditingCrew(member.id) }" placeholder="" />                    
-                  </div>              
-                  <div class="ms-1">
-                    <div class="d-flex">
-                      <div class="form-text">Luck</div>
-                      <span class="border border-3 px-2 ms-1 rounded" :class="{ 'd-none': isEditingCrew(member.id) }">{{member.luck}}</span>
-                    </div>
-                    <input v-model.number="member.luck" type="number" class="form-control" :class="{ 'd-none': !isEditingCrew(member.id) }" placeholder="" />                    
-                  </div>
-                  <div class="ms-1">
-                    <div class="d-flex">
-                      <div class="form-text">XP</div>
-                      <span class="border border-3 px-2 ms-1 rounded" :class="{ 'd-none': isEditingCrew(member.id) }">{{member.xp}}</span>
-                    </div>
-                    <input v-model.number="member.xp" type="number" class="form-control" :class="{ 'd-none': !isEditingCrew(member.id) }" placeholder="" />                    
-                  </div>
-                </div>
-              </div>
 
-              <div class="row mt-1">
-                
-                <div class="col">
-                  <table class="table small">
-                    <thead>
-                      <tr>
-                        <th scope="col" width="200">
-                          Weapon <button type="button" :class="{ 'd-none': !editing }" class="btn btn-primary btn-sm d-print-none py-0 m-0" @click="addWeaponToCrew(member.id)"><i class="fas fa-plus"></i></button>
-                        </th>
-                        <th scope="col" width="80">Range</th>
-                        <th scope="col" width="70">Shots</th>
-                        <th scope="col" width="70">Damage</th>
-                        <th scope="col">Traits/Mods</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr v-for="weapon in member.weapons.weapons" :key="weapon">
-                        <td th scope="row">
-                          <input v-model="weapon.name" type="text" class="form-control" :class="{ 'd-none': !isEditingCrew(member.id) }" placeholder="Weapon" />
-                          <span :class="{ 'd-none': isEditingCrew(member.id) }">{{weapon.name}}</span>
-                        </td>
-                        <td>
-                          <input v-model="weapon.range" type="number" class="form-control" :class="{ 'd-none': !isEditingCrew(member.id) }" placeholder="" />
-                          <span :class="{ 'd-none': isEditingCrew(member.id) }">{{weapon.range}}</span>
-                        </td>
-                        <td>
-                          <input v-model="weapon.shots" type="number" class="form-control" :class="{ 'd-none': !isEditingCrew(member.id) }" placeholder="" />
-                          <span :class="{ 'd-none': isEditingCrew(member.id) }">{{weapon.shots}}</span>
-                        </td>
-                        <td>
-                          <input v-model="weapon.damage" type="number" class="form-control" :class="{ 'd-none': !isEditingCrew(member.id) }" placeholder="" />
-                          <span :class="{ 'd-none': isEditingCrew(member.id) }">{{weapon.damage}}</span>
-                        </td>
-                         <td>
-                          <input v-model="weapon.traits" type="text" class="form-control" :class="{ 'd-none': !isEditingCrew(member.id) }" placeholder="" />
-                          <span :class="{ 'd-none': isEditingCrew(member.id) }">{{weapon.traits}}</span>
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>                 
+                  <div class="row">
+                    <div class="col">
+                      <table class="table small">
+                        <thead>
+                          <tr>
+                            <th scope="col" width="200">
+                              Weapon
+                              <button type="button" :class="{ 'd-none': !isEditingCrew(member.id) }" class="btn btn-primary btn-sm d-print-none py-0 m-0" @click="addWeaponToCrew(member.id)"><i class="fas fa-plus"></i></button>                              
+                            </th>
+                            <th scope="col" width="80">Range</th>
+                            <th scope="col" width="70">Shots</th>
+                            <th scope="col" width="70">Damage</th>
+                            <th scope="col">Traits/Mods</th>
+                            <th scope="col" width="50">_</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr v-for="weapon in member.weapons.weapons" :key="weapon.id">
+                            <td th scope="row">
+                              <input v-model="weapon.name" type="text" class="form-control" :class="{ 'd-none': !isEditingCrew(member.id) }" placeholder="Weapon" />
+                              <span :class="{ 'd-none': isEditingCrew(member.id) }">{{weapon.name}}</span>
+                            </td>
+                            <td>
+                              <input v-model="weapon.range" type="number" class="form-control" :class="{ 'd-none': !isEditingCrew(member.id) }" placeholder="" />
+                              <span :class="{ 'd-none': isEditingCrew(member.id) }">{{weapon.range}}</span>
+                            </td>
+                            <td>
+                              <input v-model="weapon.shots" type="number" class="form-control" :class="{ 'd-none': !isEditingCrew(member.id) }" placeholder="" />
+                              <span :class="{ 'd-none': isEditingCrew(member.id) }">{{weapon.shots}}</span>
+                            </td>
+                            <td>
+                              <input v-model="weapon.damage" type="number" class="form-control" :class="{ 'd-none': !isEditingCrew(member.id) }" placeholder="" />
+                              <span :class="{ 'd-none': isEditingCrew(member.id) }">{{weapon.damage}}</span>
+                            </td>
+                            <td>
+                              <input v-model="weapon.traits" type="text" class="form-control" :class="{ 'd-none': !isEditingCrew(member.id) }" placeholder="" />
+                              <span :class="{ 'd-none': isEditingCrew(member.id) }">{{weapon.traits}}</span>
+                            </td>
+                            <td>
+                              <button type="button" :class="{ 'd-none': !isEditingCrew(member.id) }" class="btn btn-danger btn-sm d-print-none py-0 m-0" @click="removeWeaponFromCrew(weapon.id, member.id)"><i class="fas fa-trash"></i></button>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>                 
+                    </div>
+                  </div>
                 </div>
+                <div class="col">
+                  <div class="row">                               
+                    <div class="col d-flex">
+                      <div class="">
+                        <div class="d-flex">
+                          <div class="form-text">Reactions</div>                    
+                          <span class="border border-3 px-2 ms-1 rounded" :class="{ 'd-none': isEditingCrew(member.id) }">{{member.reactions}}</span>
+                        </div>
+                        <input v-model.number="member.reactions" type="number" class="form-control" :class="{ 'd-none': !isEditingCrew(member.id) }" placeholder="" />                    
+                      </div>
+                      <div class="ms-1">
+                        <div class="d-flex">
+                          <div class="form-text">Speed</div>
+                          <span class="border border-3 px-2 ms-1 rounded" :class="{ 'd-none': isEditingCrew(member.id) }"> {{member.speed}}</span>
+                        </div>
+                        <input v-model.number="member.speed" type="number" class="form-control" :class="{ 'd-none': !isEditingCrew(member.id) }" placeholder="" />                    
+                      </div>
+                      <div class="ms-1">
+                        <div class="d-flex">
+                          <div class="form-text">Combat</div>
+                          <span class="border border-3 px-2 ms-1 rounded" :class="{ 'd-none': isEditingCrew(member.id) }">{{member.combat}}</span>
+                        </div>
+                        <input v-model.number="member.combat" type="number" class="form-control" :class="{ 'd-none': !isEditingCrew(member.id) }" placeholder="" />
+                      </div>
+                      <div class="ms-1">
+                        <div class="d-flex">
+                          <div class="form-text">Toughness</div>
+                          <span class="border border-3 px-2 ms-1 rounded" :class="{ 'd-none': isEditingCrew(member.id) }">{{member.toughness}}</span>
+                        </div>
+                        <input v-model.number="member.toughness" type="number" class="form-control" :class="{ 'd-none': !isEditingCrew(member.id) }" placeholder="" />                    
+                      </div>
+                      <div class="ms-1">
+                        <div class="d-flex">
+                          <div class="form-text">Savvy</div>
+                          <span class="border border-3 px-2 ms-1 rounded" :class="{ 'd-none': isEditingCrew(member.id) }">{{member.savvy}}</span>
+                        </div>
+                        <input v-model.number="member.savvy" type="number" class="form-control" :class="{ 'd-none': !isEditingCrew(member.id) }" placeholder="" />                    
+                      </div>              
+                      <div class="ms-1">
+                        <div class="d-flex">
+                          <div class="form-text">Luck</div>
+                          <span class="border border-3 px-2 ms-1 rounded" :class="{ 'd-none': isEditingCrew(member.id) }">{{member.luck}}</span>
+                        </div>
+                        <input v-model.number="member.luck" type="number" class="form-control" :class="{ 'd-none': !isEditingCrew(member.id) }" placeholder="" />                    
+                      </div>
+                      <div class="ms-1">
+                        <div class="d-flex">
+                          <div class="form-text">XP</div>
+                          <span class="border border-3 px-2 ms-1 rounded" :class="{ 'd-none': isEditingCrew(member.id) }">{{member.xp}}</span>
+                        </div>
+                        <input v-model.number="member.xp" type="number" class="form-control" :class="{ 'd-none': !isEditingCrew(member.id) }" placeholder="" />                    
+                      </div>
+                    </div>
+                  </div>
                   
-                <div class="col">
-                  <div>
-                    <div class="form-text">Gear/Gadgets</div>            
-                    <p class="card-text">
-                      <textarea v-model="member.gear" type="text" class="form-control" :class="{ 'd-none': !isEditingCrew(member.id) }" placeholder="Gear"></textarea>
-                      <span :class="{ 'd-none': isEditingCrew(member.id) }">{{member.gear}}</span>
-                    </p>
+                  <div class="row mt-1">                                 
+                    <div class="col">
+                      <div>
+                        <div class="form-text">Gear/Gadgets</div>            
+                        <p class="card-text">
+                          <textarea v-model="member.gear" type="text" class="form-control" :class="{ 'd-none': !isEditingCrew(member.id) }" placeholder="Gear"></textarea>
+                          <span :class="{ 'd-none': isEditingCrew(member.id) }">{{member.gear}}</span>
+                        </p>
+                      </div>
+                      <div>
+                        <div class="form-text">Notes</div>
+                        <p class="card-text">
+                          <textarea v-model="member.notes" type="text" class="form-control" :class="{ 'd-none': !isEditingCrew(member.id) }" placeholder="Notes"></textarea>
+                          <span :class="{ 'd-none': isEditingCrew(member.id) }">{{member.notes}}</span>
+                        </p>
+                      </div>
+                    </div>
                   </div>
-                  <div>
-                    <div class="form-text">Notes</div>
-                    <p class="card-text">
-                      <textarea v-model="member.notes" type="text" class="form-control" :class="{ 'd-none': !isEditingCrew(member.id) }" placeholder="Notes"></textarea>
-                      <span :class="{ 'd-none': isEditingCrew(member.id) }">{{member.notes}}</span>
-                    </p>
-                  </div>
-                </div>
+                </div> 
               </div>
-
+             
               <div class="row mt-1">
                 <div class="col d-flex">
                   <div class="form-check">
@@ -321,6 +331,7 @@
 import { DataStore } from '@aws-amplify/datastore';
 import { Crew } from '../models';
 import { CrewMember } from '../models';
+var shortid = require('shortid');
 
 export default {
   name: 'Crew',  
@@ -384,7 +395,7 @@ export default {
 
     async saveCrew() {      
       let UPDATED_CREW = this.crew;      
-      var result = await DataStore.save(Crew.copyOf(this.currentCrew, item => {        
+      await DataStore.save(Crew.copyOf(this.currentCrew, item => {        
         for (const key of Object.keys(UPDATED_CREW)) {
           try {           
               item[key] = UPDATED_CREW[key];            
@@ -392,8 +403,8 @@ export default {
             console.error("Error saving crew member", e);
           }
         }
-      }));
-      console.log(result);
+        console.log(item);
+      }));      
       this.toggleEdit()
     },   
 
@@ -423,16 +434,23 @@ export default {
 
     async addWeaponToCrew(id)
     {
-      const modelWeapon = { "name": "Weapon", "range": "", "shots": "0", "damage": "0", "traits": "" };
+      let modelWeapon = { "id": shortid.generate(), "name": "Weapon", "range": "", "shots": "0", "damage": "0", "traits": "" };
       let crewMember = this.crewMembers.find(m => m.id === id);
       crewMember.weapons.weapons.push(modelWeapon);
     },
 
+    async removeWeaponFromCrew(id, crewId)
+    {      
+      if (!confirm("Are you sure you want to delete this weapon?")) return;
+      let crewMember = this.crewMembers.find(m => m.id === crewId);
+      crewMember.weapons.weapons = crewMember.weapons.weapons.filter( w => w.id !== id);
+    },
+
     async saveCrewMember(id) {
-      let CURRENT_MEMBER = this.currentCrewMembers.filter( m => m.id === id)[0];
-      let UPDATED_MEMBER = this.crewMembers.filter( m => m.id === id)[0];
+      let CURRENT_MEMBER = this.currentCrewMembers.find( m => m.id === id);
+      let UPDATED_MEMBER = this.crewMembers.find( m => m.id === id);
             
-      var result = await DataStore.save(CrewMember.copyOf(CURRENT_MEMBER, item => {        
+      await DataStore.save(CrewMember.copyOf(CURRENT_MEMBER, item => {        
         for (const key of Object.keys(UPDATED_MEMBER)) {
           try {
             let updatedVal = UPDATED_MEMBER[key];
@@ -445,15 +463,15 @@ export default {
             console.error("Error saving crew member", e);
           }
         }
-      }));
-      console.log(result);
+        console.log(item);
+      }));      
       this.toggleCrewEdit(id);
     },   
 
     async removeCrewMember(id) {
       if (!confirm("Are you sure you want to delete this crew member?")) return;
 
-      const modelToDelete = this.currentCrewMembers.filter( m => m.id === id)[0];
+      const modelToDelete = this.currentCrewMembers.find( m => m.id === id);
       DataStore.delete(modelToDelete);
       this.fetchCrew();      
     },

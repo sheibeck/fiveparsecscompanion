@@ -1,15 +1,24 @@
 import Vue from 'vue'
 import App from './App.vue'
 import "@aws-amplify/ui-vue";
-import Amplify from 'aws-amplify';
+import { Amplify, Hub } from 'aws-amplify';
 import awsconfig from './aws-exports'
 import "bootstrap/dist/css/bootstrap.min.css"
 import "bootstrap"
 import router from './router'
 import Vuex from 'vuex'
+import { DataStore } from '@aws-amplify/datastore';
 
 awsconfig.oauth.redirectSignIn = `${window.location.origin}`;
 awsconfig.oauth.redirectSignOut = `${window.location.origin}`;
+
+//when a new sign-in is detected clear the local data
+//so we can pull the new users data
+Hub.listen('auth', async (data) => {  
+  if (data.payload.event === 'signIn') {
+    await DataStore.clear();
+  }
+});
 
 Amplify.configure(awsconfig)
 
