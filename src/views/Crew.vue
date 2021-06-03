@@ -3,7 +3,7 @@
     <div v-if="crew" class="row mt-2">
       <!-- crew log -->      
       <div class="col col-12 col-md-4 mt-2 mt-md-0">
-        <h4 class="bg-secondary p-1 rounded">Crew Log</h4>
+        <h4 class="p-1 rounded">Crew Log</h4>
         <div class="row">
           <div class="col col-9">
             <label for="crewName" class="form-label small">Crew Name</label>
@@ -24,7 +24,7 @@
 
       <!-- stash -->
       <div class="col col-12 col-md-4 mt-2 mt-md-0">
-        <h4 class="bg-secondary p-1 rounded">Stash</h4>
+        <h4 class="p-1 rounded">Stash</h4>
         <div class="row">
           <div class="col col-9">
             <label for="crewStash" class="form-label small">Stash</label>
@@ -51,7 +51,7 @@
 
       <!-- ship details -->          
       <div class="col col-12 col-md-4 mb-2 mt-2 mt-md-0">
-        <h4 class="bg-secondary p-1 rounded">Ship Details</h4>
+        <h4 class="p-1 rounded">Ship Details</h4>
         <div class="row">
           <div class="col col-6">
             <label for="shipName" class="form-label small">Ship Name</label>
@@ -82,21 +82,74 @@
 
     <div class="row">
       <div class="col">
-        <button type="button" class="btn btn-primary btn-sm mx-1" @click="saveCrew()">Save <i class="fas fa-save"></i></button>
-        <button type="button" class="btn btn-secondary btn-sm mx-1" @click="createCrewMember()">Add Member <i class="fas fa-plus"></i></button>
+        <button type="button" class="btn btn-primary btn-sm mx-1" @click="saveCrew()">Save <i class="fas fa-save"></i></button>        
       </div>
     </div>
 
-    <div class="row" v-if="crew && crew.CrewMembers.length > 0">
-      <div class="card-group">
-        <div class="card" v-for="member in crew.CrewMembers" :key="member.id">
-          <div class="card-body">
-            <h5 class="card-title"><input v-model="member.name" type="text" class="form-control" placeholder="Name" /></h5>
-            <p class="card-text"><input v-model="member.species" type="text" class="form-control" placeholder="Species" /></p>
-            <p class="card-text"><textarea v-model="member.gear" type="text" class="form-control" placeholder="Gear" rows="5"></textarea></p>
-            <p class="card-text"><textarea v-model="member.notes" type="text" class="form-control" placeholder="Notes" rows="5"></textarea></p>
-          </div>
+    <div class="row mt-2" v-if="crewMembers">
+      <div class="col">
+        <div class="rounded h4 p-1 p-2 d-flex">
+          <div class="mt-1">Crew Members</div>
+          <button type="button" class="btn btn-primary btn-sm mx-1" @click="createCrewMember()">Add Member <i class="fas fa-plus"></i></button>
         </div>
+        
+          <div class="card" v-for="member in crewMembers" :key="member.id">
+            <div class="card-body">
+              <div class="row">
+                <div class="col d-flex">
+                  <div class="w-100">
+                    <div class="form-text">Name</div>
+                    <input v-model="member.name" type="text" class="form-control" placeholder="Name" />                
+                  </div>
+                  <div class="w-100">
+                    <div class="form-text">Species/Type</div>
+                    <input v-model="member.species" type="text" class="form-control" placeholder="Species" />        
+                  </div>
+                </div>
+                <div class="col d-flex">
+                  <div>
+                    <div class="form-text">Reactions</div>
+                    <input v-model="member.reactions" type="number" class="form-control" placeholder="Reactions" />
+                  </div>
+                  <div>
+                    <div class="form-text">Speed</div>
+                    <input v-model="member.speed" type="number" class="form-control" placeholder="Speed" />
+                  </div>
+                  <div>
+                    <div class="form-text">Combat</div>
+                    <input v-model="member.combat" type="number" class="form-control" placeholder="Combat" />
+                  </div>
+                  <div>
+                    <div class="form-text">Toughness</div>
+                    <input v-model="member.toughness" type="number" class="form-control" placeholder="Toughness" />
+                  </div>
+                  <div>
+                    <div class="form-text">Savvy</div>
+                    <input v-model="member.savvy" type="number" class="form-control" placeholder="Savvy" />
+                  </div>              
+                  <div>
+                    <div class="form-text">Luck</div>
+                    <input v-model="member.luck" type="number" class="form-control" placeholder="Luck" />
+                  </div>
+                </div>
+              </div>
+
+              <div class="row mt-1">
+                <div>
+                  <div class="form-text">Gear</div>            
+                  <p class="card-text"><textarea v-model="member.gear" type="text" class="form-control" placeholder="Gear"></textarea></p>
+                </div>
+                <div>
+                  <div class="form-text">Notes</div>
+                  <p class="card-text"><textarea v-model="member.notes" type="text" class="form-control" placeholder="Notes"></textarea></p>                
+                </div>
+              </div>
+            </div>
+            <div class="card-footer">
+              <button type="button" class="btn btn-primary btn-sm mx-1" @click="saveCrew()">Save <i class="fas fa-save"></i></button>
+            </div>
+          </div>
+        
       </div>
     </div>
 </div>
@@ -113,12 +166,13 @@ export default {
   components: {    
   },
   mounted() {
-    this.fetchCrew();
+    this.fetchCrew();    
   }, 
   data() {
     return {
       crew: null,
-      currentCrew: null
+      currentCrew: null,
+      crewMembers: [],
     }
   },
   computed : {   
@@ -128,15 +182,28 @@ export default {
   },
   methods: {   
     async fetchCrew() {
-      const crews = await DataStore.query(Crew, c => c.user("eq", this.$store.state.user.username).id("eq", this.crewId ));
+      let crews = await DataStore.query(Crew, c => c.user("eq", this.$store.state.user.username).id("eq", this.crewId ));
+      if (crews.length > 0) {
+        this.currentCrew = crews[0];
+        this.crew = JSON.parse(JSON.stringify(this.currentCrew))
+      }
 
+      this.fetchMembers();
+      /*
       if (crews.length > 0) {
         this.currentCrew = crews[0];
         let currentCrew = JSON.parse(JSON.stringify(this.currentCrew))
         let members = await DataStore.query(CrewMember, c => c.crewID === currentCrew.id);        
         currentCrew.CrewMembers = members;      
         this.crew = currentCrew;
-      }    
+      } */
+    },
+
+    async fetchMembers() {
+      let crewMembers = await DataStore.query(CrewMember, c => c.crewID === this.crew.id);      
+      if (crewMembers.length > 0) {
+        this.crewMembers = JSON.parse(JSON.stringify(crewMembers))
+      }      
     },
 
     async saveCrew() {
@@ -183,5 +250,9 @@ export default {
     font-weight: 700;
     padding-bottom: 0px;
     margin-bottom: 0px;
+  }
+
+  h4, .h4 {
+    background-color: #ccc;
   }
 </style>
