@@ -17,7 +17,7 @@ export declare class CrewMember {
   readonly luck?: number;
   readonly gear?: string;
   readonly notes?: string;
-  readonly weapons?: (string | null)[];
+  readonly weapons?: string;
   readonly xp?: number;
   readonly kia?: boolean;
   readonly leader?: boolean;

@@ -89,11 +89,10 @@ export const schema = {
                 },
                 "weapons": {
                     "name": "weapons",
-                    "isArray": true,
+                    "isArray": false,
                     "type": "AWSJSON",
                     "isRequired": false,
-                    "attributes": [],
-                    "isArrayNullable": true
+                    "attributes": []
                 },
                 "xp": {
                     "name": "xp",
@@ -383,5 +382,5 @@ export const schema = {
     },
     "enums": {},
     "nonModels": {},
-    "version": "d362266205b082642f5eaaa185c506c2"
+    "version": "5ee430aa9a126226e4f4e28b876b6f75"
 };

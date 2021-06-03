@@ -15,7 +15,7 @@
         <div class="card h-100">
           <div class="card-body">
             <h5 class="card-title">{{crew.name}}</h5>
-            <ul v-for="member in crewMembers.filter(m => m.crewId === crew.id)" :key="member.id" class="list-group">
+            <ul v-for="member in crewMembers.filter(m => m.crewID === crew.id)" :key="member.id" class="list-group">
               <li class="list-group-item">
                 {{member.name}} 
               </li>

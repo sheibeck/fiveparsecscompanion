@@ -11,7 +11,7 @@ type CrewMember @model @auth(rules: [{allow: public}]) @key(name: "byCrew", fiel
   luck: Int
   gear: String
   notes: String
-  weapons: [AWSJSON]
+  weapons: AWSJSON
   xp: Int
   kia: Boolean
   leader: Boolean
