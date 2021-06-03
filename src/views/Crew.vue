@@ -1,6 +1,6 @@
 <template>
-  <div>    
-    <div v-if="crew" class="row mt-2">
+  <div v-if="crew">    
+    <div class="row mt-2">
       <!-- crew log -->      
       <div class="col col-12 col-md-4 mt-2 mt-md-0">
         <h4 class="p-1 rounded">Crew Log</h4>
@@ -11,13 +11,27 @@
           </div> 
           <div class="col">
             <label for="crewStoryPoints" class="form-label small">Story</label>
-            <input v-model="crew.story_points" type="number" class="form-control" id="crewStoryPoints" placeholder="0" />        
+            <input v-model.number="crew.story_points" type="number" class="form-control" id="crewStoryPoints" placeholder="0" />        
+          </div>
+        </div>
+         <div class="row">
+          <div class="col-3">
+            <label for="campaignTurn" class="form-label small">Turn</label>
+            <input v-model.number="crew.campaign_turn" type="number" class="form-control" id="campaignTurn" placeholder="Turn" />     
+          </div>
+          <div class="col-4">
+            <label for="campaignDifficulty" class="form-label small">Difficulty</label>
+            <input v-model="crew.campaign_difficulty" type="text" class="form-control" id="campaignDifficulty" placeholder="Difficulty" />
+          </div>
+          <div class="col">
+            <label for="campaignVictory" class="form-label small">Victory Condition</label>
+            <input v-model="crew.campaign_victory" type="text" class="form-control" id="campaignVictory" placeholder="Victory Condition" />
           </div>
         </div>
         <div class="row">
           <div class="col">
             <label for="crewNotes" class="form-label small">Notes</label>
-            <textarea v-model="crew.notes" class="form-control" id="crewNotes" placeholder="Notes" rows="4"></textarea>        
+            <textarea v-model="crew.notes" class="form-control" id="crewNotes" placeholder="Notes"></textarea>        
           </div>
         </div>
       </div>
@@ -28,21 +42,21 @@
         <div class="row">
           <div class="col col-9">
             <label for="crewStash" class="form-label small">Stash</label>
-            <textarea v-model="crew.stash" class="form-control" id="crewStash" placeholder="Stash" rows="7"></textarea>        
+            <textarea v-model.number="crew.stash" class="form-control" id="crewStash" placeholder="Stash" rows="7"></textarea>        
           </div>
         
           <div class="col">
             <div class="">
               <label for="crewCredits" class="form-label small">Credits</label>
-              <input v-model="crew.credits" type="number" class="form-control" id="crewCredits" placeholder="0" />        
+              <input v-model.number="crew.credits" type="number" class="form-control" id="crewCredits" placeholder="0" />        
             </div> 
             <div class="">
               <label for="crewPatrons" class="form-label small">Patrons</label>
-              <input v-model="crew.patrons" type="number" class="form-control" id="crewPatrons" placeholder="0" />
+              <input v-model.number="crew.patrons" type="number" class="form-control" id="crewPatrons" placeholder="0" />
             </div>
             <div class="">
               <label for="crewRivals" class="form-label small">Rivals</label>
-              <input v-model="crew.patrons" type="number" class="form-control" id="crewRivals" placeholder="0" />
+              <input v-model.number="crew.rivals" type="number" class="form-control" id="crewRivals" placeholder="0" />
             </div>
           </div>
 
@@ -59,11 +73,11 @@
           </div> 
           <div class="col">
             <label for="shipHull" class="form-label small">Hull</label>
-            <input v-model="crew.ship_hull" type="number" class="form-control" id="shipHull" placeholder="0" />        
+            <input v-model.number="crew.ship_hull" type="number" class="form-control" id="shipHull" placeholder="0" />        
           </div>
           <div class="col">
             <label for="shipDebt" class="form-label small">Debt</label>
-            <input v-model="crew.ship_debt" type="number" class="form-control" id="shipDebt" placeholder="0" />
+            <input v-model.number="crew.ship_debt" type="number" class="form-control" id="shipDebt" placeholder="0" />
           </div>
         </div>
         <div class="row">
@@ -80,17 +94,19 @@
 
     </div>
 
-    <div class="row">
-      <div class="col">
-        <button type="button" class="btn btn-primary btn-sm mx-1" @click="saveCrew()">Save <i class="fas fa-save"></i></button>        
+    <div class="row mt-1">
+      <div class="col d-flex">
+        <button type="button" class="btn btn-primary btn-sm mx-1" @click="saveCrew()">Save Crew Log <i class="fas fa-save"></i></button>
+        <button type="button" class="btn btn-secondary btn-sm mx-1"> Print Crew <i class="fas fa-print"></i></button>
+        <button type="button" class="ms-auto btn btn-danger btn-sm mx-1" @click="removeCrew()">Delete Crew Log <i class="fas fa-trash"></i></button>
       </div>
     </div>
 
-    <div class="row mt-2" v-if="crewMembers">
+    <div class="row mt-2">
       <div class="col">
         <div class="rounded h4 p-1 p-2 d-flex">
           <div class="mt-1">Crew Members</div>
-          <button type="button" class="btn btn-primary btn-sm mx-1" @click="createCrewMember()">Add Member <i class="fas fa-plus"></i></button>
+          <button type="button" class="btn btn-primary btn-sm mx-1" @click="addCrewMember()">Add Member <i class="fas fa-plus"></i></button>
         </div>
         
           <div class="card" v-for="member in crewMembers" :key="member.id">
@@ -101,35 +117,35 @@
                     <div class="form-text">Name</div>
                     <input v-model="member.name" type="text" class="form-control" placeholder="Name" />                
                   </div>
-                  <div class="w-100">
+                  <div class="w-100 ms-1">
                     <div class="form-text">Species/Type</div>
                     <input v-model="member.species" type="text" class="form-control" placeholder="Species" />        
                   </div>
                 </div>
                 <div class="col d-flex">
-                  <div>
+                  <div class="">
                     <div class="form-text">Reactions</div>
-                    <input v-model="member.reactions" type="number" class="form-control" placeholder="Reactions" />
+                    <input v-model.number="member.reactions" type="number" class="form-control" placeholder="Reactions" />
                   </div>
-                  <div>
+                  <div class="ms-1">
                     <div class="form-text">Speed</div>
-                    <input v-model="member.speed" type="number" class="form-control" placeholder="Speed" />
+                    <input v-model.number="member.speed" type="number" class="form-control" placeholder="Speed" />
                   </div>
-                  <div>
+                  <div class="ms-1">
                     <div class="form-text">Combat</div>
-                    <input v-model="member.combat" type="number" class="form-control" placeholder="Combat" />
+                    <input v-model.number="member.combat" type="number" class="form-control" placeholder="Combat" />
                   </div>
-                  <div>
+                  <div class="ms-1">
                     <div class="form-text">Toughness</div>
-                    <input v-model="member.toughness" type="number" class="form-control" placeholder="Toughness" />
+                    <input v-model.number="member.toughness" type="number" class="form-control" placeholder="Toughness" />
                   </div>
-                  <div>
+                  <div class="ms-1">
                     <div class="form-text">Savvy</div>
-                    <input v-model="member.savvy" type="number" class="form-control" placeholder="Savvy" />
+                    <input v-model.number="member.savvy" type="number" class="form-control" placeholder="Savvy" />
                   </div>              
-                  <div>
+                  <div class="ms-1">
                     <div class="form-text">Luck</div>
-                    <input v-model="member.luck" type="number" class="form-control" placeholder="Luck" />
+                    <input v-model.number="member.luck" type="number" class="form-control" placeholder="Luck" />
                   </div>
                 </div>
               </div>
@@ -145,8 +161,9 @@
                 </div>
               </div>
             </div>
-            <div class="card-footer">
-              <button type="button" class="btn btn-primary btn-sm mx-1" @click="saveCrew()">Save <i class="fas fa-save"></i></button>
+            <div class="card-footer d-flex">
+              <button type="button" class="btn btn-primary btn-sm mx-1" @click="saveCrewMember(member.id)">Save <i class="fas fa-save"></i></button>
+              <button type="button" class="ms-auto btn btn-danger btn-sm mx-1" @click="removeCrewMember(member.id)">Delete <i class="fas fa-trash"></i></button>
             </div>
           </div>
         
@@ -173,73 +190,99 @@ export default {
       crew: null,
       currentCrew: null,
       crewMembers: [],
+      currentCrewMembers: [],
     }
   },
   computed : {   
     crewId : function() {       
       return this.$route.params.id;
-    }
+    },
+    username: function() {
+      return this.$store.state.user.username;
+    },    
   },
   methods: {   
+    isOwner: function(itemOwner) {
+      return this.username === itemOwner;
+    },
     async fetchCrew() {
-      let crews = await DataStore.query(Crew, c => c.user("eq", this.$store.state.user.username).id("eq", this.crewId ));
-      if (crews.length > 0) {
-        this.currentCrew = crews[0];
-        this.crew = JSON.parse(JSON.stringify(this.currentCrew))
-      }
+      const crew = await DataStore.query(Crew, this.crewId);
+      this.currentCrew = crew;
+      this.crew = JSON.parse(JSON.stringify(crew));      
 
-      this.fetchMembers();
-      /*
-      if (crews.length > 0) {
-        this.currentCrew = crews[0];
-        let currentCrew = JSON.parse(JSON.stringify(this.currentCrew))
-        let members = await DataStore.query(CrewMember, c => c.crewID === currentCrew.id);        
-        currentCrew.CrewMembers = members;      
-        this.crew = currentCrew;
-      } */
+      this.fetchCrewMembers();
     },
 
-    async fetchMembers() {
-      let crewMembers = await DataStore.query(CrewMember, c => c.crewID === this.crew.id);      
-      if (crewMembers.length > 0) {
-        this.crewMembers = JSON.parse(JSON.stringify(crewMembers))
-      }      
+    async fetchCrewMembers() {
+      const crewMembers = await DataStore.query(CrewMember, c => c.crewID("eq", this.crewId));      
+      this.currentCrewMembers = crewMembers;
+      this.crewMembers = JSON.parse(JSON.stringify(crewMembers));      
     },
 
-    async saveCrew() {
-      /* Models in DataStore are immutable. To update a record you must use the copyOf function
-      to apply updates to the item’s fields rather than mutating the instance directly */
+    async saveCrew() {      
       let UPDATED_CREW = this.crew;      
       var result = await DataStore.save(Crew.copyOf(this.currentCrew, item => {        
         for (const key of Object.keys(UPDATED_CREW)) {
-          try {
-            if (item[key]) {
-              if (typeof item[key] === "number") {
-                item[key] = parseInt(UPDATED_CREW[key]);
-              }
-              else {
-                item[key] = UPDATED_CREW[key];
-              }
-            }
+          try {          
+            item[key] = UPDATED_CREW[key];
           } catch (e) {
-            console.error("Error saving crew", e);
+            console.error("Error saving crew member", e);
           }
         }
       }));
       console.log(result);
     },   
 
-    async createCrewMember() {
+    async addCrewMember() {
       await DataStore.save(
           new CrewMember({
-          "user": this.$store.state.user.username,
-          "name": "Bob Dobbs",
-          "species": "Human",         
+          "user": this.username,
+          "name": "New Member",
+          "species": "Human",
+          "reactions": 0,
+          "speed": 0,
+          "combat": 0,
+          "toughness": 0,
+          "savvy": 0,
+          "luck": 0,
+          "gear": "",
+          "notes": "",
+          "weapons": [],
+          "xp": 0,
+          "kia": false,
+          "leader": false,
           "crewID": this.crewId
         })
-      );
-      this.fetchCrew();    
+      );     
+      this.fetchCrewMembers();  
     },   
+
+    async saveCrewMember(id) {
+      let CURRENT_MEMBER = this.currentCrewMembers.filter( m => m.id === id)[0];
+      let UPDATED_MEMBER = this.crewMembers.filter( m => m.id === id)[0];
+            
+      var result = await DataStore.save(CrewMember.copyOf(CURRENT_MEMBER, item => {        
+        for (const key of Object.keys(UPDATED_MEMBER)) {
+          try {          
+            item[key] = UPDATED_MEMBER[key];
+          } catch (e) {
+            console.error("Error saving crew member", e);
+          }
+        }
+      }));
+      console.log(result);
+    },   
+
+    async removeCrewMember(id) {
+      const modelToDelete = this.currentCrewMembers.filter( m => m.id === id)[0];
+      DataStore.delete(modelToDelete);
+      this.fetchCrew();
+    },
+
+    async removeCrew() {      
+      await DataStore.delete(this.currentCrew);
+      this.$router.push('/');
+    }    
   }
 }
 </script>

@@ -2,28 +2,31 @@
   <div>
     <h1>
       Crew 
-      <button type="button" class="btn btn-success btn-sm mx-1" @click="createCrew">Add Crew <i class="fas fa-plus"></i></button>      
-      <button type="button" class="btn btn-danger btn-sm" @click="refreshCrew">Refresh</button>
+      <button type="button" class="btn btn-success btn-sm mx-1" @click="createCrew">New Crew Log <i class="fas fa-plus"></i></button>      
+
+      <button type="button" class="btn btn-secondary btn-sm mx-1" @click="listLocalData">List Local Data <i class="fas fa-trash"></i></button>      
+      <button type="button" class="btn btn-danger btn-sm mx-1" @click="clearLocalData">Clear Local Data <i class="fas fa-trash"></i></button> 
     </h1>
     
-    <div v-for="crew in crewList" :key="crew.id" class="d-flex flex-row bd-highlight mb-3">
-      <div>
-        <div class="d-flex py-1">
-          <div class="align-bottom mt-1">
-            <h5>{{crew.name}}</h5>
-          </div>
-          <a :href="'/crew/'+crew.id" class="btn-link btn btn-primary btn-sm mx-1"> Edit Crew <i class="fas fa-pen"></i></a>
-          <button type="button" class="btn btn-secondary btn-sm mx-1"> Print Crew <i class="fas fa-print"></i></button>          
-        </div>         
-        <ul v-for="member in crew.CrewMembers" :key="member.name" class="d-flex flex-col">
-          <li>
-            {{member.name}} 
-          </li>
-        </ul>
-        
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+      <div v-for="crew in crews" :key="crew.id" class="col">
+        <div class="card h-100">
+          <div class="card-body">
+            <h5 class="card-title">{{crew.name}}</h5>
+            <ul v-for="member in crewMembers.filter(m => m.crewId === crew.id)" :key="member.id" class="list-group">
+              <li class="list-group-item">
+                {{member.name}} 
+              </li>
+            </ul>
+            <div class="card-footer d-flex justify-content-center">
+              <a :href="'/crew/'+crew.id" class="btn btn-primary btn-sm mx-1"> <div class="mt-1">Edit Crew <i class="fas fa-pen"></i></div></a>
+              <button type="button" class="btn btn-secondary btn-sm mx-1"> Print Crew <i class="fas fa-print"></i></button>
+            </div>
+          </div>        
+        </div>
       </div>
     </div>
-      
+        
   </div>
 </template>
 
@@ -39,7 +42,8 @@ export default {
   }, 
   data() {
     return {      
-      crewList: []
+      crews: [],
+      crewMembers: [],
     }
   },
   computed : {
@@ -49,36 +53,32 @@ export default {
   },
   methods: {
     async fetchCrew() {
-      const crews = await DataStore.query(Crew, c => c.user("eq", this.username));
-
-      this.crewList = [];
-      crews.forEach( async (crew) => { 
-        let members = await DataStore.query(CrewMember, c => c.crewID === crew.id);
-        let crewObj = JSON.parse(JSON.stringify(crew));
-        crewObj.CrewMembers = members;
-        this.crewList.push(crewObj);
-      });      
-    },    
+      this.crews = await DataStore.query(Crew, c => c.user("eq", this.username));
+      this.crewMembers = await DataStore.query(CrewMember, c => c.user("eq", this.username));
+    },
     async createCrew() {
       await DataStore.save(
         new Crew({
           "user": this.username,
-          "name": "Cool Crew",
-          "notes": "Some notes",
-          "story_points": 1,
-          "stash": "My stash",
-          "credits": 10,
-          "patrons": 1,
-          "rivals": 1,
-          "ship_name": "Firefly",
-          "ship_hull_points": 30,
-          "ship_debt": 20,
-          "ship_traits": "Ship traits are",
-          "ship_upgrades": "Warp drive",
+          "name": "New Crew",
+          "notes": "",
+          "story_points": 0,
+          "stash": "",
+          "credits": 0,
+          "patrons": 0,
+          "rivals": 0,
+          "ship_name": "",
+          "ship_hull_points": 0,
+          "ship_debt": 0,
+          "ship_traits": "",
+          "ship_upgrades": "",
           "story_track": "",
           "event": 0,
           "clock": 0,
           "quest_rumors": 0,
+          "campaign_turn": 0,
+          "campaign_difficulty": "",
+          "campaign_victory": "",
           "CrewMembers": []
         })
       );          
@@ -88,26 +88,26 @@ export default {
     async deleteCrew(id) {
       const modelToDelete = await DataStore.query(Crew, id);
       DataStore.delete(modelToDelete);
-      this.crewList = this.fetchCrew();
-    },
-    async refreshCrew() {     
-      await DataStore.stop(); 
-      await DataStore.clear();      
+      this.fetchCrew();
+    },  
+
+    async clearLocalData() {      
+      await DataStore.stop();
+      await DataStore.clear();
       await DataStore.start();
-      this.crewList = this.fetchCrew();
+      this.fetchCrew();
+    },  
+
+    async listLocalData() {
+      const crew = await DataStore.query(Crew);
+      console.log(crew);
+
+      const members = await DataStore.query(CrewMember);
+      console.log(members);
     }
-    /*async updateCrew(id) {
-      // Models in DataStore are immutable. To update a record you must use the copyOf function
-      //  to apply updates to the item’s fields rather than mutating the instance directly
-      await DataStore.save(Crew.copyOf(CURRENT_ITEM, item => {
-          // Update the values on {item} variable to update DataStore entry
-          item.name = "bob"
-      }));
-      this.crewList = this.fetchCrew();
-    }*/
   }
 }
 </script>
 
-<style scoped>
+<style scoped>  
 </style>
