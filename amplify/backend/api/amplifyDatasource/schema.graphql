@@ -18,7 +18,7 @@ type CrewMember @model @auth(rules: [{allow: public}]) @key(name: "byCrew", fiel
   crewID: ID
   background: String
   motivation: String
-  clas: String
+  class: String
 }
 
 type Crew @model @auth(rules: [{allow: public}]) {
