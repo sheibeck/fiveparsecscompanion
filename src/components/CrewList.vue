@@ -2,10 +2,12 @@
   <div>
     <h1>
       Crew 
-      <button type="button" class="btn btn-success btn-sm mx-1" @click="createCrew">New Crew Log <i class="fas fa-plus"></i></button>      
+      <div class="d-print-none">
+        <button type="button" class="btn btn-success btn-sm mx-1" @click="createCrew">New Crew Log <i class="fas fa-plus"></i></button>      
 
-      <button type="button" class="btn btn-secondary btn-sm mx-1" @click="listLocalData">List Local Data <i class="fas fa-trash"></i></button>      
-      <button type="button" class="btn btn-danger btn-sm mx-1" @click="clearLocalData">Clear Local Data <i class="fas fa-trash"></i></button> 
+        <button type="button" class="btn btn-secondary btn-sm mx-1" @click="listLocalData">List Local Data <i class="fas fa-trash"></i></button>      
+        <button type="button" class="btn btn-danger btn-sm mx-1" @click="clearLocalData">Clear Local Data <i class="fas fa-trash"></i></button> 
+      </div>
     </h1>
     
     <div class="row row-cols-1 row-cols-md-3 g-4">
@@ -19,8 +21,7 @@
               </li>
             </ul>
             <div class="card-footer d-flex justify-content-center">
-              <a :href="'/crew/'+crew.id" class="btn btn-primary btn-sm mx-1"> <div class="mt-1">Edit Crew <i class="fas fa-pen"></i></div></a>
-              <button type="button" class="btn btn-secondary btn-sm mx-1"> Print Crew <i class="fas fa-print"></i></button>
+              <a :href="'/crew/'+crew.id" class="btn btn-primary btn-sm"> <div class="">Edit Crew <i class="fas fa-pen"></i></div></a>              
             </div>
           </div>
           <div class="card-footer d-flex justify-content-between">
