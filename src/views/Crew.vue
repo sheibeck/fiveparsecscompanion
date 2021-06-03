@@ -6,7 +6,7 @@
         <div class="border border-1">
           <h4 class="p-1 rounded">Crew Log</h4>
           <div class="row">
-            <div class="col col-9">
+            <div class="col col-10">
               <label for="crewName" class="form-label small">Crew Name</label>
               <input v-model="crew.name" type="text" class="form-control" :class="{ 'd-none': !editing }" id="crewName" placeholder="Crew Name" /> 
               <span :class="{ 'd-none': editing }">: {{crew.name}}</span>
@@ -18,8 +18,8 @@
             </div>
           </div>
           <div class="row">
-            <div class="col-3">
-              <label for="campaignTurn" class="form-label small"><span class="d-print-none">Camp</span> Turn</label>
+            <div class="col-2">
+              <label for="campaignTurn" class="form-label small">Turn</label>
               <input v-model.number="crew.campaign_turn" type="number" class="form-control" :class="{ 'd-none': !editing }" id="campaignTurn" placeholder="Turn" />
               <span :class="{ 'd-none': editing }">: {{crew.campaign_turn}}</span>
             </div>
@@ -49,7 +49,7 @@
         <div class="border border-1">
           <h4 class="p-1 rounded">Stash</h4>
           <div class="row">
-            <div class="col col-9">
+            <div class="col col-10">
               <label for="crewStash" class="form-label small">Stash</label>
               <textarea v-model.number="crew.stash" class="form-control" :class="{ 'd-none': !editing }" id="crewStash" placeholder="Stash" rows="7"></textarea>
               <span :class="{ 'd-none': editing }">: {{crew.stash}}</span>       
@@ -81,7 +81,7 @@
         <div class="border border-1 h-100">
           <h4 class="p-1 rounded">Ship Details</h4>
           <div class="row">
-            <div class="col col-6">
+            <div class="col col-8">
               <label for="shipName" class="form-label small">Ship Name</label>
               <input v-model="crew.ship_name" type="text" class="form-control" :class="{ 'd-none': !editing }"  id="shipName" placeholder="Ship Name" />
               <span :class="{ 'd-none': editing }">: {{crew.ship_name}}</span>
@@ -100,13 +100,36 @@
           <div class="row">
             <div class="col">
               <label for="shipTraits" class="form-label small">Traits</label>
-              <textarea v-model="crew.ship_traits" class="form-control" id="shipTraits" :class="{ 'd-none': !editing }" placeholder="Traits" rows="4"></textarea>
+              <textarea v-model="crew.ship_traits" class="form-control" id="shipTraits" :class="{ 'd-none': !editing }" placeholder="Traits"></textarea>
               <span :class="{ 'd-none': editing }">: {{crew.ship_traits}}</span>
             </div>
             <div class="col">
               <label for="shipUpgrades" class="form-label small">Upgrades</label>
-              <textarea v-model="crew.shipt_upgrades" class="form-control" id="shipUpgrades" :class="{ 'd-none': !editing }" placeholder="Upgrades" rows="4"></textarea>
-              <span :class="{ 'd-none': editing }">: {{crew.shipt_upgrades}}</span>
+              <textarea v-model="crew.ship_upgrades" class="form-control" id="shipUpgrades" :class="{ 'd-none': !editing }" placeholder="Upgrades"></textarea>
+              <span :class="{ 'd-none': editing }">: {{crew.ship_upgrades}}</span>
+            </div>
+
+            <div class="row">
+              <div class="col col-6">
+                <label for="crewStoryTrack" class="form-label small">Story</label>
+                <input v-model="crew.story_track" type="text" class="form-control" id="crewStoryTrack" :class="{ 'd-none': !editing }" placeholder="" />
+                <span :class="{ 'd-none': editing }">: {{crew.story_track}}</span>
+              </div>
+              <div class="col">
+                <label for="crewEvent" class="form-label small">Event</label>
+                <input v-model.number="crew.event" type="number" class="form-control" id="crewEvent" :class="{ 'd-none': !editing }" placeholder="" />
+                <span :class="{ 'd-none': editing }">: {{crew.event}}</span>
+              </div>
+              <div class="col">
+                <label for="crewClock" class="form-label small">Clock</label>
+                <input v-model.number="crew.clock" type="number" class="form-control" id="crewClock" :class="{ 'd-none': !editing }" placeholder="" />
+                <span :class="{ 'd-none': editing }">: {{crew.clock}}</span>
+              </div>
+              <div class="col">
+                <label for="crewRumors" class="form-label small">Rumors</label>
+                <input v-model.number="crew.quest_rumors" type="number" class="form-control" id="crewClock" :class="{ 'd-none': !editing }" placeholder="" />
+                <span :class="{ 'd-none': editing }">: {{crew.quest_rumors}}</span>
+              </div>
             </div>
           </div>
         </div>
@@ -183,11 +206,11 @@
                               Weapon
                               <button type="button" :class="{ 'd-none': !isEditingCrew(member.id) }" class="btn btn-primary btn-sm d-print-none py-0 m-0" @click="addWeaponToCrew(member.id)"><i class="fas fa-plus"></i></button>                              
                             </th>
-                            <th scope="col" width="80">Range</th>
-                            <th scope="col" width="70">Shots</th>
-                            <th scope="col" width="70">Damage</th>
+                            <th scope="col" width="50">Range</th>
+                            <th scope="col" width="50">Shots</th>
+                            <th scope="col" width="50">Dam</th>
                             <th scope="col">Traits/Mods</th>
-                            <th scope="col" width="50">_</th>
+                            <th scope="col" width="30"> </th>
                           </tr>
                         </thead>
                         <tbody>
@@ -197,7 +220,7 @@
                               <span :class="{ 'd-none': isEditingCrew(member.id) }">{{weapon.name}}</span>
                             </td>
                             <td>
-                              <input v-model="weapon.range" type="number" class="form-control" :class="{ 'd-none': !isEditingCrew(member.id) }" placeholder="" />
+                              <input v-model="weapon.range" type="text" class="form-control" :class="{ 'd-none': !isEditingCrew(member.id) }" placeholder="" />
                               <span :class="{ 'd-none': isEditingCrew(member.id) }">{{weapon.range}}</span>
                             </td>
                             <td>
@@ -222,7 +245,7 @@
                   </div>
                 </div>
                 <div class="col">
-                  <div class="row">                               
+                  <div class="row">                 
                     <div class="col d-flex">
                       <div class="">
                         <div class="d-flex">
@@ -504,5 +527,9 @@ export default {
 
   .bg-leader {
     background-color: #f0f0ff;
+  }
+
+  .form-control {
+    padding: 1px;
   }
 </style>
