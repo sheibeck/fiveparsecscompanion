@@ -8,6 +8,9 @@ import "bootstrap"
 import router from './router'
 import Vuex from 'vuex'
 
+awsconfig.oauth.redirectSignIn = `${window.location.origin}`;
+awsconfig.oauth.redirectSignOut = `${window.location.origin}`;
+
 Amplify.configure(awsconfig)
 
 Vue.use(Vuex)

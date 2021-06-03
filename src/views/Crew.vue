@@ -86,6 +86,19 @@
         <button type="button" class="btn btn-secondary btn-sm mx-1" @click="createCrewMember()">Add Member <i class="fas fa-plus"></i></button>
       </div>
     </div>
+
+    <div class="row" v-if="crew && crew.CrewMembers.length > 0">
+      <div class="card-group">
+        <div class="card" v-for="member in crew.CrewMembers" :key="member.id">
+          <div class="card-body">
+            <h5 class="card-title"><input v-model="member.name" type="text" class="form-control" placeholder="Name" /></h5>
+            <p class="card-text"><input v-model="member.species" type="text" class="form-control" placeholder="Species" /></p>
+            <p class="card-text"><textarea v-model="member.gear" type="text" class="form-control" placeholder="Gear" rows="5"></textarea></p>
+            <p class="card-text"><textarea v-model="member.notes" type="text" class="form-control" placeholder="Notes" rows="5"></textarea></p>
+          </div>
+        </div>
+      </div>
+    </div>
 </div>
    
 </template>
