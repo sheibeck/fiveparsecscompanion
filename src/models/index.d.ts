@@ -25,6 +25,7 @@ export declare class CrewMember {
   readonly background?: string;
   readonly motivation?: string;
   readonly class?: string;
+  readonly sick_bay?: boolean;
   readonly createdAt?: string;
   readonly updatedAt?: string;
   constructor(init: ModelInit<CrewMember>);

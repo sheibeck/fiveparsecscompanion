@@ -152,7 +152,7 @@
           <button type="button" class="btn btn-primary btn-sm mx-1  d-print-none" @click="addCrewMember()">Add Member <i class="fas fa-plus"></i></button>
         </div>
         
-          <div class="card" :class="{ 'bg-dead': member.kia, 'bg-leader': member.leader }" v-for="member in crewMembers" :key="member.id">
+          <div class="card" :class="{ 'bg-dead': member.kia, 'bg-leader': member.leader, 'bg-sick': member.sick_bay }" v-for="member in crewMembers" :key="member.id">
             <div class="card-body">
               <div class="row">
                 <div class="col">
@@ -247,53 +247,39 @@
                 <div class="col">
                   <div class="row">                 
                     <div class="col d-flex">
-                      <div class="">
-                        <div class="d-flex">
-                          <div class="form-text">Reactions</div>                    
-                          <span class="border border-3 px-2 ms-1 rounded" :class="{ 'd-none': isEditingCrew(member.id) }">{{member.reactions}}</span>
-                        </div>
-                        <input v-model.number="member.reactions" type="number" class="form-control" :class="{ 'd-none': !isEditingCrew(member.id) }" placeholder="" />                    
+                      <div class="text-center">                        
+                        <div class="form-text">Reactions</div>
+                        <span class="border border-3 px-2 ms-1 rounded" :class="{ 'd-none': isEditingCrew(member.id) }">{{member.reactions}}</span>
+                        <input v-model.number="member.reactions" type="number" class="form-control" :class="{ 'd-none': !isEditingCrew(member.id) }" placeholder="" />                        
                       </div>
-                      <div class="ms-1">
-                        <div class="d-flex">
-                          <div class="form-text">Speed</div>
-                          <span class="border border-3 px-2 ms-1 rounded" :class="{ 'd-none': isEditingCrew(member.id) }"> {{member.speed}}</span>
-                        </div>
+                      <div class="ms-1 text-center">                        
+                        <div class="form-text">Speed</div>
+                        <span class="border border-3 px-2 ms-1 rounded" :class="{ 'd-none': isEditingCrew(member.id) }"> {{member.speed}}</span>                      
                         <input v-model.number="member.speed" type="number" class="form-control" :class="{ 'd-none': !isEditingCrew(member.id) }" placeholder="" />                    
                       </div>
-                      <div class="ms-1">
-                        <div class="d-flex">
-                          <div class="form-text">Combat</div>
-                          <span class="border border-3 px-2 ms-1 rounded" :class="{ 'd-none': isEditingCrew(member.id) }">{{member.combat}}</span>
-                        </div>
+                      <div class="ms-1 text-center">                        
+                        <div class="form-text">Combat</div>
+                        <span class="border border-3 px-2 ms-1 rounded" :class="{ 'd-none': isEditingCrew(member.id) }">{{member.combat}}</span>                        
                         <input v-model.number="member.combat" type="number" class="form-control" :class="{ 'd-none': !isEditingCrew(member.id) }" placeholder="" />
                       </div>
-                      <div class="ms-1">
-                        <div class="d-flex">
-                          <div class="form-text">Toughness</div>
-                          <span class="border border-3 px-2 ms-1 rounded" :class="{ 'd-none': isEditingCrew(member.id) }">{{member.toughness}}</span>
-                        </div>
+                      <div class="ms-1 text-center">
+                        <div class="form-text">Toughness</div>
+                        <span class="border border-3 px-2 ms-1 rounded" :class="{ 'd-none': isEditingCrew(member.id) }">{{member.toughness}}</span>                      
                         <input v-model.number="member.toughness" type="number" class="form-control" :class="{ 'd-none': !isEditingCrew(member.id) }" placeholder="" />                    
                       </div>
-                      <div class="ms-1">
-                        <div class="d-flex">
-                          <div class="form-text">Savvy</div>
-                          <span class="border border-3 px-2 ms-1 rounded" :class="{ 'd-none': isEditingCrew(member.id) }">{{member.savvy}}</span>
-                        </div>
+                      <div class="ms-1 text-center">
+                        <div class="form-text">Savvy</div>
+                        <span class="border border-3 px-2 ms-1 rounded" :class="{ 'd-none': isEditingCrew(member.id) }">{{member.savvy}}</span>                        
                         <input v-model.number="member.savvy" type="number" class="form-control" :class="{ 'd-none': !isEditingCrew(member.id) }" placeholder="" />                    
                       </div>              
-                      <div class="ms-1">
-                        <div class="d-flex">
-                          <div class="form-text">Luck</div>
-                          <span class="border border-3 px-2 ms-1 rounded" :class="{ 'd-none': isEditingCrew(member.id) }">{{member.luck}}</span>
-                        </div>
+                      <div class="ms-1 text-center">                        
+                        <div class="form-text">Luck</div>
+                        <span class="border border-3 px-2 ms-1 rounded" :class="{ 'd-none': isEditingCrew(member.id) }">{{member.luck}}</span>                        
                         <input v-model.number="member.luck" type="number" class="form-control" :class="{ 'd-none': !isEditingCrew(member.id) }" placeholder="" />                    
                       </div>
-                      <div class="ms-1">
-                        <div class="d-flex">
-                          <div class="form-text">XP</div>
-                          <span class="border border-3 px-2 ms-1 rounded" :class="{ 'd-none': isEditingCrew(member.id) }">{{member.xp}}</span>
-                        </div>
+                      <div class="ms-1 text-center">                        
+                        <div class="form-text">XP</div>
+                        <span class="border border-3 px-2 ms-1 rounded" :class="{ 'd-none': isEditingCrew(member.id) }">{{member.xp}}</span>                      
                         <input v-model.number="member.xp" type="number" class="form-control" :class="{ 'd-none': !isEditingCrew(member.id) }" placeholder="" />                    
                       </div>
                     </div>
@@ -326,6 +312,12 @@
                     <input :disabled="!isEditingCrew(member.id)" v-model="member.leader" class="form-check-input" type="checkbox" value="" id="leader">
                     <label class="form-check-label small" for="leader">
                       Leader
+                    </label>
+                  </div>
+                  <div class="form-check ms-4">
+                    <input :disabled="!isEditingCrew(member.id)" v-model="member.sick_bay" class="form-check-input" type="checkbox" value="" id="sickbay" checked>
+                    <label class="form-check-label small" for="sickbay">
+                      Sick Bay
                     </label>
                   </div>
                   <div class="form-check ms-4">
@@ -448,6 +440,10 @@ export default {
           "xp": 0,
           "kia": false,
           "leader": false,
+          "sick_bay": false,
+          "background": "",
+          "motivation": "",
+          "class": "",
           "crewID": this.crewId
         })
       );     
@@ -526,6 +522,10 @@ export default {
 
   .bg-leader {
     background-color: #f0f0ff;
+  }
+
+  .bg-sick {
+    background-color: #f8ffde;
   }
 
   .form-control {

@@ -143,6 +143,13 @@ export const schema = {
                     "isRequired": false,
                     "attributes": []
                 },
+                "sick_bay": {
+                    "name": "sick_bay",
+                    "isArray": false,
+                    "type": "Boolean",
+                    "isRequired": false,
+                    "attributes": []
+                },
                 "createdAt": {
                     "name": "createdAt",
                     "isArray": false,
@@ -403,5 +410,5 @@ export const schema = {
     },
     "enums": {},
     "nonModels": {},
-    "version": "437d0736cd0a025964fc28b43b8c2989"
+    "version": "b4199005ab9009e4ba5624741abd1dd3"
 };
