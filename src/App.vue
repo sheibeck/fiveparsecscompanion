@@ -36,11 +36,21 @@
         <amplify-sign-out></amplify-sign-out>
       </amplify-authenticator> 
     </div>
+
+    <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 5">
+      <div id="userFeedback" class="toast hide bg-success text-white d-flex" role="alert" aria-live="assertive" aria-atomic="true">        
+        <div class="toast-body" id="feedbackMsg">
+          {{this.$store.state.feedbackMsg}}          
+        </div>
+        <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
-import { onAuthUIStateChange } from '@aws-amplify/ui-components'
+import { onAuthUIStateChange } from '@aws-amplify/ui-components';
+import { Toast } from 'bootstrap';
 
 export default {
   name: 'App',  
@@ -50,6 +60,11 @@ export default {
       this.user = authData;
       this.$store.commit('user', authData);
     })
+  },
+  mounted() {    
+    var feedbackToastEl = document.getElementById('userFeedback');
+    var feedbackToast = new Toast(feedbackToastEl);
+    this.$store.state.feedbackToast = feedbackToast;     
   },
   data() {
     return {

@@ -1,12 +1,10 @@
 <template>
   <div>
     <h1>
-      Crew 
-      <div class="d-print-none">
-        <button type="button" class="btn btn-success btn-sm mx-1" @click="createCrew">New Crew Log <i class="fas fa-plus"></i></button>      
-
+      Crew <button type="button" class="btn btn-success btn-sm mx-1 d-print-none" @click="createCrew">New Crew<i class="fas fa-plus"></i></button>      
+      <div v-if="isDev" class="d-print-none">        
         <button type="button" class="btn btn-secondary btn-sm mx-1" @click="listLocalData">List Local Data <i class="fas fa-trash"></i></button>      
-        <button type="button" class="btn btn-danger btn-sm mx-1" @click="clearLocalData">Clear Local Data <i class="fas fa-trash"></i></button> 
+        <button type="button" class="btn btn-danger btn-sm mx-1" @click="clearLocalData">Clear Local Data <i class="fas fa-trash"></i></button>         
       </div>
     </h1>
     
@@ -58,6 +56,9 @@ export default {
   computed : {
     username : function() {       
       return this.$store.state.user.username;
+    },
+    isDev: function() {
+      return this.$store.state.develop;
     }
   },
   methods: {

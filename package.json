@@ -15,6 +15,7 @@
     "aws-amplify": "^4.0.3",
     "bootstrap": "^5.0.1",
     "core-js": "^3.6.5",
+    "rpg-table-randomizer": "^0.10.0",
     "shortid": "^2.2.16",
     "vue": "^2.6.11",
     "vue-router": "^3.5.1",

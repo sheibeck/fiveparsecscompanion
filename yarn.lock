@@ -8544,6 +8544,11 @@ ripemd160@^2.0.0, ripemd160@^2.0.1:
     hash-base "^3.0.0"
     inherits "^2.0.1"
 
+rpg-table-randomizer@^0.10.0:
+  version "0.10.0"
+  resolved "https://registry.yarnpkg.com/rpg-table-randomizer/-/rpg-table-randomizer-0.10.0.tgz#e487a59c22eb35143cbdf92a79e3f4419e86adf9"
+  integrity sha512-na3QS8tYS8mxSnbTUOJlZehAU20nlEEwP571AaIX+Q7gPQCaeMxqHubPM+lUzIqLi4EB4xopbSr0ZK4cIJzB7g==
+
 run-async@^2.2.0, run-async@^2.4.0:
   version "2.4.1"
   resolved "https://registry.yarnpkg.com/run-async/-/run-async-2.4.1.tgz#8440eccf99ea3e70bd409d49aab88e10c189a455"

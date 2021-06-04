@@ -27,6 +27,9 @@ Vue.use(Vuex)
 const store = new Vuex.Store({
   state: {
     user: null,
+    develop: Vue.config.devtools ?? false,
+    feedbackMsg: "",
+    feedbackToast: null,
   },
   mutations: {
     user (state, user) {      
