@@ -139,8 +139,7 @@
     <div class="row mt-1  d-print-none">
       <div class="col d-flex">
         <button v-if="editing" type="button" class="btn btn-primary btn-sm mx-1" @click="saveCrew()">Save Crew Log <i class="fas fa-save"></i></button>
-        <button v-if="!editing" type="button" class="btn btn-primary btn-sm mx-1" @click="toggleEdit()">Edit Crew Log <i class="fas fa-pencil"></i></button>
-        <button type="button" class="btn btn-secondary btn-sm mx-1"> Print Crew <i class="fas fa-print"></i></button>
+        <button v-if="!editing" type="button" class="btn btn-primary btn-sm mx-1" @click="toggleEdit()">Edit Crew Log <i class="fas fa-pencil"></i></button>        
         <button type="button" class="ms-auto btn btn-danger btn-sm mx-1" @click="removeCrew()">Delete Crew Log <i class="fas fa-trash"></i></button>
       </div>
     </div>
@@ -497,7 +496,7 @@ export default {
       let UPDATED_MEMBER = this.crewMembers.find( m => m.id === id);
             
       await DataStore.save(CrewMember.copyOf(CURRENT_MEMBER, item => {        
-        for (const key of Object.keys(CURRENT_MEMBER)) {
+        for (const key of Object.keys(UPDATED_MEMBER)) {
           try {
             let updatedVal = UPDATED_MEMBER[key];
             //handle weapons
@@ -508,8 +507,7 @@ export default {
           } catch (e) {
             console.error("Error saving crew member", e);
           }
-        }
-        console.log(item);
+        }        
       }));      
       this.toggleCrewEdit(id);
     },   
