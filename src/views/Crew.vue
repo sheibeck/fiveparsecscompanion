@@ -365,14 +365,14 @@ export default {
   }, 
   data() {
     return {
-      crew: null,
-      currentCrew: null,
-      crewMembers: [],
-      currentCrewMembers: [],
+      crew: null,      
+      crewMembers: [],      
       editing: false,
       crewEdit: [],
     }
   },
+  currentCrewMembers: [],
+  currentCrew: null,
   computed : {   
     crewId : function() {       
       return this.$route.params.id;
@@ -400,7 +400,7 @@ export default {
     },
     async fetchCrew() {
       const crew = await DataStore.query(Crew, this.crewId);
-      this.currentCrew = crew;
+      this.$options.currentCrew = crew;
       this.crew = JSON.parse(JSON.stringify(crew));      
 
       this.fetchCrewMembers();
@@ -408,7 +408,7 @@ export default {
 
     async fetchCrewMembers() {
       const crewMembers = await DataStore.query(CrewMember, c => c.crewID("eq", this.crewId));      
-      this.currentCrewMembers = crewMembers;
+      this.$options.currentCrewMembers = crewMembers;
       this.crewMembers = JSON.parse(JSON.stringify(crewMembers));
       //handle weapons
       for(var m = 0; m < this.crewMembers.length; m++) {
@@ -417,18 +417,17 @@ export default {
     },
 
     async saveCrew() {      
-      let UPDATED_CREW = this.crew;      
-      await DataStore.save(Crew.copyOf(this.currentCrew, item => {        
-        for (const key of Object.keys(UPDATED_CREW)) {
+      let UPDATED_CREW = JSON.parse(JSON.stringify(this.crew));
+      await DataStore.save(Crew.copyOf(this.$options.currentCrew, item => {        
+        for (const key of Object.keys(this.$options.currentCrew)) {
           try {           
               item[key] = UPDATED_CREW[key];            
           } catch (e) {
             console.error("Error saving crew member", e);
           }
-        }
-        console.log(item);
+        }        
       }));      
-      this.toggleEdit()
+      this.toggleEdit();
     },   
 
     async addCrewMember() {
@@ -470,11 +469,11 @@ export default {
     },
 
     async saveCrewMember(id) {
-      let CURRENT_MEMBER = this.currentCrewMembers.find( m => m.id === id);
-      let UPDATED_MEMBER = this.crewMembers.find( m => m.id === id);
+      let CURRENT_MEMBER = this.$options.currentCrewMembers.find( m => m.id === id);
+      let UPDATED_MEMBER = JSON.parse(JSON.stringify(this.crewMembers.find( m => m.id === id)));
             
       await DataStore.save(CrewMember.copyOf(CURRENT_MEMBER, item => {        
-        for (const key of Object.keys(UPDATED_MEMBER)) {
+        for (const key of Object.keys(CURRENT_MEMBER)) {
           try {
             let updatedVal = UPDATED_MEMBER[key];
             //handle weapons
@@ -494,15 +493,15 @@ export default {
     async removeCrewMember(id) {
       if (!confirm("Are you sure you want to delete this crew member?")) return;
 
-      const modelToDelete = this.currentCrewMembers.find( m => m.id === id);
+      const modelToDelete = this.$options.currentCrewMembers.find( m => m.id === id);
       DataStore.delete(modelToDelete);
-      this.fetchCrew();      
+      this.fetchCrewMembers();      
     },
 
     async removeCrew() {
       if (!confirm("Are you sure you want to delete the entire crew?")) return;
 
-      await DataStore.delete(this.currentCrew);
+      await DataStore.delete(this.$options.currentCrew);
       this.$router.push('/');
     }    
   }
