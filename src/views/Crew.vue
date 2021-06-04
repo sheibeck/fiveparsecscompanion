@@ -163,7 +163,10 @@
                       <div class="form-text">Name</div>
                       <span :class="{ 'd-none': isEditingCrew(member.id) }">: {{member.name}}</span>
                     </div>
-                    <input v-model="member.name" type="text" class="form-control" :class="{ 'd-none': !isEditingCrew(member.id) }" placeholder="Name" />                    
+                    <div :class="{ 'd-none': !isEditingCrew(member.id) }" class="d-flex">
+                      <input v-model="member.name" type="text" class="form-control" placeholder="Name" />
+                      <i class="fas fa-redo-alt pe-auto" @click="member.name = rollOnTable('name')"></i>
+                    </div>
                   </div>
                   <div class="w-100 ms-md-1">
                     <div class="d-flex">
@@ -201,10 +204,10 @@
                     <div class="">
                       <div class="d-flex">
                         <div class="form-text">Class</div>
-                         <span :class="{ 'd-none': isEditingCrew(member.id) }">: {{member.clas}}</span>
+                         <span :class="{ 'd-none': isEditingCrew(member.id) }">: {{member.class}}</span>
                       </div>                     
                     </div>
-                    <input v-model="member.clas" type="text" class="form-control" :class="{ 'd-none': !isEditingCrew(member.id) }" placeholder="Class" />                            
+                    <input v-model="member.class" type="text" class="form-control" :class="{ 'd-none': !isEditingCrew(member.id) }" placeholder="Class" />                            
                   </div>
                 </div>
 
@@ -377,9 +380,7 @@ export default {
       editing: false,
       crewEdit: [],
     }
-  },
-  currentCrewMembers: [],
-  currentCrew: null,
+  },  
   tables: new FPFHTables(),
   computed : {   
     crewId : function() {       
@@ -407,13 +408,16 @@ export default {
       return this.crewEdit.includes(crewId);
     },
     rollOnTable: function(table) {
-      this.$store.state.feedbackMsg = `Rolled on table ${table}`;
-      this.$store.state.feedbackToast.show();
-      return this.$options.tables.Roll(table);
+      if (table != "name") {
+        this.$store.state.feedbackMsg = `Rolled on table ${table}`;
+        this.$store.state.feedbackToast.show();
+        return this.$options.tables.Roll(table);
+      } else {
+        return this.$options.tables.RandomName(table);
+      }
     },    
     async fetchCrew() {
-      const crew = await DataStore.query(Crew, this.crewId);
-      this.$options.currentCrew = crew;
+      const crew = await DataStore.query(Crew, this.crewId);      
       this.crew = JSON.parse(JSON.stringify(crew));      
 
       this.fetchCrewMembers();      
@@ -421,7 +425,6 @@ export default {
 
     async fetchCrewMembers() {
       const crewMembers = await DataStore.query(CrewMember, c => c.crewID("eq", this.crewId));      
-      this.$options.currentCrewMembers = crewMembers;
       this.crewMembers = JSON.parse(JSON.stringify(crewMembers));
       //handle weapons
       for(var m = 0; m < this.crewMembers.length; m++) {
@@ -431,8 +434,9 @@ export default {
 
     async saveCrew() {      
       let UPDATED_CREW = this.crew;
-      await DataStore.save(Crew.copyOf(this.$options.currentCrew, item => {        
-        for (const key of Object.keys(this.$options.currentCrew)) {
+      const CURRENT_CREW = await DataStore.query(Crew, this.crewId);
+      await DataStore.save(Crew.copyOf(CURRENT_CREW, item => {        
+        for (const key of Object.keys(CURRENT_CREW)) {
           try {           
               item[key] = UPDATED_CREW[key];            
           } catch (e) {
@@ -444,12 +448,13 @@ export default {
     },   
 
     async addCrewMember() {
+      const name = this.$options.tables.RandomName("name");
       const species = this.$options.tables.Roll("crewtype");
       
       await DataStore.save(
           new CrewMember({
           "user": this.username,
-          "name": "New Member",
+          "name": name,
           "species": species,
           "reactions": 0,
           "speed": 0,
@@ -488,7 +493,7 @@ export default {
     },
 
     async saveCrewMember(id) {
-      let CURRENT_MEMBER = this.$options.currentCrewMembers.find( m => m.id === id);
+      let CURRENT_MEMBER = await DataStore.query(CrewMember, id);
       let UPDATED_MEMBER = this.crewMembers.find( m => m.id === id);
             
       await DataStore.save(CrewMember.copyOf(CURRENT_MEMBER, item => {        
@@ -512,7 +517,7 @@ export default {
     async removeCrewMember(id) {
       if (!confirm("Are you sure you want to delete this crew member?")) return;
 
-      const modelToDelete = this.$options.currentCrewMembers.find( m => m.id === id);
+      const modelToDelete = await DataStore.query(CrewMember, id);
       DataStore.delete(modelToDelete);
       this.fetchCrewMembers();      
     },
@@ -520,7 +525,8 @@ export default {
     async removeCrew() {
       if (!confirm("Are you sure you want to delete the entire crew?")) return;
 
-      await DataStore.delete(this.$options.currentCrew);
+      const modelToDelete = await DataStore.query(Crew, this.crewId)
+      await DataStore.delete(modelToDelete);
       this.$router.push('/');
     }    
   }

@@ -1,5 +1,7 @@
 import Randomizer from 'rpg-table-randomizer/src/randomizer.js';
 import RandomTable from 'rpg-table-randomizer/src/random_table.js';
+import random_name from 'rpg-table-randomizer/src/random_name.js';
+import names from 'rpg-table-randomizer/sample/names.js';
 
 export class FPFHTables {
     constructor() {
@@ -13,6 +15,9 @@ export class FPFHTables {
         this.randomizer.setTableKeyLookup(function(key) {
             return this.tables[key] || null;
         });
+
+        random_name.setNameData(names);
+        random_name.setRandomizer(this.randomizer);
 
         const crewTypeTable = {
             key: 'crewtype',
@@ -95,6 +100,10 @@ export class FPFHTables {
     Roll(key) {        
         const table = new RandomTable(this.tables[key]);
         const result = this.randomizer.getTableResult(table);        
-        return result[result.length-1].result;        
+        return result[result.length-1].result;
+    }
+
+    RandomName() {
+        return random_name.selectName();
     }
 }

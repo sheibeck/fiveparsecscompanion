@@ -15,7 +15,7 @@
             <h5 class="card-title">{{crew.name}}</h5>
             <ul v-for="member in crewMembers.filter(m => m.crewID === crew.id)" :key="member.id" class="list-group">
               <li class="list-group-item">
-                {{member.name}} 
+                {{member.name}} ({{member.species}}<span v-if="member.leader"> &mdash; Leader</span>, {{member.xp}}XP)
               </li>
             </ul>
             <div class="card-footer d-flex justify-content-center">
