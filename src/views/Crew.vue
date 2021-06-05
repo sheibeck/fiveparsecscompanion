@@ -88,8 +88,8 @@
             </div> 
             <div class="col">
               <label for="shipHull" class="form-label small">Hull</label>
-              <input v-model.number="crew.ship_hull" type="number" class="form-control" :class="{ 'd-none': !editing }" id="shipHull" placeholder="0" />
-              <span :class="{ 'd-none': editing }">: {{crew.ship_hull}}</span>
+              <input v-model.number="crew.ship_hull_points" type="number" class="form-control" :class="{ 'd-none': !editing }" id="shipHull" placeholder="0" />
+              <span :class="{ 'd-none': editing }">: {{crew.ship_hull_points}}</span>
             </div>
             <div class="col">
               <label for="shipDebt" class="form-label small">Debt</label>
