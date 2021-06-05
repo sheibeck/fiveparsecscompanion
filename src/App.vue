@@ -1,15 +1,28 @@
 <template>
   <div id="app" class="d-flex flex-column h-100">        
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark d-print-none">
       <div class="container-fluid">
-        <a href="/" class="d-flex align-items-center mb-2 mb-lg-0 text-white text-decoration-none">
-          <img src="./assets/logo.png" alt="5 Parsecs Companion" class="rounded-circle" /> <h4 class="text-secondary mx-2 mt-2">Parsecs Companion</h4>
+        <a href="/" class="navbar-brand d-flex">
+          <img src="./assets/logo.png" alt="5 Parsecs Companion" class="d-inline-block align-text-top rounded-circle" />
+          <div class="ms-2 mt-2">Parsecs Companion</div>
         </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
-          <ul class="navbar-nav me-auto mb-2 mb-lg-0">           
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <a class="nav-link" :class="{ 'active': $route.name === 'Home' }" aria-current="page" href="/">Crew List</a>
+            <li class="nav-item dropdown">              
+              <a class="nav-link dropdown-toggle" :class="{ 'active': $route.name !== 'Home' }" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Campaign Turn
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">                
+                <li><a class="dropdown-item" href="/campaign-turn/travel">1. Travel</a></li>
+                <li><a class="dropdown-item" href="/campaign-turn/world">2. World</a></li>
+                <!--<li><a class="dropdown-item" href="#">3. Battle</a></li>-->
+                <!--<li><a class="dropdown-item" href="#">4. Post-Battle</a></li>-->
+              </ul>
+            </li>          
           </ul>
           <div class="text-end">
             <div v-if="authState !== 'signedin'">You are signed out.</div>
@@ -42,7 +55,7 @@
       </div>
     </main>
 
-    <footer class="footer mt-auto py-3 bg-light">
+    <footer class="footer mt-auto py-3 bg-light d-print-none">
       <div class="container">
         <span class="text-muted">This is not an official 5PFH app.</span>
         <div class="position-fixed bottom-0 end-0 p-2" style="z-index: 5">
@@ -125,4 +138,7 @@ footer {
   text-align: center;  
 }
 
+i {
+  cursor: pointer;
+}
 </style>

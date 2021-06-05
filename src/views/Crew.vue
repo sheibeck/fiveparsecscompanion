@@ -409,7 +409,7 @@ export default {
     rollOnTable: function(table) {
       if (table != "name") {
         this.$root.showUserMsg(`Rolled on table ${table}`);
-        return this.$options.tables.Roll(table);
+        return this.$options.tables.GetTableResult(table);
       } else {
         return this.$options.tables.RandomName(table);
       }
@@ -448,7 +448,7 @@ export default {
 
     async addCrewMember() {
       const name = this.$options.tables.RandomName("name");
-      const species = this.$options.tables.Roll("crewtype");
+      const species = this.$options.tables.GetTableResult("crewtype");
       
       await DataStore.save(
           new CrewMember({

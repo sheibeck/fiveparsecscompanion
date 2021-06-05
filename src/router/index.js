@@ -2,6 +2,8 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
 import Crew from '../views/Crew.vue'
+import Travel from '../views/Travel.vue'
+import World from '../views/World.vue'
 
 Vue.use(VueRouter)
 
@@ -11,7 +13,9 @@ const routes = [
     name: 'Home',
     component: Home
   },
-  { path: '/crew/:id', component: Crew }
+  { path: '/crew/:id', name: 'Crew', component: Crew },
+  { path: '/campaign-turn/travel', name: 'Travel', component: Travel },
+  { path: '/campaign-turn/world', name: 'World', component: World }
  // {
  //   path: '/about',
  //   name: 'About',
