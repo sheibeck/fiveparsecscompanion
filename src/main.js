@@ -35,11 +35,17 @@ const store = new Vuex.Store({
     user (state, user) {      
       state.user = user;
     }
-  }
+  }  
 })
 
 new Vue({
   router,
   store,
+  methods : {
+    showUserMsg: function(msg) {
+      this.$store.state.feedbackMsg = msg;
+      this.$store.state.feedbackToast.show();
+    }
+  },
   render: (h) => h(App)
 }).$mount("#app");

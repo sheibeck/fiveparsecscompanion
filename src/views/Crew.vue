@@ -403,13 +403,12 @@ export default {
         this.crewEdit.push(crewId);
       }
     },
-    isEditingCrew: function(crewId) {      
+    isEditingCrew: function(crewId) {
       return this.crewEdit.includes(crewId);
     },
     rollOnTable: function(table) {
       if (table != "name") {
-        this.$store.state.feedbackMsg = `Rolled on table ${table}`;
-        this.$store.state.feedbackToast.show();
+        this.$root.showUserMsg(`Rolled on table ${table}`);
         return this.$options.tables.Roll(table);
       } else {
         return this.$options.tables.RandomName(table);
@@ -442,7 +441,8 @@ export default {
             console.error("Error saving crew", e);
           }
         }        
-      }));      
+      }));
+      this.$root.showUserMsg(`Crew log saved`);
       this.toggleEdit();
     },   
 
@@ -473,7 +473,8 @@ export default {
           "class": "",
           "crewID": this.crewId
         })
-      );     
+      );
+      this.$root.showUserMsg(`Added ${name} to crew`);
       this.fetchCrewMembers();  
     },
 
@@ -489,6 +490,8 @@ export default {
       if (!confirm("Are you sure you want to delete this weapon?")) return;
       let crewMember = this.crewMembers.find(m => m.id === crewId);
       crewMember.weapons.weapons = crewMember.weapons.weapons.filter( w => w.id !== id);
+
+      this.$root.showUserMsg(`Removed weapon`);
     },
 
     async saveCrewMember(id) {
@@ -509,6 +512,8 @@ export default {
           }
         }        
       }));      
+
+      this.$root.showUserMsg(`Crew member ${UPDATED_MEMBER.name} saved`);
       this.toggleCrewEdit(id);
     },   
 
@@ -517,7 +522,9 @@ export default {
 
       const modelToDelete = await DataStore.query(CrewMember, id);
       DataStore.delete(modelToDelete);
-      this.fetchCrewMembers();      
+      this.fetchCrewMembers();
+      
+      this.$root.showUserMsg(`Removed crew member`);
     },
 
     async removeCrew() {
@@ -525,6 +532,9 @@ export default {
 
       const modelToDelete = await DataStore.query(Crew, this.crewId)
       await DataStore.delete(modelToDelete);
+      
+      this.$root.showUserMsg(`Removed crew`);
+
       this.$router.push('/');
     }    
   }

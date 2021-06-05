@@ -66,6 +66,7 @@ export default {
       this.crews = await DataStore.query(Crew, c => c.user("eq", this.username));
       this.crewMembers = await DataStore.query(CrewMember, c => c.user("eq", this.username));
     },
+
     async createCrew() {
       await DataStore.save(
         new Crew({
@@ -92,15 +93,10 @@ export default {
           "CrewMembers": []
         })
       );          
-            
+      this.$root.showUserMsg(`Added new crew`);
       this.fetchCrew();
     },    
-    async deleteCrew(id) {
-      const modelToDelete = await DataStore.query(Crew, id);
-      DataStore.delete(modelToDelete);
-      this.fetchCrew();
-    },  
-
+    
     async clearLocalData() {      
       await DataStore.stop();
       await DataStore.clear();
