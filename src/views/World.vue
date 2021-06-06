@@ -39,14 +39,14 @@
           <div class="card-header bg-light border-success">
             <h5>2. Assign Crew Tasks</h5>
           </div>
-          <div class="accordion" id="accordionExample">
+          <div class="accordion" id="accordianTasks">
             <div class="accordion-item">
-              <h2 class="accordion-header" id="headingOne">
+              <h2 class="accordion-header" id="headingPatron">
                 <button class="accordion-button collapsed" type="headingPatron" data-bs-toggle="collapse" data-bs-target="#collapsePatron" aria-expanded="false" aria-controls="collapsePatron">                  
                   Find Patron (Pg.77)
                 </button>
               </h2>
-              <div id="collapsePatron" class="accordion-collapse collapse" aria-labelledby="headingPatron" data-bs-parent="#accordionExample">
+              <div id="collapsePatron" class="accordion-collapse collapse" aria-labelledby="headingPatron" data-bs-parent="#accordianTasks">
                 <div class="accordion-body">
                   <div class="col d-flex flex-column">
                     <div class="mb-3 text-center">
@@ -94,7 +94,7 @@
                   Trade (Pg.78, 79)
                 </button>
               </h2>
-              <div id="collapseTrade" class="accordion-collapse collapse" aria-labelledby="headingTrade" data-bs-parent="#accordionExample">
+              <div id="collapseTrade" class="accordion-collapse collapse" aria-labelledby="headingTrade" data-bs-parent="#accordianTasks">
                 <div class="accordion-body">
                    <div class="mb-3 text-center">
                       <i class="fas fa-dice me-1 mt-1 d-print-none fa-2x" @click="findTrade()"></i>
@@ -122,7 +122,7 @@
                   Recruit (Pg.78)
                 </button>
               </h2>
-              <div id="collapseRecruit" class="accordion-collapse collapse" aria-labelledby="headingRecruit" data-bs-parent="#accordionExample">
+              <div id="collapseRecruit" class="accordion-collapse collapse" aria-labelledby="headingRecruit" data-bs-parent="#accordianTasks">
                 <div class="accordion-body">
                   <div class="mb-3 text-center">
                     <i class="fas fa-dice me-1 mt-1 d-print-none fa-2x" @click="findRecruit()"></i>
@@ -145,7 +145,7 @@
                   Explore (Pg.78, 80)
                 </button>
               </h2>
-              <div id="collapseExplore" class="accordion-collapse collapse" aria-labelledby="headingExplore" data-bs-parent="#accordionExample">
+              <div id="collapseExplore" class="accordion-collapse collapse" aria-labelledby="headingExplore" data-bs-parent="#accordianTasks">
                 <div class="accordion-body">
                   <div class="mb-3 text-center">
                     <i class="fas fa-dice me-1 mt-1 d-print-none fa-2x" @click="findExploration()"></i>
@@ -173,7 +173,7 @@
                   Track (Pg.78, 80)
                 </button>
               </h2>
-              <div id="collapseTrack" class="accordion-collapse collapse" aria-labelledby="headingTrack" data-bs-parent="#accordionExample">
+              <div id="collapseTrack" class="accordion-collapse collapse" aria-labelledby="headingTrack" data-bs-parent="#accordianTasks">
                 <div class="accordion-body">
                   <div class="mb-3 text-center">
                     <i class="fas fa-dice me-1 mt-1 d-print-none fa-2x" @click="trackRival()"></i>
@@ -201,7 +201,7 @@
                   Repair (Pg.78)
                 </button>
               </h2>
-              <div id="collapseRepair" class="accordion-collapse collapse" aria-labelledby="headingRepair" data-bs-parent="#accordionExample">
+              <div id="collapseRepair" class="accordion-collapse collapse" aria-labelledby="headingRepair" data-bs-parent="#accordianTasks">
                 <div class="accordion-body">
                   <div class="mb-3 text-center">
                     <i class="fas fa-dice me-1 mt-1 d-print-none fa-2x" @click="repairItem()"></i>
@@ -236,13 +236,11 @@
                   Decoy (Pg.78)
                 </button>
               </h2>
-              <div id="collapseDecoy" class="accordion-collapse collapse" aria-labelledby="headingDecoy" data-bs-parent="#accordionExample">
+              <div id="collapseDecoy" class="accordion-collapse collapse" aria-labelledby="headingDecoy" data-bs-parent="#accordianTasks">
                 <div class="accordion-body">                  
-                  <div class="col d-flex flex-column">
-                   <div class="input-group mb-3 input-group-sm">
-                      <span class="input-group-text" id="decoy-addon">Total decoys</span>
-                      <input type="number" class="form-control" placeholder="0" aria-label="Decoys" aria-describedby="decoy-addon" 
-                        min="0" v-model.number="crewTasks.find(t => t.task === 'decoy').number" />
+                  <div class="col d-flex flex-column">                   
+                    <div class="">
+                      See <strong>Choose Battle</strong> step
                     </div>
                   </div>
                 </div>
@@ -250,7 +248,7 @@
             </div>
 
           </div>
-                 
+
         </div>
       </div>
 
@@ -293,9 +291,20 @@
       <div class="col">
         <div class="card">
           <div class="card-header bg-light border-success">
-            <h5>5. Resolve Rumors</h5>
+            <h5>
+              5. Resolve Rumors
+              <i class="fas fa-dice pe-auto d-print-none" @click="resolveAnyRumors()"></i>
+            </h5>
           </div>
-          <div class="card-body">            
+          <div class="card-body">
+
+            <div class="input-group mb-3 input-group-sm">
+              <span class="input-group-text" id="savvy-addon">Total Rumors (Pg.85)</span>
+              <input type="number" class="form-control" placeholder="0" aria-label="savvy" aria-describedby="savvy-addon" 
+                min="0" v-model.number="resolveRumors.totalRumors" />
+            </div>           
+            <label>{{getResolveRumorsResults}}</label>
+
           </div>
         </div>
       </div>
@@ -305,8 +314,39 @@
           <div class="card-header bg-light border-success">
             <h5>6. Choose Battle</h5>
           </div>
-          <div class="card-body">            
+         
+          <div class="accordion" id="accordianBattle">
+            <div class="accordion-item">
+              <h2 class="accordion-header" id="headingCheckRivals">
+                <button class="accordion-button collapsed" type="headingRivals" data-bs-toggle="collapse" data-bs-target="#collapseRivals" aria-expanded="false" aria-controls="collapseRivals">                  
+                  Check for Rivals (Pg.85)
+                </button>
+              </h2>
+              <div id="collapseRivals" class="accordion-collapse collapse" aria-labelledby="headingRivals" data-bs-parent="#accordianBattle">
+                <div class="accordion-body">
+                  <div class="col d-flex flex-column">
+                    <div class="mb-3 text-center">
+                      <i class="fas fa-dice me-1 mt-1 d-print-none fa-2x" @click="checkForRivals()"></i>
+                    </div>
+                    <div class="input-group mb-3 input-group-sm">
+                      <span class="input-group-text" id="decoy-addon">Total decoys</span>
+                      <input type="number" class="form-control" placeholder="0" aria-label="Decoys" aria-describedby="decoy-addon" 
+                        min="0" v-model.number="checkRivals.totalDecoys" />                      
+                    </div>
+
+                    <div class="input-group mb-3 input-group-sm">
+                      <span class="input-group-text" id="totalrivals-addon">Total rivals</span>
+                      <input type="number" class="form-control" placeholder="0" aria-label="Total Rivals" aria-describedby="totalrivals-addon" 
+                        min="0" v-model.number="checkRivals.totalRivals" />                      
+                    </div>
+
+                    <label>{{getCheckForRivalsResults}}</label>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
+      
         </div>
       </div>
 
@@ -337,7 +377,18 @@ export default {
         {label: "Track", task: "track", roll: 0, numCrew: 0, credits: 0, hasRolled: false },
         {label: "Repair", task: "repair", roll: 0, savvy: 0, isEngineer: false, credits: 0, hasRolled: false },
         {label: "Decoy", task: "decoy", number: 0 },
-      ]
+      ],
+      resolveRumors : {
+        totalRumors: 0,
+        roll: 0,
+        hasRolled: false,
+      },
+      checkRivals : {
+        totalRivals: 0,
+        totalDecoys: 0,
+        roll: 0,
+        hasRolled: false,
+      }
     }
   },  
   tables: new FPFHTables(),
@@ -430,9 +481,41 @@ export default {
       }
       return result;
     },
+    getResolveRumorsResults() {     
+      if (!this.resolveRumors.hasRolled) {
+        return "Waiting on roll..."
+      }
+      const roll = this.resolveRumors.roll;     
+      
+      let result = `Rolled ${roll}: `;
+      if (roll <= this.resolveRumors.totalRumors) {
+        result += "Quest Found!"; 
+      }
+      else {       
+       result += "No quest found.";
+      }       
+      return result;
+    },
+    getCheckForRivalsResults() {     
+      if (!this.checkRivals.hasRolled) {
+        return "Waiting on roll..."
+      }
+      const roll = this.checkRivals.roll;
+      const decoys = this.checkRivals.totalDecoys;
+      const finalResult = roll + decoys;
+      
+      let result = `Rolled ${roll} (+ ${decoys} decoys): `;
+      if (finalResult <= this.checkRivals.totalRivals) {
+        result += "A rival has tracked you down!"; 
+      }
+      else {       
+       result += "No rivals have found you.";
+      }       
+      return result;
+    },
   },
-  methods: {            
-    rerollTableTable(table) {
+  methods: {
+    rerollTable(table) {
       const roll = this.$options.tables.GetFullTableResult(table);
       let jobLine = this.jobOffer.find( o => o.id === table);     
       jobLine.result = roll[0];
@@ -538,6 +621,20 @@ export default {
       const roll = this.rollDice(dice);
       repair.roll = roll;
       repair.hasRolled = true;
+    },
+    resolveAnyRumors() {      
+      const dice = `1d6`;
+
+      const roll = this.rollDice(dice);
+      this.resolveRumors.roll = roll;
+      this.resolveRumors.hasRolled = true;
+    },
+    checkForRivals() {
+      const dice = `1d6`;
+
+      const roll = this.rollDice(dice);
+      this.checkRivals.roll = roll;
+      this.checkRivals.hasRolled = true;
     },
   }
 }
