@@ -39,18 +39,19 @@
           <div class="card-header bg-light border-success">
             <h5>2. Assign Crew Tasks</h5>
           </div>
-          <div class="card-body">   
-            <p class="card-text">
-              <ul class="list-group">
-                <li class="d-flex list-group-item bg-light">
-                  <div class="col-5 d-flex flex-column">
-                    <div>
-                      <i class="fas fa-dice me-1 mt-1 d-print-none" @click="findPatron()"></i>
-                      <label class="">Find Patron:</label>
-                    </div>
-                    <small>(Pg.77)</small>
-                  </div>
+          <div class="accordion" id="accordionExample">
+            <div class="accordion-item">
+              <h2 class="accordion-header" id="headingOne">
+                <button class="accordion-button collapsed" type="headingPatron" data-bs-toggle="collapse" data-bs-target="#collapsePatron" aria-expanded="false" aria-controls="collapsePatron">                  
+                  Find Patron (Pg.77)
+                </button>
+              </h2>
+              <div id="collapsePatron" class="accordion-collapse collapse" aria-labelledby="headingPatron" data-bs-parent="#accordionExample">
+                <div class="accordion-body">
                   <div class="col d-flex flex-column">
+                    <div class="mb-3 text-center">
+                      <i class="fas fa-dice me-1 mt-1 d-print-none fa-2x" @click="findPatron()"></i>
+                    </div>
                     <div class="input-group mb-3 input-group-sm">
                       <span class="input-group-text" id="crew-addon">Crew looking</span>
                       <input type="number" class="form-control" placeholder="0" aria-label="Crew looking" aria-describedby="crew-addon" 
@@ -68,26 +69,36 @@
                     </div>
                     <label>{{getFindPatronResult}}</label>
                   </div>
-                </li>
-                <li class="d-flex list-group-item bg-light">
-                  <div class="col-5 d-flex flex-column">
-                    <div>                     
-                      <label class="">Train</label>                      
+                </div>
+              </div>
+            </div>
+
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="headingTrain">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTrain" aria-expanded="false" aria-controls="collapseTrain">                  
+                  Train (Pg.77)
+                </button>
+              </h2>
+              <div id="collapseTrain" class="accordion-collapse collapse" aria-labelledby="headingTrain" data-bs-parent="#accordionExample">
+                <div class="accordion-body">
+                  <div class="col d-flex flex-column">
+                    Earn 1 XP
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="headingTrade">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTrade" aria-expanded="false" aria-controls="collapseTrade">                  
+                  Trade (Pg.78, 79)
+                </button>
+              </h2>
+              <div id="collapseTrade" class="accordion-collapse collapse" aria-labelledby="headingTrade" data-bs-parent="#accordionExample">
+                <div class="accordion-body">
+                   <div class="mb-3 text-center">
+                      <i class="fas fa-dice me-1 mt-1 d-print-none fa-2x" @click="findTrade()"></i>
                     </div>
-                    <small>(Pg.77)</small>
-                  </div>
-                  <div class="col d-flex flex-column"> 
-                    Earn 1 XP 
-                  </div>
-                </li>
-                <li class="d-flex list-group-item bg-light">
-                  <div class="col-5 d-flex flex-column">
-                    <div>
-                      <i class="fas fa-dice me-1 mt-1 d-print-none" @click="findTrade()"></i>
-                      <label class="">Trade</label>
-                    </div>
-                    <small>(Pg.78, 79)</small>
-                  </div>
                   <div class="col d-flex flex-column">
                     <div class="input-group mb-3 input-group-sm">
                       <span class="input-group-text" id="trade-addon">Total rolls</span>
@@ -101,31 +112,43 @@
                       </li>
                     </ul>
                   </div>
-                </li>
-                <li class="d-flex list-group-item bg-light">
-                  <div class="col-5 d-flex flex-column">
-                    <div>
-                      <i class="fas fa-dice me-1 mt-1 d-print-none" @click="findRecruit()"></i>
-                      <label class="">Recruit</label>
-                    </div>
-                    <small>(Pg.78)</small>
+                </div>
+              </div>
+            </div>
+
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="headingRecruit">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseRecruit" aria-expanded="false" aria-controls="collapseRecruit">                  
+                  Recruit (Pg.78)
+                </button>
+              </h2>
+              <div id="collapseRecruit" class="accordion-collapse collapse" aria-labelledby="headingRecruit" data-bs-parent="#accordionExample">
+                <div class="accordion-body">
+                  <div class="mb-3 text-center">
+                    <i class="fas fa-dice me-1 mt-1 d-print-none fa-2x" @click="findRecruit()"></i>
                   </div>
                   <div class="col d-flex flex-column">
-                     <div class="input-group mb-3 input-group-sm">
+                    <div class="input-group mb-3 input-group-sm">
                       <span class="input-group-text" id="crew-addon">Crew looking</span>
                       <input type="number" class="form-control" placeholder="0" aria-label="Crew looking" aria-describedby="crew-addon" 
                         min="0" v-model.number="crewTasks.find(t => t.task === 'recruit').numCrew" />
                     </div>
                     <label>{{getRecruitResult}}</label>
                   </div>
-                </li>
-                <li class="d-flex list-group-item bg-light">
-                 <div class="col-5 d-flex flex-column">
-                    <div>
-                      <i class="fas fa-dice me-1 mt-1 d-print-none" @click="findExploration()"></i>
-                      <label class="">Explore</label>
-                    </div>
-                    <small>(Pg.78, 80)</small>
+                </div>
+              </div>
+            </div>
+
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="headingExplore">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExplore" aria-expanded="false" aria-controls="collapseExplore">                  
+                  Explore (Pg.78, 80)
+                </button>
+              </h2>
+              <div id="collapseExplore" class="accordion-collapse collapse" aria-labelledby="headingExplore" data-bs-parent="#accordionExample">
+                <div class="accordion-body">
+                  <div class="mb-3 text-center">
+                    <i class="fas fa-dice me-1 mt-1 d-print-none fa-2x" @click="findExploration()"></i>
                   </div>
                   <div class="col d-flex flex-column">
                     <div class="input-group mb-3 input-group-sm">
@@ -140,16 +163,22 @@
                       </li>
                     </ul>
                   </div>
-                </li>
-                <li class="d-flex list-group-item bg-light">
-                  <div class="col-5 d-flex flex-column">
-                    <div>
-                      <i class="fas fa-dice me-1 mt-1 d-print-none" @click="trackRival()"></i>
-                      <label class="">Track</label>
-                    </div>
-                    <small>(Pg.78)</small>                 
+                </div>
+              </div>
+            </div>
+
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="headingTrack">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTrack" aria-expanded="false" aria-controls="collapseTrack">                  
+                  Track (Pg.78, 80)
+                </button>
+              </h2>
+              <div id="collapseTrack" class="accordion-collapse collapse" aria-labelledby="headingTrack" data-bs-parent="#accordionExample">
+                <div class="accordion-body">
+                  <div class="mb-3 text-center">
+                    <i class="fas fa-dice me-1 mt-1 d-print-none fa-2x" @click="trackRival()"></i>
                   </div>
-                  <div class="col d-flex flex-column">                                
+                  <div class="col d-flex flex-column">
                     <div class="input-group mb-3 input-group-sm">
                       <span class="input-group-text" id="crew-addon">Crew looking</span>
                       <input type="number" class="form-control" placeholder="0" aria-label="Crew looking" aria-describedby="crew-addon" 
@@ -161,38 +190,67 @@
                         min="0" v-model.number="crewTasks.find(t => t.task === 'track').credits" />
                     </div>
                     <label>{{getTrackResults}}</label>
-                  </div>                 
-                </li>
-                <li class="d-flex list-group-item bg-light">
-                  <div class="col-5 d-flex flex-column">
-                    <div>
-                      <i class="fas fa-dice me-1 mt-1 d-print-none"></i>
-                      <label class="">Repair</label>
-                    </div>
-                    <small>(Pg.78)</small>                  
                   </div>
-                  <div class="col d-flex flex-column">
-                    TBD
-                  </div>
-                </li>
-                <li class="d-flex list-group-item bg-light">
-                  <div class="col-5 d-flex flex-column">
-                    <div>                      
-                      <label class="">Decoy</label>
-                    </div>
-                    <small>(Pg.78)</small>                    
+                </div>
+              </div>
+            </div>
+
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="headingRepair">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseRepair" aria-expanded="false" aria-controls="collapseRepair">                  
+                  Repair (Pg.78)
+                </button>
+              </h2>
+              <div id="collapseRepair" class="accordion-collapse collapse" aria-labelledby="headingRepair" data-bs-parent="#accordionExample">
+                <div class="accordion-body">
+                  <div class="mb-3 text-center">
+                    <i class="fas fa-dice me-1 mt-1 d-print-none fa-2x" @click="repairItem()"></i>
                   </div>
                   <div class="col d-flex flex-column">
                     <div class="input-group mb-3 input-group-sm">
+                      <span class="input-group-text" id="savvy-addon">Savvy</span>
+                      <input type="number" class="form-control" placeholder="0" aria-label="savvy" aria-describedby="savvy-addon" 
+                        min="0" v-model.number="crewTasks.find(t => t.task === 'repair').savvy" />
+                    </div>
+                    <div class="input-group mb-3">
+                      <div class="input-group-text">
+                        <input class="form-check-input mt-0" type="checkbox" value="" aria-label="Checkbox for following text input" 
+                          v-model="crewTasks.find(t => t.task === 'repair').isEngineer" />
+                      </div>
+                      <span class="input-group-text" id="savvy-addon">Is Engineer?</span>
+                    </div>
+                    <div class="input-group mb-3 input-group-sm">
+                      <span class="input-group-text" id="credits-addon">Spend Credits</span>
+                      <input type="number" class="form-control" placeholder="0" aria-label="Credits" aria-describedby="credits-addon" 
+                        min="0" v-model.number="crewTasks.find(t => t.task === 'repair').credits" />
+                    </div>
+                    <label>{{getRepairResults}}</label>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="headingDecoy">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseDecoy" aria-expanded="false" aria-controls="collapseDecoy">                  
+                  Decoy (Pg.78)
+                </button>
+              </h2>
+              <div id="collapseDecoy" class="accordion-collapse collapse" aria-labelledby="headingDecoy" data-bs-parent="#accordionExample">
+                <div class="accordion-body">                  
+                  <div class="col d-flex flex-column">
+                   <div class="input-group mb-3 input-group-sm">
                       <span class="input-group-text" id="decoy-addon">Total decoys</span>
                       <input type="number" class="form-control" placeholder="0" aria-label="Decoys" aria-describedby="decoy-addon" 
                         min="0" v-model.number="crewTasks.find(t => t.task === 'decoy').number" />
                     </div>
                   </div>
-                </li>
-              </ul>
-            </p>         
+                </div>
+              </div>
+            </div>
+
           </div>
+                 
         </div>
       </div>
 
@@ -277,7 +335,7 @@ export default {
         {label: "Recruit", task: "recruit", roll: 0, numCrew: 0, hasRolled: false },
         {label: "Explore", task: "explore", items: [], rolls: 0, hasRolled: false },
         {label: "Track", task: "track", roll: 0, numCrew: 0, credits: 0, hasRolled: false },
-        {label: "Repair", task: "repair" },
+        {label: "Repair", task: "repair", roll: 0, savvy: 0, isEngineer: false, credits: 0, hasRolled: false },
         {label: "Decoy", task: "decoy", number: 0 },
       ]
     }
@@ -345,6 +403,31 @@ export default {
       else {
         result += "Failed!";
       } 
+      return result;
+    },
+    getRepairResults() {
+      const repair = this.crewTasks.find(t => t.task === 'repair');
+      if (!repair.hasRolled) {
+        return "Waiting on roll..."
+      }
+      const roll = repair.roll;
+      const credits = repair.credits;
+      const isEngineer = repair.isEngineer ? 1 : 0;      
+      const savvy = repair.savvy;
+      const finalResult = roll + savvy + isEngineer + credits;
+
+      let result = `Rolled ${roll} (+ ${savvy} savvy + ${isEngineer} engineer + ${credits} credits): `;
+      if (roll == 1) {
+        result = "Rolled natural 1. Item destroyed!"; 
+      }
+      else {
+        if (finalResult >= 6) {
+          result += "Repair successful!";
+        }        
+        else {
+          result += "Failed!";
+        } 
+      }
       return result;
     },
   },
@@ -448,7 +531,14 @@ export default {
       track.roll = roll;
       track.hasRolled = true;
     },
-    
+    repairItem() {
+      let repair = this.crewTasks.find(t => t.task === 'repair');
+      const dice = `1d6`;
+
+      const roll = this.rollDice(dice);
+      repair.roll = roll;
+      repair.hasRolled = true;
+    },
   }
 }
 </script>
