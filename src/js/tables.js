@@ -233,6 +233,46 @@ export class FPFHTables {
             }
         };
         this.tables[tradeResultTable.key] = tradeResultTable;
+
+        const explorationTable = {
+            key: 'exploration',
+            title: 'Exploration',
+            tables: {
+                default: [
+                    { "label": "I know a good deal when I see one", "weight": 3 },
+                    { "label": "Meet a Patron", "weight": 3 },
+                    { "label": "Must've been something I ate", "weight": 2 },
+                    { "label": "Meet someone interesting", "weight": 3 },
+                    { "label": "Had a nice chat", "weight": 4 },
+                    { "label": "See the sights, enjoy the view", "weight": 3 },
+                    { "label": "Make a new friend", "weight": 3 },
+                    { "label": "Time to relax", "weight": 3 },
+                    { "label": "Possible bargain", "weight": 4 },
+                    { "label": "Alien merchant", "weight": 3 },
+                    { "label": "Got yourself noticed", "weight": 3 },
+                    { "label": "You hear a tip", "weight": 3 },
+                    { "label": "Completely Lost", "weight": 3 },
+                    { "label": "Someone want a package delivered", "weight": 4 },
+                    { "label": "A tech fanatic offers to help out", "weight": 3 },
+                    { "label": "Got a few drinks", "weight": 3 },
+                    { "label": "I don't have a gambling problem!", "weight": 3 },
+                    { "label": "Overheard someone talk", "weight": 4 },
+                    { "label": "Pick a fight", "weight": 3 },
+                    { "label": "Found a trainer", "weight": 4 },
+                    { "label": "Information broker", "weight": 4 },
+                    { "label": "Arms dealer", "weight": 3 },
+                    { "label": "Promising lead", "weight": 4 },
+                    { "label": "Just needs a little love", "weight": 4 },
+                    { "label": "Get in a bad fight", "weight": 3 },
+                    { "label": "Offered a small job", "weight": 4 },
+                    { "label": "Offered a reward", "weight": 4 },
+                    { "label": "You make a useful contact", "weight": 4 },
+                    { "label": "Who left this lying around?", "weight": 2 },
+                    { "label": "This place is rahter nice, really", "weight": 4 },
+                ]               
+            }
+        };
+        this.tables[explorationTable.key] = explorationTable;
     }
      
     GetTableResult(key) {        

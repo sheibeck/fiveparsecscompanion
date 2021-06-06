@@ -22,7 +22,17 @@
                 <!--<li><a class="dropdown-item" href="#">3. Battle</a></li>-->
                 <!--<li><a class="dropdown-item" href="#">4. Post-Battle</a></li>-->
               </ul>
-            </li>          
+            </li>
+            <li class="nav-item dropdown">              
+              <a class="nav-link dropdown-toggle" :class="{ 'active': $route.name !== 'Home' }" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Resources
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">                
+                <li><a class="dropdown-item" href="https://www.modiphius.net/products/five-parsecs-from-home"  target="_blank"><i class="fas fa-book-open"></i> 5 Parsecs From Home</a></li>
+                <li><a class="dropdown-item" href="https://discord.gg/vFVmE59" target="_blank"><i class="fab fa-discord"></i> NWG Discord</a></li>                
+              </ul>
+            </li>
+            <a class="nav-link" href="https://github.com/sheibeck/fiveparsecscompanion/issues" target="_blank"><i class="fas fa-bug"></i> Report Issues</a>
           </ul>
           <div class="text-end">
             <div v-if="authState !== 'signedin'">You are signed out.</div>

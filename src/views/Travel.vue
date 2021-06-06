@@ -12,7 +12,7 @@
             <ol class="list-group">
               <li class="list-group-item">1. Flee invasion</li>
               <li class="list-group-item">2. Decide whether to travel</li>
-              <li class="list-group-item">3. Staship travel event</li>
+              <li class="list-group-item">3. Starship travel event</li>
               <li class="list-group-item">4. New world arrival</li>              
             </ol>
           </div>

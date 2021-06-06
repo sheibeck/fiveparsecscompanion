@@ -48,9 +48,14 @@
                       <i class="fas fa-dice me-1 mt-1 d-print-none" @click="findPatron()"></i>
                       <label class="">Find Patron:</label>
                     </div>
-                    <small>Click dice to roll</small>
+                    <small>(Pg.77)</small>
                   </div>
-                  <div class="col d-flex flex-column">                                
+                  <div class="col d-flex flex-column">
+                    <div class="input-group mb-3 input-group-sm">
+                      <span class="input-group-text" id="crew-addon">Crew looking</span>
+                      <input type="number" class="form-control" placeholder="0" aria-label="Crew looking" aria-describedby="crew-addon" 
+                        min="0" v-model.number="crewTasks.find(t => t.task === 'patron').numCrew" />
+                    </div>                                
                     <div class="input-group mb-3 input-group-sm">
                       <span class="input-group-text" id="contacts-addon">Enter Contacts</span>
                       <input type="number" class="form-control" placeholder="0" aria-label="Contacts" aria-describedby="contacts-addon" 
@@ -67,8 +72,9 @@
                 <li class="d-flex list-group-item bg-light">
                   <div class="col-5 d-flex flex-column">
                     <div>                     
-                      <label class="">Train</label>
-                    </div>                    
+                      <label class="">Train</label>                      
+                    </div>
+                    <small>(Pg.77)</small>
                   </div>
                   <div class="col d-flex flex-column"> 
                     Earn 1 XP 
@@ -79,7 +85,8 @@
                     <div>
                       <i class="fas fa-dice me-1 mt-1 d-print-none" @click="findTrade()"></i>
                       <label class="">Trade</label>
-                    </div>                    
+                    </div>
+                    <small>(Pg.78, 79)</small>
                   </div>
                   <div class="col d-flex flex-column">
                     <div class="input-group mb-3 input-group-sm">
@@ -92,48 +99,77 @@
                       <li v-for="(item, idx) in crewTasks.find(t => t.task === 'trade').items" :key="idx">
                         {{item}}
                       </li>
-                    </ul>         
+                    </ul>
                   </div>
                 </li>
                 <li class="d-flex list-group-item bg-light">
                   <div class="col-5 d-flex flex-column">
                     <div>
-                      <i class="fas fa-dice me-1 mt-1 d-print-none"></i>
+                      <i class="fas fa-dice me-1 mt-1 d-print-none" @click="findRecruit()"></i>
                       <label class="">Recruit</label>
-                    </div>                    
+                    </div>
+                    <small>(Pg.78)</small>
                   </div>
                   <div class="col d-flex flex-column">
-                    TBD
+                     <div class="input-group mb-3 input-group-sm">
+                      <span class="input-group-text" id="crew-addon">Crew looking</span>
+                      <input type="number" class="form-control" placeholder="0" aria-label="Crew looking" aria-describedby="crew-addon" 
+                        min="0" v-model.number="crewTasks.find(t => t.task === 'recruit').numCrew" />
+                    </div>
+                    <label>{{getRecruitResult}}</label>
                   </div>
                 </li>
                 <li class="d-flex list-group-item bg-light">
-                  <div class="col-5 d-flex flex-column">
+                 <div class="col-5 d-flex flex-column">
                     <div>
-                      <i class="fas fa-dice me-1 mt-1 d-print-none"></i>
+                      <i class="fas fa-dice me-1 mt-1 d-print-none" @click="findExploration()"></i>
                       <label class="">Explore</label>
-                    </div>                    
+                    </div>
+                    <small>(Pg.78, 80)</small>
                   </div>
                   <div class="col d-flex flex-column">
-                    TBD
+                    <div class="input-group mb-3 input-group-sm">
+                      <span class="input-group-text" id="explore-addon">Total rolls</span>
+                      <input type="number" class="form-control" placeholder="0" aria-label="Explore rolls" aria-describedby="explore-addon" 
+                        min="0" v-model.number="crewTasks.find(t => t.task === 'explore').rolls" />
+                    </div>
+                    <label v-if="!crewTasks.find(t => t.task === 'explore').hasRolled">Waiting on roll ...</label>
+                    <ul v-else>
+                      <li v-for="(item, idx) in crewTasks.find(t => t.task === 'explore').items" :key="idx">
+                        {{item}}
+                      </li>
+                    </ul>
                   </div>
                 </li>
                 <li class="d-flex list-group-item bg-light">
                   <div class="col-5 d-flex flex-column">
                     <div>
-                      <i class="fas fa-dice me-1 mt-1 d-print-none"></i>
+                      <i class="fas fa-dice me-1 mt-1 d-print-none" @click="trackRival()"></i>
                       <label class="">Track</label>
-                    </div>                    
+                    </div>
+                    <small>(Pg.78)</small>                 
                   </div>
-                  <div class="col d-flex flex-column">
-                    TBD
-                  </div>
+                  <div class="col d-flex flex-column">                                
+                    <div class="input-group mb-3 input-group-sm">
+                      <span class="input-group-text" id="crew-addon">Crew looking</span>
+                      <input type="number" class="form-control" placeholder="0" aria-label="Crew looking" aria-describedby="crew-addon" 
+                        min="0" v-model.number="crewTasks.find(t => t.task === 'track').numCrew" />
+                    </div>
+                    <div class="input-group mb-3 input-group-sm">
+                      <span class="input-group-text" id="credits-addon">Spend Credits</span>
+                      <input type="number" class="form-control" placeholder="0" aria-label="Credits" aria-describedby="credits-addon" 
+                        min="0" v-model.number="crewTasks.find(t => t.task === 'track').credits" />
+                    </div>
+                    <label>{{getTrackResults}}</label>
+                  </div>                 
                 </li>
                 <li class="d-flex list-group-item bg-light">
                   <div class="col-5 d-flex flex-column">
                     <div>
                       <i class="fas fa-dice me-1 mt-1 d-print-none"></i>
                       <label class="">Repair</label>
-                    </div>                    
+                    </div>
+                    <small>(Pg.78)</small>                  
                   </div>
                   <div class="col d-flex flex-column">
                     TBD
@@ -143,7 +179,8 @@
                   <div class="col-5 d-flex flex-column">
                     <div>                      
                       <label class="">Decoy</label>
-                    </div>                    
+                    </div>
+                    <small>(Pg.78)</small>                    
                   </div>
                   <div class="col d-flex flex-column">
                     <div class="input-group mb-3 input-group-sm">
@@ -234,12 +271,12 @@ export default {
     return {
       jobOffer: [],
       crewTasks: [
-        {label: "Patron", task: "patron", contacts: 0, credits: 0, roll: 0, hasRolled: false },
+        {label: "Patron", task: "patron", numCrew: 0, contacts: 0, credits: 0, roll: 0, hasRolled: false },
         {label: "Train", task: "train" },
         {label: "Trade", task: "trade", items: [], rolls: 0, hasRolled: false },
-        {label: "Recruit", task: "recruit" },
-        {label: "Explore", task: "explore" },
-        {label: "Track", task: "track" },
+        {label: "Recruit", task: "recruit", roll: 0, numCrew: 0, hasRolled: false },
+        {label: "Explore", task: "explore", items: [], rolls: 0, hasRolled: false },
+        {label: "Track", task: "track", roll: 0, numCrew: 0, credits: 0, hasRolled: false },
         {label: "Repair", task: "repair" },
         {label: "Decoy", task: "decoy", number: 0 },
       ]
@@ -257,9 +294,11 @@ export default {
 
       const roll = this.crewTasks.find(t => t.task === 'patron').roll;
       const credits = this.crewTasks.find(t => t.task === 'patron').credits;
-      const finalResult = roll + credits;
+      const contacts = this.crewTasks.find(t => t.task === 'patron').contacts;
+      const crew = this.crewTasks.find(t => t.task === 'patron').numCrew;
+      const finalResult = roll + contacts + credits;
 
-      let result = `Rolled ${roll} (+${credits} credits): `;
+      let result = `Rolled ${roll} (+ ${crew} crew + ${contacts} contacts + ${credits} credits): `;
       if (finalResult >= 6) {
         result += "Found 2 Patrons.";
       }
@@ -270,7 +309,44 @@ export default {
         result += "Failed!";
       } 
       return result;
-    }
+    },
+    getRecruitResult() {
+      if (!this.crewTasks.find(t => t.task === 'recruit').hasRolled) {
+        return "Waiting on roll..."
+      }
+
+      const roll = this.crewTasks.find(t => t.task === 'recruit').roll;
+      const crew = this.crewTasks.find(t => t.task === 'recruit').numCrew;
+      const finalResult = roll + crew;
+
+      let result = `Rolled ${roll} (+${crew} crew): `;
+      if (finalResult >= 6) {
+        result += "Recruitment successful!";
+      }     
+      else {
+        result += "Failed!";
+      } 
+      return result;
+    },
+    getTrackResults() {
+      if (!this.crewTasks.find(t => t.task === 'track').hasRolled) {
+        return "Waiting on roll..."
+      }
+
+      const roll = this.crewTasks.find(t => t.task === 'track').roll;
+      const numCrew = this.crewTasks.find(t => t.task === 'track').numCrew;
+      const credits = this.crewTasks.find(t => t.task === 'track').credits;
+      const finalResult = roll + numCrew + credits;
+
+      let result = `Rolled ${roll} (+ ${numCrew} crew + ${credits} credits): `;
+      if (finalResult >= 6) {
+        result += "Found a Rival.";
+      }      
+      else {
+        result += "Failed!";
+      } 
+      return result;
+    },
   },
   methods: {            
     rerollTableTable(table) {
@@ -309,15 +385,20 @@ export default {
       this.$root.showUserMsg(`Created job offer`);
     },
     findPatron() {
-      const contacts = this.crewTasks.find(t => t.task === 'patron').contacts;      
-      const dice = `1d6+${contacts}`;
+      let patron = this.crewTasks.find(t => t.task === 'patron');
+      if (patron.numCrew == 0) {
+        return;
+      }
+
+      const dice = `1d6`;
 
       const roll = this.rollDice(dice);
-      this.crewTasks.find(t => t.task === 'patron').roll = roll;
-      this.crewTasks.find(t => t.task === 'patron').hasRolled = true;
+      patron.roll = roll;
+      patron.hasRolled = true;
     },
     findTrade() {
-      let numRolls = this.crewTasks.find(t => t.task === 'trade').rolls;
+      let trade = this.crewTasks.find(t => t.task === 'trade');
+      let numRolls = trade.rolls;
 
       if (numRolls > 0) {
         let items = [];
@@ -325,10 +406,48 @@ export default {
           let result = this.$options.tables.GetTableResult("traderesult");
           items.push(result);
         }
-        this.crewTasks.find(t => t.task === 'trade').items = items;
-        this.crewTasks.find(t => t.task === 'trade').hasRolled = true;
+        trade.items = items;
+        trade.hasRolled = true;
       }
-    }
+    },
+    findRecruit() {      
+      let recruit = this.crewTasks.find(t => t.task === 'recruit');
+      if (recruit.numCrew == 0) {
+        return;
+      }
+
+      const dice = `1d6`;
+
+      const roll = this.rollDice(dice);
+      recruit.roll = roll;
+      recruit.hasRolled = true;
+    },
+    findExploration() {
+      let explore = this.crewTasks.find(t => t.task === 'explore');
+      let numRolls = explore.rolls;
+
+      if (numRolls > 0) {
+        let items = [];
+        for(var i = 0; i < numRolls; i++) {
+          let result = this.$options.tables.GetTableResult("exploration");
+          items.push(result);
+        }
+        explore.items = items;
+        explore.hasRolled = true;
+      }
+    },
+    trackRival() {
+      let track = this.crewTasks.find(t => t.task === 'track');
+      if (track.numCrew == 0) {
+        return;
+      }
+
+      const dice = `1d6`;
+
+      const roll = this.rollDice(dice);
+      track.roll = roll;
+      track.hasRolled = true;
+    },
     
   }
 }
