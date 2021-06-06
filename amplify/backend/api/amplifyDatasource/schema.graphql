@@ -1,53 +1,49 @@
-type Ship @model @auth(rules: [{allow: public}]) {
-  id: ID!
-  name: String
-  hull_points: Int
-  debt: Int
-  traits: String
-  upgrade: String
-}
-
-type Weapon @model @auth(rules: [{allow: public}]) @key(name: "byCrewMember", fields: ["crewmemberID"]) {
-  id: ID!
-  name: Int
-  range: Int
-  shots: Int
-  damage: Int
-  trait: String
-  mods: String
-  crewmemberID: ID
-}
-
 type CrewMember @model @auth(rules: [{allow: public}]) @key(name: "byCrew", fields: ["crewID"]) {
   id: ID!
-  name: String
+  user: String!
+  name: String!
   species: String
   reactions: Int
   speed: Int
   combat: Int
-  toughness: String
+  toughness: Int
   savvy: Int
   luck: Int
-  x: Int
-  notes: String
   gear: String
+  notes: String
+  weapons: AWSJSON
+  xp: Int
+  kia: Boolean
+  leader: Boolean
   crewID: ID
-  Weapons: [Weapon] @connection(keyName: "byCrewMember", fields: ["id"])
+  background: String
+  motivation: String
+  class: String
+  sick_bay: Boolean
 }
 
 type Crew @model @auth(rules: [{allow: public}]) {
   id: ID!
-  story_points: Int
+  user: String!
+  name: String!
   notes: String
+  story_points: Int
   stash: String
-  equipment: String
-  credit: Int
+  credits: Int
   patrons: Int
   rivals: Int
+  ship_name: String
+  ship_hull_points: Int
+  ship_debt: Int
+  ship_traits: String
+  ship_upgrades: String
   story_track: String
   event: Int
   clock: Int
-  rumors: Int
+  quest_rumors: Int
   CrewMembers: [CrewMember] @connection(keyName: "byCrew", fields: ["id"])
-  name: String
+  campaign_turn: Int
+  campaign_difficulty: String
+  campaign_victory: String
 }
+ 

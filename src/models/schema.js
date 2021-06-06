@@ -1,202 +1,5 @@
 export const schema = {
     "models": {
-        "Ship": {
-            "name": "Ship",
-            "fields": {
-                "id": {
-                    "name": "id",
-                    "isArray": false,
-                    "type": "ID",
-                    "isRequired": true,
-                    "attributes": []
-                },
-                "name": {
-                    "name": "name",
-                    "isArray": false,
-                    "type": "String",
-                    "isRequired": false,
-                    "attributes": []
-                },
-                "hull_points": {
-                    "name": "hull_points",
-                    "isArray": false,
-                    "type": "Int",
-                    "isRequired": false,
-                    "attributes": []
-                },
-                "debt": {
-                    "name": "debt",
-                    "isArray": false,
-                    "type": "Int",
-                    "isRequired": false,
-                    "attributes": []
-                },
-                "traits": {
-                    "name": "traits",
-                    "isArray": false,
-                    "type": "String",
-                    "isRequired": false,
-                    "attributes": []
-                },
-                "upgrade": {
-                    "name": "upgrade",
-                    "isArray": false,
-                    "type": "String",
-                    "isRequired": false,
-                    "attributes": []
-                },
-                "createdAt": {
-                    "name": "createdAt",
-                    "isArray": false,
-                    "type": "AWSDateTime",
-                    "isRequired": false,
-                    "attributes": [],
-                    "isReadOnly": true
-                },
-                "updatedAt": {
-                    "name": "updatedAt",
-                    "isArray": false,
-                    "type": "AWSDateTime",
-                    "isRequired": false,
-                    "attributes": [],
-                    "isReadOnly": true
-                }
-            },
-            "syncable": true,
-            "pluralName": "Ships",
-            "attributes": [
-                {
-                    "type": "model",
-                    "properties": {}
-                },
-                {
-                    "type": "auth",
-                    "properties": {
-                        "rules": [
-                            {
-                                "allow": "public",
-                                "operations": [
-                                    "create",
-                                    "update",
-                                    "delete",
-                                    "read"
-                                ]
-                            }
-                        ]
-                    }
-                }
-            ]
-        },
-        "Weapon": {
-            "name": "Weapon",
-            "fields": {
-                "id": {
-                    "name": "id",
-                    "isArray": false,
-                    "type": "ID",
-                    "isRequired": true,
-                    "attributes": []
-                },
-                "name": {
-                    "name": "name",
-                    "isArray": false,
-                    "type": "Int",
-                    "isRequired": false,
-                    "attributes": []
-                },
-                "range": {
-                    "name": "range",
-                    "isArray": false,
-                    "type": "Int",
-                    "isRequired": false,
-                    "attributes": []
-                },
-                "shots": {
-                    "name": "shots",
-                    "isArray": false,
-                    "type": "Int",
-                    "isRequired": false,
-                    "attributes": []
-                },
-                "damage": {
-                    "name": "damage",
-                    "isArray": false,
-                    "type": "Int",
-                    "isRequired": false,
-                    "attributes": []
-                },
-                "trait": {
-                    "name": "trait",
-                    "isArray": false,
-                    "type": "String",
-                    "isRequired": false,
-                    "attributes": []
-                },
-                "mods": {
-                    "name": "mods",
-                    "isArray": false,
-                    "type": "String",
-                    "isRequired": false,
-                    "attributes": []
-                },
-                "crewmemberID": {
-                    "name": "crewmemberID",
-                    "isArray": false,
-                    "type": "ID",
-                    "isRequired": false,
-                    "attributes": []
-                },
-                "createdAt": {
-                    "name": "createdAt",
-                    "isArray": false,
-                    "type": "AWSDateTime",
-                    "isRequired": false,
-                    "attributes": [],
-                    "isReadOnly": true
-                },
-                "updatedAt": {
-                    "name": "updatedAt",
-                    "isArray": false,
-                    "type": "AWSDateTime",
-                    "isRequired": false,
-                    "attributes": [],
-                    "isReadOnly": true
-                }
-            },
-            "syncable": true,
-            "pluralName": "Weapons",
-            "attributes": [
-                {
-                    "type": "model",
-                    "properties": {}
-                },
-                {
-                    "type": "key",
-                    "properties": {
-                        "name": "byCrewMember",
-                        "fields": [
-                            "crewmemberID"
-                        ]
-                    }
-                },
-                {
-                    "type": "auth",
-                    "properties": {
-                        "rules": [
-                            {
-                                "allow": "public",
-                                "operations": [
-                                    "create",
-                                    "update",
-                                    "delete",
-                                    "read"
-                                ]
-                            }
-                        ]
-                    }
-                }
-            ]
-        },
         "CrewMember": {
             "name": "CrewMember",
             "fields": {
@@ -207,11 +10,18 @@ export const schema = {
                     "isRequired": true,
                     "attributes": []
                 },
+                "user": {
+                    "name": "user",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": true,
+                    "attributes": []
+                },
                 "name": {
                     "name": "name",
                     "isArray": false,
                     "type": "String",
-                    "isRequired": false,
+                    "isRequired": true,
                     "attributes": []
                 },
                 "species": {
@@ -245,7 +55,7 @@ export const schema = {
                 "toughness": {
                     "name": "toughness",
                     "isArray": false,
-                    "type": "String",
+                    "type": "Int",
                     "isRequired": false,
                     "attributes": []
                 },
@@ -263,10 +73,10 @@ export const schema = {
                     "isRequired": false,
                     "attributes": []
                 },
-                "x": {
-                    "name": "x",
+                "gear": {
+                    "name": "gear",
                     "isArray": false,
-                    "type": "Int",
+                    "type": "String",
                     "isRequired": false,
                     "attributes": []
                 },
@@ -277,10 +87,31 @@ export const schema = {
                     "isRequired": false,
                     "attributes": []
                 },
-                "gear": {
-                    "name": "gear",
+                "weapons": {
+                    "name": "weapons",
                     "isArray": false,
-                    "type": "String",
+                    "type": "AWSJSON",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "xp": {
+                    "name": "xp",
+                    "isArray": false,
+                    "type": "Int",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "kia": {
+                    "name": "kia",
+                    "isArray": false,
+                    "type": "Boolean",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "leader": {
+                    "name": "leader",
+                    "isArray": false,
+                    "type": "Boolean",
                     "isRequired": false,
                     "attributes": []
                 },
@@ -291,19 +122,33 @@ export const schema = {
                     "isRequired": false,
                     "attributes": []
                 },
-                "Weapons": {
-                    "name": "Weapons",
-                    "isArray": true,
-                    "type": {
-                        "model": "Weapon"
-                    },
+                "background": {
+                    "name": "background",
+                    "isArray": false,
+                    "type": "String",
                     "isRequired": false,
-                    "attributes": [],
-                    "isArrayNullable": true,
-                    "association": {
-                        "connectionType": "HAS_MANY",
-                        "associatedWith": "crewmemberID"
-                    }
+                    "attributes": []
+                },
+                "motivation": {
+                    "name": "motivation",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "class": {
+                    "name": "class",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "sick_bay": {
+                    "name": "sick_bay",
+                    "isArray": false,
+                    "type": "Boolean",
+                    "isRequired": false,
+                    "attributes": []
                 },
                 "createdAt": {
                     "name": "createdAt",
@@ -366,17 +211,31 @@ export const schema = {
                     "isRequired": true,
                     "attributes": []
                 },
-                "story_points": {
-                    "name": "story_points",
+                "user": {
+                    "name": "user",
                     "isArray": false,
-                    "type": "Int",
-                    "isRequired": false,
+                    "type": "String",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "name": {
+                    "name": "name",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": true,
                     "attributes": []
                 },
                 "notes": {
                     "name": "notes",
                     "isArray": false,
                     "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "story_points": {
+                    "name": "story_points",
+                    "isArray": false,
+                    "type": "Int",
                     "isRequired": false,
                     "attributes": []
                 },
@@ -387,15 +246,8 @@ export const schema = {
                     "isRequired": false,
                     "attributes": []
                 },
-                "equipment": {
-                    "name": "equipment",
-                    "isArray": false,
-                    "type": "String",
-                    "isRequired": false,
-                    "attributes": []
-                },
-                "credit": {
-                    "name": "credit",
+                "credits": {
+                    "name": "credits",
                     "isArray": false,
                     "type": "Int",
                     "isRequired": false,
@@ -412,6 +264,41 @@ export const schema = {
                     "name": "rivals",
                     "isArray": false,
                     "type": "Int",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "ship_name": {
+                    "name": "ship_name",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "ship_hull_points": {
+                    "name": "ship_hull_points",
+                    "isArray": false,
+                    "type": "Int",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "ship_debt": {
+                    "name": "ship_debt",
+                    "isArray": false,
+                    "type": "Int",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "ship_traits": {
+                    "name": "ship_traits",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "ship_upgrades": {
+                    "name": "ship_upgrades",
+                    "isArray": false,
+                    "type": "String",
                     "isRequired": false,
                     "attributes": []
                 },
@@ -436,8 +323,8 @@ export const schema = {
                     "isRequired": false,
                     "attributes": []
                 },
-                "rumors": {
-                    "name": "rumors",
+                "quest_rumors": {
+                    "name": "quest_rumors",
                     "isArray": false,
                     "type": "Int",
                     "isRequired": false,
@@ -457,8 +344,22 @@ export const schema = {
                         "associatedWith": "crewID"
                     }
                 },
-                "name": {
-                    "name": "name",
+                "campaign_turn": {
+                    "name": "campaign_turn",
+                    "isArray": false,
+                    "type": "Int",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "campaign_difficulty": {
+                    "name": "campaign_difficulty",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
+                    "attributes": []
+                },
+                "campaign_victory": {
+                    "name": "campaign_victory",
                     "isArray": false,
                     "type": "String",
                     "isRequired": false,
@@ -509,5 +410,5 @@ export const schema = {
     },
     "enums": {},
     "nonModels": {},
-    "version": "2eaa7365bdf4fd1457d99ba23230f3aa"
+    "version": "b4199005ab9009e4ba5624741abd1dd3"
 };
