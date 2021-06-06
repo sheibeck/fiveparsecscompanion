@@ -12,6 +12,9 @@
   "dependencies": {
     "@aws-amplify/ui-vue": "^1.0.10",
     "@popperjs/core": "^2.9.2",
+    "@sentry/integrations": "^6.5.1",
+    "@sentry/tracing": "^6.5.1",
+    "@sentry/vue": "^6.5.1",
     "aws-amplify": "^4.0.3",
     "bootstrap": "^5.0.1",
     "core-js": "^3.6.5",
