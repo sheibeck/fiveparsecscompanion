@@ -62,7 +62,7 @@
         "Google"
     ],
     "hostedUIProviderMeta": "[{\"ProviderName\":\"Google\",\"authorize_scopes\":\"openid email profile\",\"AttributeMapping\":{\"email\":\"email\",\"username\":\"sub\"}}]",
-    "oAuthMetadata": "{\"AllowedOAuthFlows\":[\"code\"],\"AllowedOAuthScopes\":[\"phone\",\"email\",\"openid\",\"profile\",\"aws.cognito.signin.user.admin\"],\"CallbackURLs\":[\"http://localhost:8080\",\"https://develop.d1tp5cd86hfjxz.amplifyapp.com\",\"https://master.d1tp5cd86hfjxz.amplifyapp.com\"],\"LogoutURLs\":[\"http://localhost:8080\",\"https://develop.d1tp5cd86hfjxz.amplifyapp.com\",\"https://master.d1tp5cd86hfjxz.amplifyapp.com\"]}",
+    "oAuthMetadata": "{\"AllowedOAuthFlows\":[\"code\"],\"AllowedOAuthScopes\":[\"phone\",\"email\",\"openid\",\"profile\",\"aws.cognito.signin.user.admin\"],\"CallbackURLs\":[\"http://localhost:8080\",\"https://develop.d1tp5cd86hfjxz.amplifyapp.com\",\"https://5parsecscompanion.com\"],\"LogoutURLs\":[\"http://localhost:8080\",\"https://develop.d1tp5cd86hfjxz.amplifyapp.com\",\"https://5parsecscompanion.com\"]}",
     "usernameCaseSensitive": false,
     "dependsOn": []
 }
