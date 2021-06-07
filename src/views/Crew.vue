@@ -434,7 +434,7 @@ export default {
       let UPDATED_CREW = this.crew;
       const CURRENT_CREW = await DataStore.query(Crew, this.crewId);
       await DataStore.save(Crew.copyOf(CURRENT_CREW, item => {        
-        for (const key of Object.keys(CURRENT_CREW)) {
+        for (const key of Object.keys(UPDATED_CREW)) {
           try {           
               item[key] = UPDATED_CREW[key];            
           } catch (e) {
