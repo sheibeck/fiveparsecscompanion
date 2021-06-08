@@ -19,7 +19,7 @@
               <ul class="dropdown-menu" aria-labelledby="navbarDropdown">                
                 <li><a class="dropdown-item" href="/campaign-turn/travel">1. Travel</a></li>
                 <li><a class="dropdown-item" href="/campaign-turn/world">2. World</a></li>
-                <!--<li><a class="dropdown-item" href="#">3. Battle</a></li>-->
+                <li><a class="dropdown-item" href="/campaign-turn/battle">3. Battle</a></li>                
                 <!--<li><a class="dropdown-item" href="#">4. Post-Battle</a></li>-->
               </ul>
             </li>

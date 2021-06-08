@@ -3,6 +3,8 @@ import RandomTable from 'rpg-table-randomizer/src/random_table.js';
 import random_name from 'rpg-table-randomizer/src/random_name.js';
 import names from 'rpg-table-randomizer/sample/names.js';
 
+import {DeploymentConditionsTable, NotableSightsTable, MissionObjectiveTable} from './tablesBattle';
+
 export class FPFHTables {
     constructor() {
         this.init();
@@ -273,6 +275,10 @@ export class FPFHTables {
             }
         };
         this.tables[explorationTable.key] = explorationTable;
+
+        this.tables[DeploymentConditionsTable.key] = DeploymentConditionsTable;
+        this.tables[NotableSightsTable.key] = NotableSightsTable;
+        this.tables[MissionObjectiveTable.key] = MissionObjectiveTable;        
     }
      
     GetTableResult(key) {        
@@ -295,3 +301,4 @@ export class FPFHTables {
         return random_name.selectName();
     }
 }
+
