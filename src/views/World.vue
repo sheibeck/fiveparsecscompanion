@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1>2. World (P.76)</h1>
+    <h1>2. World (Pg.76)</h1>
 
     <div class="row row-cols-1 row-cols-md-3 rows-cols-lg-4 g-4"> 
            
