@@ -75,6 +75,63 @@ export const worldTables = [
     },
 
     {
+        key: 'motivation',
+        title: 'Motivations',
+        tables: {
+            default: [
+                { "label": "Wealth", "weight": 8 },
+                { "label": "Fame", "weight": 6 },
+                { "label": "Glory", "weight": 5 },
+                { "label": "Survival", "weight": 7 },
+                { "label": "Escape", "weight": 6 },
+                { "label": "Adventure", "weight": 7 },
+                { "label": "Truth", "weight": 5 },
+                { "label": "Technology", "weight": 5 },
+                { "label": "Discovery", "weight": 7 },
+                { "label": "Loyalty", "weight": 7 },
+                { "label": "Revenge", "weight": 6 },
+                { "label": "Romance", "weight": 5 },
+                { "label": "Faith", "weight": 5 },
+                { "label": "Political", "weight": 5 },
+                { "label": "Power", "weight": 6 },
+                { "label": "Order", "weight": 5 },
+                { "label": "Freedom", "weight": 5 },                
+            ]
+        }
+    },
+
+    {
+        key: 'class',
+        title: 'Class',
+        tables: {
+            default: [
+                { "label": "Working Class", "weight": 5 },
+                { "label": "Technician", "weight": 4 },
+                { "label": "Scientist", "weight": 4 },
+                { "label": "Hacker", "weight": 4 },
+                { "label": "Soldier", "weight": 5 },
+                { "label": "Mercenary", "weight": 5 },
+                { "label": "Agitator", "weight": 5 },
+                { "label": "Primitive", "weight": 4 },
+                { "label": "Artist", "weight": 4 },
+                { "label": "Trader", "weight": 5 },
+                { "label": "Starship Crew", "weight": 5 },
+                { "label": "Petty Criminal", "weight": 4 },
+                { "label": "Ganger", "weight": 5 },
+                { "label": "Scoundrel", "weight": 4 },
+                { "label": "Enforcer", "weight": 4 },
+                { "label": "Special Agent", "weight": 4 },
+                { "label": "Troubleshooter", "weight": 4 },
+                { "label": "Bounty Hunter", "weight": 4 },
+                { "label": "Nomad", "weight": 5 },
+                { "label": "Explorer", "weight": 4 },
+                { "label": "Punk", "weight": 4 },
+                { "label": "Scavenger", "weight": 4 },
+            ]
+        }
+    },
+
+    {
         key: 'patron',
         title: 'Patron',           
         tables: {

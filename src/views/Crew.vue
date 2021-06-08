@@ -149,16 +149,17 @@
       <!-- crew members -->
       <div class="accordion" id="accordionMembers">
         <div class="accordion-item">
-          <h2 class="accordion-header" id="headingMembers">
+          <h2 class="accordion-header d-flex" id="headingMembers">
+            <button type="button" class="btn btn-primary btn-sm mx-1 d-print-none" @click="addCrewMember()">Add <i class="fas fa-plus"></i></button>
             <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseMembers" aria-expanded="true" aria-controls="collapseMembers">
-              Crew Members <button type="button" class="btn btn-primary btn-sm mx-1  d-print-none" @click="addCrewMember()">Add Member <i class="fas fa-plus"></i></button>
-            </button>
+              Crew Members (Active members: {{crewMembers.filter( c => c.kia !== true ).length}})
+            </button>            
           </h2>
         </div>
    
         <div id="collapseMembers" class="accordion-collapse collapse show" aria-labelledby="headingMembers" data-bs-parent="#accordionMembers">
           <div class="accordion-body">          
-            <div class="card crewmember" :class="{ 'bg-dead': member.kia, 'bg-leader': member.leader, 'bg-sick': member.sick_bay }" v-for="member in crewMembers" :key="member.id">
+            <div class="card crewmember mb-1" :class="{ 'bg-dead': member.kia, 'bg-leader': member.leader, 'bg-sick': member.sick_bay }" v-for="member in crewMembers" :key="member.id">
               <div class="card-body">
                 <div class="row">
                   <div class="col col-md-8">
@@ -193,6 +194,7 @@
                       <div class="ms-md-1 w-100">
                         <div class="">
                           <div class="d-flex">
+                            <i :class="{ 'd-none': !isEditingCrew(member.id) }" class="fas fa-dice pe-auto" @click="member.motivation = rollOnTable('motivation')"></i>
                             <div class="form-text">Motivation</div>
                             <span :class="{ 'd-none': isEditingCrew(member.id) }">: {{member.motivation}}</span>
                           </div>                      
@@ -202,6 +204,7 @@
                       <div class="ms-md-1 w-100">
                         <div class="">
                           <div class="d-flex">
+                            <i :class="{ 'd-none': !isEditingCrew(member.id) }" class="fas fa-dice pe-auto" @click="member.class = rollOnTable('class')"></i>
                             <div class="form-text">Class</div>
                             <span :class="{ 'd-none': isEditingCrew(member.id) }">: {{member.class}}</span>
                           </div>                     
@@ -355,9 +358,10 @@
       <!-- worlds -->
       <div class="accordion" id="accordionWorlds">
         <div class="accordion-item">
-          <h2 class="accordion-header" id="headingWorlds">
+          <h2 class="accordion-header d-flex" id="headingWorlds">
+            <button type="button" class="btn btn-primary btn-sm mx-1 d-print-none" @click="addWorld()">Add <i class="fas fa-plus"></i></button>
             <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseWorlds" aria-expanded="false" aria-controls="collapseWorlds">              
-              Worlds <button type="button" class="btn btn-primary btn-sm mx-1 d-print-none" @click="addWorld()">Add World <i class="fas fa-plus"></i></button>
+              Worlds
             </button>
           </h2>
         </div>
@@ -468,8 +472,70 @@ export default {
     },   
 
     async addCrewMember() {
+      const restrictedBackgrounds = ["Peaceful, High-Tech Colony", "Wealthy Merchant Family", "Tech Guild", "Comfortable Megacity Class", "Bureaucrat"];
       const name = this.$options.tables.RandomName("name");
       const species = this.$options.tables.GetTableResult("crewtype");
+      let background = this.$options.tables.GetTableResult("background");
+      let motivation = this.$options.tables.GetTableResult("motivation");
+      let crewClass = crewClass = this.$options.tables.GetTableResult("class");
+
+      switch(species) 
+      {
+        case "Bot":
+        case "Assault Bot":      
+          background = "";
+          motivation = "";
+          crewClass = "";
+        break;
+
+        case "De-conerted":
+          motivation = "Revenge";
+          break;
+          
+        case "Unity Agent":
+          motivation = "Order";
+          break;
+
+        case "Mysterious Past":
+          background += `,${this.$options.tables.GetTableResult("background")}`;
+          break;
+
+        case "Hulker":
+          switch(crewClass) {
+            case "Technician":
+            case "Scientist":
+            case "Hacker":
+              crewClass = "Primitive";
+              break;
+          }
+          break;
+
+        case "Genetic Uplift":
+          while (restrictedBackgrounds.includes(background)) {
+            background = this.$options.tables.GetTableResult("background");
+          }
+          break;
+
+        case "Mutant":
+          background = "Lower Megacity Class";
+          break;
+
+        case "Manipulator":
+          background = "Bureaucrat";
+          break;
+
+        case "Primitive":
+          background = "Primitive OR Regressed World";
+          break;
+
+        case "Feeler":
+          motivation += `,${this.$options.tables.GetTableResult("motivation")}`;
+          break;
+
+        case "Emo-suppressed":
+          motivation = "Survival";
+          break;
+      }
       
       await DataStore.save(
           new CrewMember({
@@ -489,14 +555,14 @@ export default {
           "kia": false,
           "leader": false,
           "sick_bay": false,
-          "background": "",
-          "motivation": "",
-          "class": "",
+          "background": background,
+          "motivation": motivation,
+          "class": crewClass,
           "crewID": this.crewId
         })
       );
       this.$root.showUserMsg(`Added ${name} to crew`);
-      this.fetchCrewMembers();  
+      this.fetchCrewMembers();      
     },
 
     async addWeaponToCrew(id)
