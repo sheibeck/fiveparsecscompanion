@@ -347,19 +347,26 @@ export default {
 
       const standardOponents = totalOpponents - specialists - lieutenant; 
       //result += `${roll1} + ${roll2} + ${rollUnique} == ${totalOpponents}`;
-
-      const weapons = this.$options.tables.GetFullTableResult("enemyweapons");
-      const standardWeapon = weapons[opponentData.weapons[0]-1];
-
+      
+      let standardWeapon = "";
       let specialistWeapon = "";
-      if (specialists > 0) {
-        const specialistWeapons = this.$options.tables.GetFullTableResult("specialistweapons");
-        const specialWeaponMapping = {
-          A: 0,
-          B: 1,
-          C: 2,
+      if (opponentData.weapons.length > 2) {
+          const customWeapon = opponentData.weapons.split(",");
+          standardWeapon = customWeapon[0];
+          specialistWeapon = customWeapon[customWeapon.length-1];
+      } else {
+        const weapons = this.$options.tables.GetFullTableResult("enemyweapons");
+        standardWeapon = weapons[opponentData.weapons[0]-1];
+              
+        if (specialists > 0) {
+          const specialistWeapons = this.$options.tables.GetFullTableResult("specialistweapons");
+          const specialWeaponMapping = {
+            A: 0,
+            B: 1,
+            C: 2,
+          }
+          specialistWeapon = `${specialistWeapons[specialWeaponMapping[opponentData.weapons[1]]]}`;
         }
-        specialistWeapon = `${specialistWeapons[specialWeaponMapping[opponentData.weapons[1]]]}`;
       }
       
       result += ` (+${opponentData.numbers} numbers, ${opponentData.weapons} weapons) </div>`
