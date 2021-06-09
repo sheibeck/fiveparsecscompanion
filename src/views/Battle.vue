@@ -229,6 +229,8 @@ export default {
       return JSON.parse(table.tableResult[idx].desc);
     },
     determineOpponents(step, silent) {
+      let difficulty = "Normal";
+
       let result = "<div>"
       let opponentNumber = 0;
       let opponentData = null;
@@ -263,10 +265,52 @@ export default {
           step.result = "Invasion!";
           return;   
       }
+
+      
+      let pageNumber = "";
+      let extraInfo = "";
+      let uniqueRollBonus = 0;
+      let rerollNumberIfOne = false;
+      switch(opponentType) {
+        case "Criminal Elements": {
+          pageNumber = "Pg.94";
+          let bountyRoll = this.rollDice("1d6");
+          if ( bountyRoll <= 3) {
+            extraInfo += ` Bounty available: ${bountyRoll} credits.`;
+          }
+          else {
+            extraInfo += ` No bounty available.`
+          }          
+          extraInfo += ` When determining if this enemy becomes a rival roll 2d6.`
+          break;        
+        }
+        case "Hired Muscle": {
+          pageNumber = "Pg.96";
+          extraInfo += ` You are -1 to any attempt to Seize the Initiative.`
+          break;
+        }
+        case "Interested Parties": {
+          pageNumber = "Pg.98";
+          uniqueRollBonus = 1;
+          rerollNumberIfOne = this.battleType == "quest" ? true : false;
+          break;
+        }
+        case "Roving Threats": {
+          pageNumber = "Pg.101";
+          extraInfo += ` This enemy never becomes a Rival.`
+          break;
+        }
+      }
      
       const dice = `1d6`;
-      const roll1 = this.rollDice(dice);
-      const roll2 = this.rollDice(dice);
+      let roll1 = this.rollDice(dice);      
+      let roll2 = this.rollDice(dice);
+      
+      if (rerollNumberIfOne) {
+        if (roll1 == 1) roll1 = this.rollDice(dice);
+        if (roll2 == 1) roll2 = this.rollDice(dice);
+      }
+
       const maxRoll = Math.max(roll1,roll2);
       const minRoll = Math.max(roll1,roll2);
 
@@ -293,11 +337,13 @@ export default {
         lieutenant = 1;
       }
       
-      let unique = 0;
-      const rollUnique = this.rollDice(`2d6`);
-      if (rollUnique >= 9) {
-        unique = 1;
-      }      
+      let uniqueOpponents = 0;      
+      if (opponentType !== "Roving Threats" ||  (opponentType !== "Roving Threats" && difficulty !== "Insanity")) {       
+        const rollUnique = this.rollDice(`2d6`);
+        if (rollUnique + uniqueRollBonus >= 9) {
+          uniqueOpponents = 1;
+        }      
+      }
 
       const standardOponents = totalOpponents - specialists - lieutenant; 
       //result += `${roll1} + ${roll2} + ${rollUnique} == ${totalOpponents}`;
@@ -316,44 +362,15 @@ export default {
         specialistWeapon = `${specialistWeapons[specialWeaponMapping[opponentData.weapons[1]]]}`;
       }
       
-      result += ` (+${opponentData.numbers} numbers) </div>`
+      result += ` (+${opponentData.numbers} numbers, ${opponentData.weapons} weapons) </div>`
       result += `<ul class='small'>`;
       result += `<li>${standardOponents}x Standard: ${standardWeapon} (Pg.92)</li>`;
       result += `<li>${specialists}x Specialists: ${specialistWeapon} (Pg.93)</li>`;
-      result += `<li>${lieutenant}x Lieutenants (Pg.93)</li>`;
-      result += `<li>${unique}x Unique Individuals (Pg. 105)</li>`;
+      result += `<li>${lieutenant}x Lieutenants: ${standardWeapon} (Pg.93)</li>`;
+      result += `<li>${uniqueOpponents}x Unique Individuals (Pg. 105)</li>`;
       result += `</ul>`;
 
-      let pageNumber = "";
-      let extraInfo = "";
-      switch(opponentType) {
-        case "Criminal Elements": {
-          pageNumber = "Pg.94";
-          let bountyRoll = this.rollDice("1d6");
-          if ( bountyRoll <= 3) {
-            extraInfo += ` Bounty available: ${bountyRoll} credits.`;
-          }
-          else {
-            extraInfo += ` No bounty available.`
-          }
-
-          let becomesRivalRoll = this.rollDice("1d6");
-          extraInfo += ` This enemy ${becomesRivalRoll === 1 ? 'WILL' : 'will NOT'} become a rival if defeated.`          
-          break;        
-        }
-        case "Hired Muscle": {
-          pageNumber = "Pg.96";
-          break;
-        }
-        case "Interested Parties": {
-          pageNumber = "Pg.98";
-          break;
-        }
-        case "Roving Threats": {
-          pageNumber = "Pg.101";
-          break;
-        }
-      }
+     
 
       result += `<div class='small fw-normal'>${pageNumber} <span class='fw-bold text-secondary'>${extraInfo}</span></div>`;
 
