@@ -42,7 +42,7 @@
           <div class="accordion" id="accordianTasks">
             <div class="accordion-item">
               <h2 class="accordion-header" id="headingPatron">
-                <button class="accordion-button collapsed" type="headingPatron" data-bs-toggle="collapse" data-bs-target="#collapsePatron" aria-expanded="false" aria-controls="collapsePatron">                  
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapsePatron" aria-expanded="false" aria-controls="collapsePatron">                  
                   Find Patron (Pg.77)
                 </button>
               </h2>
@@ -79,7 +79,7 @@
                   Train (Pg.77)
                 </button>
               </h2>
-              <div id="collapseTrain" class="accordion-collapse collapse" aria-labelledby="headingTrain" data-bs-parent="#accordionExample">
+              <div id="collapseTrain" class="accordion-collapse collapse" aria-labelledby="headingTrain" data-bs-parent="#accordianTasks">
                 <div class="accordion-body">
                   <div class="col d-flex flex-column">
                     Earn 1 XP
