@@ -158,6 +158,7 @@ export default {
     },
     deploymentConditions(step, silent) {
       let result = step.tableResult[0];
+      
       switch(this.battleType) {
         case "opportunity":         
           result = step.tableResult[0]
@@ -165,59 +166,62 @@ export default {
 
         case "rival":
           result = step.tableResult[1];
+          result += ` (Rival attack? ${this.$options.tables.GetFullTableResult("rivalattack")[0].result})`;
           break;
 
         case "quest":
           result = step.tableResult[2];
           break;
-      }
-      step.result = result;
+      }     
+      step.result = result;     
       if (!silent) this.$root.showUserMsg(`Re-rolled Deployment Conditions`);
     },
     notableSights(step, silent) {
       let result = "";
-      if (this.battleType === "invasion") {
-        result = "None";
-      } 
-      else {
-        switch(this.battleType) {
-          case "opportunity":
-          case "patron":
-              result = step.tableResult[0].result;
-            break;
+      
+      switch(this.battleType) {
+        case "opportunity":
+        case "patron":
+          result = step.tableResult[0].result;
+          break;
 
-          case "rival":
-              result = step.tableResult[1].result;
-            break;
+        case "rival":
+          result = step.tableResult[1].result;
+          break;
 
-          case "quest":
-              result = step.ableResult[2].result;
-            break;
-        }
+        case "quest":
+          result = step.tableResult[2].result;
+          break;
+
+        default:
+          result = "None!";
+          break;
       }
+      
       step.result = result;   
       if (!silent) this.$root.showUserMsg(`Re-rolled Notable Sights`);    
     },
     missionObjectives(step, silent) {
       let result = null;
-      if (this.battleType !== "patron" && this.battleType !== "opportunity" && this.battleType !== "quest") {
-        result = "Hold the Field";
-      }
-      else {        
-        switch(this.battleType) {
-          case "patron":          
-            result = step.tableResult[0].result;
-            break;
+     
+      switch(this.battleType) {
+        case "patron":          
+          result = step.tableResult[0].result;
+          break;
 
-          case "opportunity":
-            result = step.tableResult[1].result;
-            break;
+        case "opportunity":
+          result = step.tableResult[1].result;
+          break;
 
-          case "quest":
-            result = step.tableResult[2].result;
-            break;
-        }
+        case "quest":
+          result = step.tableResult[2].result;
+          break;
+
+        default:
+          result = "Hold the field";
+          break;
       }
+     
       step.result = result;
       if (!silent) this.$root.showUserMsg(`Re-rolled Mission Objective`);
     },
@@ -225,28 +229,39 @@ export default {
       return JSON.parse(table.tableResult[idx].desc);
     },
     determineOpponents(step, silent) {
-      let result = ""
+      let result = "<div>"
       let opponentNumber = 0;
+      let opponentData = null;
+      let opponentType = "";
       switch(this.battleType) {
-        case "patron":           
-            result = `${step.tableResult[0]} - ${step.tableResult[1]}`;
-            opponentNumber = this.getOpponentData(step, 1).numbers;
+        case "patron":
+          opponentType = `${step.tableResult[0]}`;
+          result += `${opponentType}: ${step.tableResult[1]}`;
+          opponentData = this.getOpponentData(step, 1);            
           break;
 
         case "opportunity":           
-            result = `${step.tableResult[2]} - ${step.tableResult[3]}`;
-            opponentNumber = this.getOpponentData(step, 3).numbers;
+          opponentType = `${step.tableResult[2]}`;
+          result += `${opponentType}: ${step.tableResult[3]}`;
+          opponentData = this.getOpponentData(step, 3);            
           break;       
 
         case "quest":
-            result = `${step.tableResult[4]} - ${step.tableResult[5]}`;
-            opponentNumber = this.getOpponentData(step, 5).numbers;
+          opponentType = `${step.tableResult[4]}`;
+          result += `${opponentType}: ${step.tableResult[5]}`;
+          opponentData = this.getOpponentData(step, 5);            
           break;
 
         case "rival":
-            result = `${step.tableResult[6]} - ${step.tableResult[7]}`;
-            opponentNumber = this.getOpponentData(step, 7).numbers;
+          opponentType = `${step.tableResult[6]}`;
+          result += `${opponentType}: ${step.tableResult[7]}`;
+          opponentData = this.getOpponentData(step, 7);            
           break;
+
+        case "invasion":
+          opponentType = "Invasion";
+          step.result = "Invasion!";
+          return;   
       }
      
       const dice = `1d6`;
@@ -286,8 +301,61 @@ export default {
 
       const standardOponents = totalOpponents - specialists - lieutenant; 
       //result += `${roll1} + ${roll2} + ${rollUnique} == ${totalOpponents}`;
-      result += ` (+${opponentNumber} numbers) <div class='small'>${standardOponents} Standard, ${specialists} Specialists, ${lieutenant} Lieutenants`;      
-      result += `, ${unique} Unique Individuals</div>`;      
+
+      const weapons = this.$options.tables.GetFullTableResult("enemyweapons");
+      const standardWeapon = weapons[opponentData.weapons[0]-1];
+
+      let specialistWeapon = "";
+      if (specialists > 0) {
+        const specialistWeapons = this.$options.tables.GetFullTableResult("specialistweapons");
+        const specialWeaponMapping = {
+          A: 0,
+          B: 1,
+          C: 2,
+        }
+        specialistWeapon = `${specialistWeapons[specialWeaponMapping[opponentData.weapons[1]]]}`;
+      }
+      
+      result += ` (+${opponentData.numbers} numbers) </div>`
+      result += `<ul class='small'>`;
+      result += `<li>${standardOponents}x Standard: ${standardWeapon} (Pg.92)</li>`;
+      result += `<li>${specialists}x Specialists: ${specialistWeapon} (Pg.93)</li>`;
+      result += `<li>${lieutenant}x Lieutenants (Pg.93)</li>`;
+      result += `<li>${unique}x Unique Individuals (Pg. 105)</li>`;
+      result += `</ul>`;
+
+      let pageNumber = "";
+      let extraInfo = "";
+      switch(opponentType) {
+        case "Criminal Elements": {
+          pageNumber = "Pg.94";
+          let bountyRoll = this.rollDice("1d6");
+          if ( bountyRoll <= 3) {
+            extraInfo += ` Bounty available: ${bountyRoll} credits.`;
+          }
+          else {
+            extraInfo += ` No bounty available.`
+          }
+
+          let becomesRivalRoll = this.rollDice("1d6");
+          extraInfo += ` This enemy ${becomesRivalRoll === 1 ? 'WILL' : 'will NOT'} become a rival if defeated.`          
+          break;        
+        }
+        case "Hired Muscle": {
+          pageNumber = "Pg.96";
+          break;
+        }
+        case "Interested Parties": {
+          pageNumber = "Pg.98";
+          break;
+        }
+        case "Roving Threats": {
+          pageNumber = "Pg.101";
+          break;
+        }
+      }
+
+      result += `<div class='small fw-normal'>${pageNumber} <span class='fw-bold text-secondary'>${extraInfo}</span></div>`;
 
       step.result = result;    
       if (!silent) this.$root.showUserMsg(`Determined Opponents`);
