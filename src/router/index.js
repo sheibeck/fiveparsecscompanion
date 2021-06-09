@@ -4,6 +4,7 @@ import Home from '../views/Home.vue'
 import Crew from '../views/Crew.vue'
 import Travel from '../views/Travel.vue'
 import World from '../views/World.vue'
+import Battle from '../views/Battle.vue'
 
 Vue.use(VueRouter)
 
@@ -15,7 +16,9 @@ const routes = [
   },
   { path: '/crew/:id', name: 'Crew', component: Crew },
   { path: '/campaign-turn/travel', name: 'Travel', component: Travel },
-  { path: '/campaign-turn/world', name: 'World', component: World }
+  { path: '/campaign-turn/world', name: 'World', component: World },
+  { path: '/campaign-turn/battle', name: 'Battle', component: Battle }
+
  // {
  //   path: '/about',
  //   name: 'About',

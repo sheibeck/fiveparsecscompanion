@@ -11,20 +11,20 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
           <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-            <a class="nav-link" :class="{ 'active': $route.name === 'Home' }" aria-current="page" href="/">Crew List</a>
+            <a class="nav-link" :class="{ 'active': $route.name === 'Home' ||  $route.name === 'Crew' }" aria-current="page" href="/">Crew List</a>
             <li class="nav-item dropdown">              
-              <a class="nav-link dropdown-toggle" :class="{ 'active': $route.name !== 'Home' }" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              <a class="nav-link dropdown-toggle" :class="{ 'active': $route.name !== 'Home' && $route.name !== 'Crew' }" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                 Campaign Turn
               </a>
               <ul class="dropdown-menu" aria-labelledby="navbarDropdown">                
                 <li><a class="dropdown-item" href="/campaign-turn/travel">1. Travel</a></li>
                 <li><a class="dropdown-item" href="/campaign-turn/world">2. World</a></li>
-                <!--<li><a class="dropdown-item" href="#">3. Battle</a></li>-->
+                <li><a class="dropdown-item" href="/campaign-turn/battle">3. Battle</a></li>                
                 <!--<li><a class="dropdown-item" href="#">4. Post-Battle</a></li>-->
               </ul>
             </li>
             <li class="nav-item dropdown">              
-              <a class="nav-link dropdown-toggle" :class="{ 'active': $route.name !== 'Home' }" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                 Resources
               </a>
               <ul class="dropdown-menu" aria-labelledby="navbarDropdown">                

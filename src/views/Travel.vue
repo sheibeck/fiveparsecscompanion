@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1>1. Travel (P.69)</h1>
+    <h1>1. Travel (Pg.69)</h1>
 
     <div class="row row-cols-1 row-cols-md-3 rows-cols-lg-4 g-4">      
       <div class="col">
