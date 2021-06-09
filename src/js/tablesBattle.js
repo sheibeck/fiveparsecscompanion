@@ -116,5 +116,54 @@ export const battleTables = [
             ],
 
         }
-    }
+    },
+    {
+        key: 'enemyencountercategory',
+        title: 'Enemy Encounter Category',
+        sequence: ["patron", "opportunity", "quest", "unknownrival"],
+        tables: {
+            patron: [
+                { "label": "Criminal Elements", "subtable": "criminalelements", "weight": 25 },
+                { "label": "Hired Muscle", "subtable": "criminalelements", "weight": 25 },
+                { "label": "Interested Parties", "subtable": "criminalelements", "weight": 25 },
+                { "label": "Roving Threats", "subtable": "criminalelements", "weight": 25 },
+            ],
+            opportunity: [
+                { "label": "Criminal Elements", "subtable": "criminalelements", "weight": 30 },
+                { "label": "Hired Muscle", "subtable": "criminalelements", "weight": 30 },
+                { "label": "Interested Parties", "subtable": "criminalelements", "weight": 20 },
+                { "label": "Roving Threats", "subtable": "criminalelements", "weight": 20 },
+            ],
+            quest: [
+                { "label": "Criminal Elements", "subtable": "criminalelements", "weight": 15 },
+                { "label": "Hired Muscle", "subtable": "criminalelements", "weight": 25 },
+                { "label": "Interested Parties", "subtable": "criminalelements", "weight": 30 },
+                { "label": "Roving Threats", "subtable": "criminalelements", "weight": 30 },
+            ],
+            unknownrival: [
+                { "label": "Criminal Elements", "subtable": "criminalelements", "weight": 50 },
+                { "label": "Hired Muscle", "subtable": "criminalelements", "weight": 30 },
+                { "label": "Interested Parties", "subtable": "criminalelements", "weight": 20 },               
+            ],
+            criminalelements: [                
+                { "label": "Gangers", "description": "{ \"numbers\": 2 }", "weight": 10 },
+                { "label": "Punks", "description": "{ \"numbers\": 3 }", "weight": 9 },
+                { "label": "Raiders", "description": "{ \"numbers\": 1 }", "weight": 8 },
+                { "label": "Cultists", "description": "{ \"numbers\": 2 }", "weight": 7 },
+                { "label": "Psychos", "description": "{ \"numbers\": 2 }", "weight": 9 },
+                { "label": "Brat Gang", "description": "{ \"numbers\": 2 }", "weight": 5 },
+                { "label": "Gene Renegade", "description": "{ \"numbers\": 1 }", "weight": 3 },
+                { "label": "Anarchists", "description": "{ \"numbers\": 2 }", "weight": 6 },
+                { "label": "Pirates", "description": "{ \"numbers\": 2 }", "weight": 7 },
+                { "label": "K'Erin Outlaws", "description": "{ \"numbers\": 1 }", "weight": 7 },
+                { "label": "Skulker Brigands", "description": "{ \"numbers\": 3 }", "weight": 8 },
+                { "label": "Tech Gangers", "description": "{ \"numbers\": 1 }", "weight": 4 },
+                { "label": "Starport Scum", "description": "{ \"numbers\": 3 }", "weight": 7 },
+                { "label": "Hulker Gang", "description": "{ \"numbers\": 0 }", "weight": 4 },
+                { "label": "Gun Slingers", "description": "{ \"numbers\": 1 }", "weight": 6 },
+            ]
+
+        }
+    },
+    
 ]
