@@ -2,18 +2,20 @@
   <div>
     <h1>3. Battle (Pg.87)</h1>
 
-    <div class="d-flex">
-      <i class="fas fa-dice me-1 mt-1 d-print-none fa-2x" @click="readyForBattle()"></i>
-      <div class="d-flex">        
+    <div class="d-flex flex-column flex-md-row">
+      <i class="fas fa-dice me-1 mt-1 d-print-none fa-2x text-center mb-2 mb-md-0" @click="readyForBattle()"></i>
+      <div class="d-flex flex-column flex-md-row">
         <div class="input-group-text me-2">Battle Type</div>
-        <div class="form-check pe-2 mt-2" v-for="btype in battleTypes" :key="btype">
-          <input class="form-check-input" :checked="battleType===btype" type="radio" name="battleType" :id="`battle${btype}`" @change="readyForBattle()" v-model="battleType" :value="btype">
-          <label class="form-check-label" for="battlePatron">
-            {{btype}}
-          </label>
+        <div class="d-flex flex-wrap">
+          <div class="form-check pe-2 mt-2" v-for="btype in battleTypes" :key="btype">
+            <input class="form-check-input" :checked="battleType===btype" type="radio" name="battleType" :id="`battle${btype}`" @change="readyForBattle()" v-model="battleType" :value="btype">
+            <label class="form-check-label" for="battlePatron">
+              {{btype}}
+            </label>
+          </div>
         </div>
       </div>
-      <div class="col-auto ms-2">
+      <div class="col-auto ms-md-2">
         <label class="visually-hidden" for="crewSize">Crew Size</label>
         <div class="input-group">
           <div class="input-group-text col-form-label-sm">Crew Size</div>
@@ -26,34 +28,17 @@
       
       <div class="col">
         <div class="card">
-
           <p class="card-text">            
             <ul class="list-group">
-              <li v-for="(item, idx) in tableResults" :key="item.key" class="d-flex list-group-item" :class="{'bg-light': idx%2 == 0}">
-                <i class="fas fa-dice me-1 mt-1 d-print-none" @click="rollOnTable(item)"></i>
-                <div class="col-4">                  
-                  <span class="">{{item.label}}</span>
+              <li v-for="(item, idx) in tableResults" :key="item.key" class="d-flex flex-column flex-md-row list-group-item" :class="{'bg-light': idx%2 == 0}">
+                <div>
+                  <i class="fas fa-dice me-1 mt-1 d-print-none" @click="rollOnTable(item)"></i>                
+                  <span class="h5">{{item.label}}</span>
                 </div>
-                <div class="col">
-                  <label class="" v-html="item.result"></label>
-                </div>
+                <label class="" v-html="item.result"></label>                
               </li>
             </ul>
           </p>
-
-            <!--
-          <div class="card-header bg-light border-success">
-            <h5>
-              {{item.label}}
-              <i class="fas fa-dice me-1 mt-1 d-print-none" @click="rollOnTable(item.key)"></i>
-            </h5>
-          </div>
-          <div class="card-body">
-            <p class="card-text">              
-              {{item.result}}
-            </p>
-          </div>
-          -->
         </div>
       </div>
 
