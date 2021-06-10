@@ -220,7 +220,7 @@ export const battleTables = [
                 { "label": "Razor Lizards", "description": "{ \"numbers\": 2, \"weapons\": \"Fangs (Damage +0)\" }", "weight": 10 },
                 { "label": "Sand Runners", "description": "{ \"numbers\": 1, \"weapons\": \"Fangs (Damage +1)\" }", "weight": 12 },
                 { "label": "Void Rippers", "description": "{ \"numbers\": 0, \"weapons\": \"Fangs (Damage +0)\" }", "weight": 7 },
-                { "label": "Krong", "description": "{ \"numbers\": 0, \"weapons\": \"Claws (Damager +2)\" }", "weight": 7 },
+                { "label": "Krorg", "description": "{ \"numbers\": 0, \"weapons\": \"Claws (Damage +2)\" }", "weight": 7 },
                 { "label": "Large Bugs", "description": "{ \"numbers\": 2, \"weapons\": \"Mandibles (Damage +1)\" }", "weight": 9 },
                 { "label": "Carnivore Chasers", "description": "{ \"numbers\": 2, \"weapons\": \"Fangs (Damage +0)\" }", "weight": 6 },
                 { "label": "Vent Crawlers", "description": "{ \"numbers\": 0, \"weapons\": \"Claws (Damage +0)\" }", "weight": 13 },
