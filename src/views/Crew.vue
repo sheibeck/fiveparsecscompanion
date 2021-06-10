@@ -1,143 +1,141 @@
 <template>
   <div v-if="crew">    
-    <div class="row mt-2">
+    <div class="d-flex justify">
       <!-- crew log -->      
-      <div class="col col-12 col-sm-4 mt-2 mt-md-0">
-        <div class="">
-          <h4 class="p-1 rounded d-print-none">Crew Log</h4>
-          <div class="row">
-            <div class="col col-8 col-md-9">
-              <label for="crewName" class="form-text small">Crew Name</label>
-              <input v-model="crew.name" type="text" class="form-control" :class="{ 'd-none': !editing }" id="crewName" placeholder="Crew Name" />
-              <span :class="{ 'd-none': editing }">: {{crew.name}}</span>
-            </div> 
-            <div class="col-4 col-md-3">
-              <label for="crewStoryPoints" class="form-text small">Story Point</label>
-              <input v-model.number="crew.story_points" type="number" class="form-control" :class="{ 'd-none': !editing }" id="crewStoryPoints" placeholder="0" />
-              <span :class="{ 'd-none': editing }">: {{crew.story_points}}</span>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-2">
-              <label for="campaignTurn" class="form-text small">Turn</label>
-              <input v-model.number="crew.campaign_turn" type="number" class="form-control" :class="{ 'd-none': !editing }" id="campaignTurn" placeholder="" />
-              <span :class="{ 'd-none': editing }">: {{crew.campaign_turn}}</span>
-            </div>
-            <div class="col-4">
-              <label for="campaignDifficulty" class="form-text small">Difficulty</label>
-              <input v-model="crew.campaign_difficulty" type="text" class="form-control" :class="{ 'd-none': !editing }" id="campaignDifficulty" placeholder="" />
-              <span :class="{ 'd-none': editing }">: {{crew.campaign_difficulty}}</span>
-            </div>
-            <div class="col">
-              <label for="campaignVictory" class="form-text small">Victory</label>
-              <input v-model="crew.campaign_victory" type="text" class="form-control" :class="{ 'd-none': !editing }" id="campaignVictory" placeholder="" />
-              <span :class="{ 'd-none': editing }">: {{crew.campaign_victory}}</span>
-            </div>
-          </div>
-          <div class="row">
-            <div class="col">
-              <label for="crewNotes" class="form-text small">Notes</label>
-              <textarea v-model="crew.notes" class="form-control" :class="{ 'd-none': !editing }" id="crewNotes" placeholder=""></textarea>
-              <span :class="{ 'd-none': editing }">: {{crew.notes}}</span>
-            </div>
+      <div class="d-flex flex-column flex-fill m-1 border border-2 p-1">
+        <h4 class="p-1 rounded d-print-none border">Crew Log</h4>
+        <div class="d-flex">
+          <div class="d-flex flex-fill me-auto">
+            <label for="crewName" class="form-text small">Crew Name</label>
+            <input v-model="crew.name" type="text" class="form-control" :class="{ 'd-none': !editing }" id="crewName" placeholder="Crew Name" />
+            <span :class="{ 'd-none': editing }">: {{crew.name}}</span>
+          </div> 
+          <div class="d-flex flex-shrink-1 me-auto">
+            <label for="crewStoryPoints" class="form-text small">Story Point</label>
+            <input v-model.number="crew.story_points" type="number" class="form-control" :class="{ 'd-none': !editing }" id="crewStoryPoints" placeholder="0" />
+            <span class="border border-3 px-2 ms-1 rounded" :class="{ 'd-none': editing }">{{crew.story_points}}</span>
           </div>
         </div>
+        <div class="d-flex">
+          <div class="d-flex me-auto flex-shrink-1">
+            <label for="campaignTurn" class="form-text small">Turn</label>
+            <input v-model.number="crew.campaign_turn" type="number" class="form-control" :class="{ 'd-none': !editing }" id="campaignTurn" placeholder="" />
+            <span :class="{ 'd-none': editing }">: {{crew.campaign_turn}}</span>
+          </div>
+          <div class="d-flex me-auto">
+            <label for="campaignDifficulty" class="form-text small">Difficulty</label>
+            <input v-model="crew.campaign_difficulty" type="text" class="form-control" :class="{ 'd-none': !editing }" id="campaignDifficulty" placeholder="" />
+            <span :class="{ 'd-none': editing }">: {{crew.campaign_difficulty}}</span>
+          </div>
+          <div class="d-flex w-50 me-auto">
+            <label for="campaignVictory" class="form-text small">Victory</label>
+            <input v-model="crew.campaign_victory" type="text" class="form-control" :class="{ 'd-none': !editing }" id="campaignVictory" placeholder="" />
+            <span :class="{ 'd-none': editing }">: {{crew.campaign_victory}}</span>
+          </div>
+        </div>
+        <div class="d-flex">
+          <div class="flex-column flex-fill">
+            <label for="crewNotes" class="form-text small">Notes</label>
+            <textarea v-model="crew.notes" class="form-control" :class="{ 'd-none': !editing }" id="crewNotes" placeholder=""></textarea>
+            <span :class="{ 'd-none': editing }">: {{crew.notes}}</span>
+          </div>
+        </div>
+        
       </div>
 
       <!-- stash -->
-      <div class="col col-12 col-sm-4 mt-2 mt-md-0">
-        <div class="">
+      <div class="d-flex flex-column flex-fill m-1  border border-2 p-1">        
           <h4 class="p-1 rounded d-print-none">Stash</h4>
-          <div class="row">
-            <div class="col col-9">
-              <label for="crewStash" class="form-label small">Stash</label>
+          <div class="d-flex">
+            <div class="d-flex flex-fill flex-column w-100">
+              <label for="crewStash" class="form-text small">Stash</label>
               <textarea v-model.number="crew.stash" class="form-control" :class="{ 'd-none': !editing }" id="crewStash" placeholder="" rows="7"></textarea>
-              <span :class="{ 'd-none': editing }">: {{crew.stash}}</span>       
+              <span :class="{ 'd-none': editing }">{{crew.stash}}</span>       
             </div>
           
-            <div class="col">
-              <div class="">
-                <label for="crewCredits" class="form-label small">Credits</label>
+            <div class="d-flex flex-column flex-shrink-1">
+              <div class="d-flex flex-column  text-center">
+                <label for="crewCredits" class="form-text small">Credits</label>
                 <input v-model.number="crew.credits" type="number" class="form-control" :class="{ 'd-none': !editing }" id="crewCredits" placeholder="0" />
-                <span :class="{ 'd-none': editing }">: {{crew.credits}}</span>      
+                <span class="border border-3 px-2 ms-1 rounded" :class="{ 'd-none': editing }">{{crew.credits}}</span>      
               </div> 
-              <div class="">
-                <label for="crewPatrons" class="form-label small">Patrons</label>
+              <div class="d-flex flex-column text-center">
+                <label for="crewPatrons" class="form-text small">Patrons</label>
                 <input v-model.number="crew.patrons" type="number" class="form-control" :class="{ 'd-none': !editing }" id="crewPatrons" placeholder="0" />
-                <span :class="{ 'd-none': editing }">: {{crew.patrons}}</span>
+                <span class="border border-3 px-2 ms-1 rounded" :class="{ 'd-none': editing }">{{crew.patrons}}</span>
               </div>
-              <div class="">
-                <label for="crewRivals" class="form-label small">Rivals</label>
+              <div class="d-flex flex-column text-center">
+                <label for="crewRivals" class="form-text small">Rivals</label>
                 <input v-model.number="crew.rivals" type="number" class="form-control" :class="{ 'd-none': !editing }" id="crewRivals" placeholder="0" />
-                <span :class="{ 'd-none': editing }">: {{crew.rivals}}</span>
+                <span class="border border-3 px-2 ms-1 rounded" :class="{ 'd-none': editing }">{{crew.rivals}}</span>
               </div>
             </div>
           </div>  
-        </div>
+        
       </div>
 
       <!-- ship details -->          
-      <div class="col col-12 col-sm-4 mb-2 mt-2 mt-md-0">
-        <div class="h-100">
-          <h4 class="p-1 rounded d-print-none">Ship Details</h4>
-          <div class="row">
-            <div class="col col-8">
-              <label for="shipName" class="form-text small">Ship Name</label>
-              <input v-model="crew.ship_name" type="text" class="form-control" :class="{ 'd-none': !editing }"  id="shipName" placeholder="" />
-              <span :class="{ 'd-none': editing }">: {{crew.ship_name}}</span>
-            </div> 
-            <div class="col col-2">
-              <label for="shipHull" class="form-text small">Hull</label>
-              <input v-model.number="crew.ship_hull_points" type="number" class="form-control" :class="{ 'd-none': !editing }" id="shipHull" placeholder="0" />
-              <span :class="{ 'd-none': editing }">: {{crew.ship_hull_points}}</span>
-            </div>
-            <div class="col col-2">
-              <label for="shipDebt" class="form-text small">Debt</label>
-              <input v-model.number="crew.ship_debt" type="number" class="form-control" :class="{ 'd-none': !editing }" id="shipDebt" placeholder="0" />
-              <span :class="{ 'd-none': editing }">: {{crew.ship_debt}}</span>
-            </div>
+      <div class="d-flex flex-column flex-fill m-1 border border-2 p-1">      
+        <h4 class="p-1 rounded d-print-none">Ship Details</h4>
+        <div class="d-flex">
+          <div class="d-flex flex-fill me-auto">
+            <label for="shipName" class="form-text small">Ship Name</label>
+            <input v-model="crew.ship_name" type="text" class="form-control" :class="{ 'd-none': !editing }"  id="shipName" placeholder="" />
+            <span :class="{ 'd-none': editing }">: {{crew.ship_name}}</span>
+          </div> 
+          <div class="d-flex flex-nowrap flex-shrink-1 me-auto">
+            <label for="shipHull" class="form-text small">Hull</label>
+            <input v-model.number="crew.ship_hull_points" type="number" class="form-control" :class="{ 'd-none': !editing }" id="shipHull" placeholder="0" />
+            <span class="border border-3 px-2 ms-1 rounded" :class="{ 'd-none': editing }">{{crew.ship_hull_points}}</span>
           </div>
-          <div class="row">
-            <div class="col">
-              <label for="shipTraits" class="form-text small">Traits</label>
-              <textarea v-model="crew.ship_traits" class="form-control" id="shipTraits" :class="{ 'd-none': !editing }" placeholder=""></textarea>
-              <span :class="{ 'd-none': editing }">: {{crew.ship_traits}}</span>
-            </div>
-            <div class="col">
-              <label for="shipUpgrades" class="form-text small">Upgrades</label>
-              <textarea v-model="crew.ship_upgrades" class="form-control" id="shipUpgrades" :class="{ 'd-none': !editing }" placeholder=""></textarea>
-              <span :class="{ 'd-none': editing }">: {{crew.ship_upgrades}}</span>
-            </div>
-
-            <div class="row">
-              <div class="col col-6">
-                <label for="crewStoryTrack" class="form-text small">Story Track</label>
-                <input v-model="crew.story_track" type="text" class="form-control" id="crewStoryTrack" :class="{ 'd-none': !editing }" placeholder="" />
-                <span :class="{ 'd-none': editing }">: {{crew.story_track}}</span>
-              </div>
-              <div class="col-2">
-                <label for="crewEvent" class="form-text small">Event</label>
-                <input v-model.number="crew.event" type="number" class="form-control" id="crewEvent" :class="{ 'd-none': !editing }" placeholder="" />
-                <span :class="{ 'd-none': editing }">: {{crew.event}}</span>
-              </div>
-              <div class="col-2">
-                <label for="crewClock" class="form-label small">Clock</label>
-                <input v-model.number="crew.clock" type="number" class="form-control" id="crewClock" :class="{ 'd-none': !editing }" placeholder="" />
-                <span :class="{ 'd-none': editing }">: {{crew.clock}}</span>
-              </div>
-              <div class="col-2">
-                <label for="crewRumors" class="form-text small">Rumors</label>
-                <input v-model.number="crew.quest_rumors" type="number" class="form-control" id="crewClock" :class="{ 'd-none': !editing }" placeholder="" />
-                <span :class="{ 'd-none': editing }">: {{crew.quest_rumors}}</span>
-              </div>
-            </div>
+          <div class="d-flex flex-nowrap flex-shrink-1 me-auto">
+            <label for="shipDebt" class="form-text small">Debt</label>
+            <input v-model.number="crew.ship_debt" type="number" class="form-control" :class="{ 'd-none': !editing }" id="shipDebt" placeholder="0" />
+            <span class="border border-3 px-2 ms-1 rounded" :class="{ 'd-none': editing }">{{crew.ship_debt}}</span>
           </div>
         </div>
+
+        <div class="d-flex h-100">
+          <div class="d-flex w-100 me-auto">
+            <label for="shipTraits" class="form-text small">Traits</label>
+            <textarea v-model="crew.ship_traits" class="form-control" id="shipTraits" :class="{ 'd-none': !editing }" placeholder=""></textarea>
+            <span :class="{ 'd-none': editing }">: {{crew.ship_traits}}</span>
+          </div>
+          <div class="d-flex w-100 me-auto">
+            <label for="shipUpgrades" class="form-text small">Upgrades</label>
+            <textarea v-model="crew.ship_upgrades" class="form-control" id="shipUpgrades" :class="{ 'd-none': !editing }" placeholder=""></textarea>
+            <span :class="{ 'd-none': editing }">: {{crew.ship_upgrades}}</span>
+          </div>
+        </div>
+      
+        <div class="d-flex">
+          <div class="d-flex me-auto flex-fill">
+            <label for="crewStoryTrack" class="form-text small">Story Track</label>
+            <input v-model="crew.story_track" type="text" class="form-control" id="crewStoryTrack" :class="{ 'd-none': !editing }" placeholder="" />
+            <span :class="{ 'd-none': editing }">: {{crew.story_track}}</span>
+          </div>
+          <div class="d-flex flex-shrink-1 me-auto">
+            <label for="crewEvent" class="form-text small">Event</label>
+            <input v-model.number="crew.event" type="number" class="form-control" id="crewEvent" :class="{ 'd-none': !editing }" placeholder="" />
+            <span class="border border-3 px-2 ms-1 rounded" :class="{ 'd-none': editing }">{{crew.event}}</span>
+          </div>
+          <div class="d-flex flex-shrink-1 me-auto">
+            <label for="crewClock" class="form-text small">Clock</label>
+            <input v-model.number="crew.clock" type="number" class="form-control" id="crewClock" :class="{ 'd-none': !editing }" placeholder="" />
+            <span class="border border-3 px-2 ms-1 rounded" :class="{ 'd-none': editing }">{{crew.clock}}</span>
+          </div>
+          <div class="d-flex flex-shrink-1 me-auto">
+            <label for="crewRumors" class="form-text small">Rumors</label>
+            <input v-model.number="crew.quest_rumors" type="number" class="form-control" id="crewClock" :class="{ 'd-none': !editing }" placeholder="" />
+            <span class="border border-3 px-2 ms-1 rounded" :class="{ 'd-none': editing }">{{crew.quest_rumors}}</span>
+          </div>
+        </div>
+        
       </div>
     </div>
 
     <div class="row mt-1  d-print-none">
-      <div class="col d-flex">
+      <div class="d-flex">
         <button v-if="editing" type="button" class="btn btn-primary btn-sm mx-1" @click="saveCrew()">Save Crew Log <i class="fas fa-save"></i></button>
         <button v-if="!editing" type="button" class="btn btn-primary btn-sm mx-1" @click="toggleEdit()">Edit Crew Log <i class="fas fa-pencil"></i></button>        
         <button type="button" class="ms-auto btn btn-danger btn-sm mx-1" @click="removeCrew()">Delete Crew Log <i class="fas fa-trash"></i></button>
@@ -158,9 +156,8 @@
         </div>
    
         <div id="collapseMembers" class="accordion-collapse collapse show" aria-labelledby="headingMembers" data-bs-parent="#accordionMembers">
-          <div class="accordion-body d-flex flex-wrap p-0">          
-            <div class="border border-2 p-1 col-12 col-md-6" :class="{ 'bg-dead': member.kia, 'bg-leader': member.leader, 'bg-sick': member.sick_bay }" v-for="member in crewMembers" :key="member.id">              
-             
+          <div class="accordion-body d-flex flex-wrap p-1">          
+            <div class="border border-1 p-1 col-12 col-md-6 p-1" :class="{ 'bg-dead': member.kia, 'bg-leader': member.leader, 'bg-sick': member.sick_bay }" v-for="member in crewMembers" :key="member.id">                           
               <div class="d-flex flex-wrap flex-md-nowrap">
                 <!--name -->
                 <div class="w-100">
@@ -399,7 +396,7 @@ export default {
     return {
       crew: null,      
       crewMembers: [],      
-      editing: true,
+      editing: false,
       crewEdit: [],
     }
   },  
@@ -417,7 +414,7 @@ export default {
       return this.username === itemOwner;
     },
     toggleEdit: function() {
-      //this.editing = !this.editing;
+      this.editing = !this.editing;
     },
     toggleCrewEdit: function(crewId) {
       if (this.crewEdit.includes(crewId)) {
