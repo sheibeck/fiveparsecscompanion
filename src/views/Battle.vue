@@ -43,76 +43,83 @@
       </div>
     </div>  
 
-    <div v-if="enemyTablePrint.length > 0" class="">
-      <h5 class="mt-3">Enemies</h5>
-      <table class="table small">
-        <thead>
-          <tr>
-            <th scope="col"></th>
-            <th scope="col" class="flex-fill">Name/Type</th>
-            <th scope="col">Number</th>
-            <th scope="col">Panic</th>
-            <th scope="col">Speed</th>
-            <th scope="col">Combat</th>
-            <th scope="col">Toughness</th>
-            <th scope="col">AI</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="(item,idx) in enemyTablePrint" :key="idx">
-            <th scope="row">{{idx+1}}</th>
-            <td>{{item.name}}</td>
-            <td>{{item.numbers}}</td>
-            <td></td>   
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-          </tr>
-          <tr>
-            <th scope="row">*</th>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-          </tr>
-        </tbody>
-      </table>
+    <div v-if="enemyTablePrint.length > 0" class="d-flex">
+      <div class="flex-fill">
+        <h5 class="mt-3">Enemies</h5>
+        <table class="table small">
+          <thead>
+            <tr>
+              <th scope="col"></th>
+              <th scope="col" class="flex-fill">Name/Type</th>
+              <th scope="col">Number</th>
+              <th scope="col">Panic</th>
+              <th scope="col">Speed</th>
+              <th scope="col">Combat</th>
+              <th scope="col">Toughness</th>
+              <th scope="col">AI</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="(item,idx) in enemyTablePrint" :key="idx">
+              <th scope="row">{{idx+1}}</th>
+              <td>{{item.name}}</td>
+              <td>{{item.numbers}}</td>
+              <td></td>   
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <th scope="row">*</th>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+          </tbody>
+        </table>
 
-      <h5>Weapons</h5>
-      <table class="table small">
-        <thead>
-          <tr>
-            <th scope="col"></th>
-            <th scope="col" class="flex-fill">Name/Type</th>
-            <th scope="col">Range</th>
-            <th scope="col">Shots</th>
-            <th scope="col">Damage</th>
-            <th scope="col">Traits</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="(item,idx) in enemyWeaponTablePrint" :key="idx">
-            <th scope="row">{{idx+1}}</th>
-            <td>{{item}}</td>
-            <td></td>
-            <td></td>   
-            <td></td>
-            <td></td>          
-          </tr>      
-          <tr>
-            <th scope="row">*</th>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-          </tr>
-        </tbody>
-      </table>
+        <h5>Weapons</h5>
+        <table class="table small">
+          <thead>
+            <tr>
+              <th scope="col"></th>
+              <th scope="col" class="flex-fill">Name/Type</th>
+              <th scope="col">Range</th>
+              <th scope="col">Shots</th>
+              <th scope="col">Damage</th>
+              <th scope="col">Traits</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="(item,idx) in enemyWeaponTablePrint" :key="idx">
+              <th scope="row">{{idx+1}}</th>
+              <td>{{item}}</td>
+              <td></td>
+              <td></td>   
+              <td></td>
+              <td></td>          
+            </tr>      
+            <tr>
+              <th scope="row">*</th>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="w-25 d-flex flex-column">
+        <h5>Notes</h5>
+        <textarea class="flex-fill" border="0">
+        </textarea>
+      </div>
     </div>
     
 </div>
