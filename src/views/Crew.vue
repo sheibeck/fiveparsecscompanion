@@ -1,6 +1,6 @@
 <template>
   <div v-if="crew">    
-    <div class="d-flex justify">
+    <div class="d-md-flex justify">
       <!-- crew log -->      
       <div class="d-flex flex-column flex-fill m-1 border border-2 p-1">
         <h4 class="p-1 rounded d-print-none border">Crew Log</h4>
