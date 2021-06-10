@@ -1,8 +1,8 @@
 <template>
   <div>
-    <h1>3. Battle (Pg.87)</h1>
-
-    <div class="d-flex flex-column flex-md-row">
+    <h1 class="d-print-none">3. Battle (Pg.87)</h1>
+    <h4 class="d-none d-print-block">Encounter Log</h4>
+    <div class="d-flex flex-column flex-md-row d-print-none">
       <i class="fas fa-dice me-1 mt-1 d-print-none fa-2x text-center mb-2 mb-md-0" @click="readyForBattle()"></i>
       <div class="d-flex flex-column flex-md-row">
         <div class="input-group-text me-2">Battle Type</div>
@@ -31,7 +31,7 @@
           <p class="card-text">            
             <ul class="list-group">
               <li v-for="(item, idx) in tableResults" :key="item.key" class="d-flex flex-column flex-md-row list-group-item" :class="{'bg-light': idx%2 == 0}">
-                <div>
+                <div class="col col-md-6">
                   <i class="fas fa-dice me-1 mt-1 d-print-none" @click="rollOnTable(item)"></i>                
                   <span class="h5">{{item.label}}</span>
                 </div>
@@ -41,8 +41,80 @@
           </p>
         </div>
       </div>
-
     </div>  
+
+    <div v-if="enemyTablePrint.length > 0" class="">
+      <h5 class="mt-3">Enemies</h5>
+      <table class="table small">
+        <thead>
+          <tr>
+            <th scope="col"></th>
+            <th scope="col" class="flex-fill">Name/Type</th>
+            <th scope="col">Number</th>
+            <th scope="col">Panic</th>
+            <th scope="col">Speed</th>
+            <th scope="col">Combat</th>
+            <th scope="col">Toughness</th>
+            <th scope="col">AI</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="(item,idx) in enemyTablePrint" :key="idx">
+            <th scope="row">{{idx+1}}</th>
+            <td>{{item.name}}</td>
+            <td>{{item.numbers}}</td>
+            <td></td>   
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <th scope="row">*</th>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h5>Weapons</h5>
+      <table class="table small">
+        <thead>
+          <tr>
+            <th scope="col"></th>
+            <th scope="col" class="flex-fill">Name/Type</th>
+            <th scope="col">Range</th>
+            <th scope="col">Shots</th>
+            <th scope="col">Damage</th>
+            <th scope="col">Traits</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="(item,idx) in enemyWeaponTablePrint" :key="idx">
+            <th scope="row">{{idx+1}}</th>
+            <td>{{item}}</td>
+            <td></td>
+            <td></td>   
+            <td></td>
+            <td></td>          
+          </tr>      
+          <tr>
+            <th scope="row">*</th>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    
 </div>
    
 </template>
@@ -59,6 +131,8 @@ export default {
   }, 
   data() {
     return {
+      enemyTablePrint: [],      
+      enemyWeaponTablePrint: [],
       crewSize: 6,
       battleTypes: [
         "patron",             
@@ -72,26 +146,27 @@ export default {
         {          
           key: "deploymentconditions",
           tableResult: null,
-          label: "1. Deployment Conditions (Pg. 88)",
+          label: "Deployment Conditions (Pg. 88)",
           result: "",
         },
         {          
           key: "notablesights",
           tableResult: null,
-          label: "2. Notable Sights (Pg. 89)",
+          label: "Notable Sights (Pg. 89)",
           result: "",
         },
         {          
           key: "missionobjective",
           tableResult: null,
-          label: "3. Mission Objective (Pg. 89)",
+          label: "Mission Objective (Pg. 89)",
           result: "",
         },
         {          
           key: "enemyencountercategory",
           tableResult: null,
-          label: "4. Determine the Enemy (Pg. 92)",
-          result: "",          
+          label: "Determine the Enemy (Pg. 92)",          
+          result: "",
+
         }
       ]
     }        
@@ -214,34 +289,42 @@ export default {
       return JSON.parse(table.tableResult[idx].desc);
     },
     determineOpponents(step, silent) {
+      this.enemyTablePrint = [];
+      this.enemyWeaponTablePrint = [];
+      
       let difficulty = "Normal";
 
       let result = "<div>"
       let opponentNumber = 0;
       let opponentData = null;
       let opponentType = "";
+      let opponentName = "";
       switch(this.battleType) {
         case "patron":
           opponentType = `${step.tableResult[0]}`;
-          result += `${opponentType}: ${step.tableResult[1]}`;
+          opponentName = `${step.tableResult[1]}`;
+          result += `${opponentType}: ${opponentName}`;
           opponentData = this.getOpponentData(step, 1);            
           break;
 
         case "opportunity":           
           opponentType = `${step.tableResult[2]}`;
-          result += `${opponentType}: ${step.tableResult[3]}`;
+          opponentName = `${step.tableResult[3]}`;
+          result += `${opponentType}: ${opponentName}`;
           opponentData = this.getOpponentData(step, 3);            
           break;       
 
         case "quest":
           opponentType = `${step.tableResult[4]}`;
-          result += `${opponentType}: ${step.tableResult[5]}`;
+          opponentName = `${step.tableResult[5]}`;
+          result += `${opponentType}: ${opponentName}`;
           opponentData = this.getOpponentData(step, 5);            
           break;
 
         case "rival":
           opponentType = `${step.tableResult[6]}`;
-          result += `${opponentType}: ${step.tableResult[7]}`;
+          opponentName = `${step.tableResult[7]}`;
+          result += `${opponentType}: ${opponentName}`;
           opponentData = this.getOpponentData(step, 7);            
           break;
 
@@ -319,7 +402,7 @@ export default {
 
       let lieutenant = 0;
       if (totalOpponents >= 4) {
-        lieutenant = 1;
+        lieutenant = 1;        
       }
       
       let uniqueOpponents = 0;      
@@ -330,19 +413,20 @@ export default {
         }      
       }
 
-      const standardOponents = totalOpponents - specialists - lieutenant; 
+      const standardOpponents = totalOpponents - specialists - lieutenant;
+                  
       //result += `${roll1} + ${roll2} + ${rollUnique} == ${totalOpponents}`;
       
       let standardWeapon = "";
       let specialistWeapon = "";
       if (opponentData.weapons.length > 2) {
-          const customWeapon = opponentData.weapons.split(",");
-          standardWeapon = customWeapon[0];
-          specialistWeapon = customWeapon[customWeapon.length-1];
+          const customWeapon = opponentData.weapons.split(","); 
+          standardWeapon = customWeapon[0];                 
+          specialistWeapon = customWeapon[customWeapon.length-1];          
       } else {
         const weapons = this.$options.tables.GetFullTableResult("enemyweapons");
         standardWeapon = weapons[opponentData.weapons[0]-1];
-              
+                      
         if (specialists > 0) {
           const specialistWeapons = this.$options.tables.GetFullTableResult("specialistweapons");
           const specialWeaponMapping = {
@@ -350,26 +434,50 @@ export default {
             B: 1,
             C: 2,
           }
-          specialistWeapon = `${specialistWeapons[specialWeaponMapping[opponentData.weapons[1]]]}`;
+          specialistWeapon = `${specialistWeapons[specialWeaponMapping[opponentData.weapons[1]]]}`;          
         }
       }
+
+      //set some printables
+      this.enemyTablePrint.push({name: opponentName, numbers: standardOpponents});      
+      this.addPrintableWeaponEntry(standardWeapon);
       
+      if (lieutenant > 0) {
+        this.enemyTablePrint.push({name: `${opponentName} Lt.`, numbers: lieutenant});        
+        this.addPrintableWeaponEntry("Blade");
+      }      
+      if (specialists > 0) {
+        this.enemyTablePrint.push({name: `${opponentName} Spc.`, numbers: specialists});
+        let spcWeapon = specialistWeapon.replace(/ *\([^)]*\) */g, "").split("+");
+        spcWeapon.forEach((w) => {
+          this.addPrintableWeaponEntry(w.trim());
+        });
+      }
+      for(var i = 0; i<uniqueOpponents; i++) {
+        this.enemyTablePrint.push({name: "", numbers: i+1});        
+      }
+
+      // formatted results
       result += ` (+${opponentData.numbers} numbers, ${opponentData.weapons} weapons) </div>`
       result += `<ul class='small'>`;
-      result += `<li>${standardOponents}x Standard: ${standardWeapon} (Pg.92)</li>`;
-      result += `<li>${specialists}x Specialists: ${specialistWeapon} (Pg.93)</li>`;
-      result += `<li>${lieutenant}x Lieutenants: ${standardWeapon} (Pg.93)</li>`;
+      result += `<li>${standardOpponents}x Standard: ${standardWeapon}</li>`;
+      result += `<li>${specialists}x Specialists: ${specialistWeapon}</li>`;
+      result += `<li>${lieutenant}x Lieutenants: ${standardWeapon}</li>`;
       result += `<li>${uniqueOpponents}x Unique Individuals (Pg. 105)</li>`;
       result += `</ul>`;
-
-     
 
       result += `<div class='small fw-normal'>${pageNumber} <span class='fw-bold text-secondary'>${extraInfo}</span></div>`;
 
       step.result = result;    
       if (!silent) this.$root.showUserMsg(`Determined Opponents`);
     },
-   
+    addPrintableWeaponEntry(entry) {     
+      entry = `${entry}`.replace(/ *\([^)]*\) */g, "");
+      let weaponArray = this.enemyWeaponTablePrint;
+      if (weaponArray.indexOf(entry) === -1) {
+         weaponArray.push(entry);
+      }
+    }
 
   }
 }
