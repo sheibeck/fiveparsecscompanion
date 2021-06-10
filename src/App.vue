@@ -164,6 +164,27 @@ i {
   }
   :-ms-input-placeholder { /* Internet Explorer 10+ */
       color: transparent;
+  } 
+
+  @page
+  {
+      size:  auto;   /* auto is the initial value */
+      margin-left: 0mm;  /* this affects the margin in the printer settings */
+      margin-right: 0mm;  /* this affects the margin in the printer settings */
+      margin-top: 3mm;
+  }
+
+  html
+  {      
+    margin-left: 0px;  /* this affects the margin on the html before sending to printer */
+    margin-right: 0px;
+  }
+
+  body
+  {
+    margin-left: 0mm; /* margin you want for the content */
+    margin-right: 0mm; /* margin you want for the content */
   }
 }
+
 </style>

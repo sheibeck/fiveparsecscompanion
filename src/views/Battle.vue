@@ -119,7 +119,7 @@
           </table>
         </div>
       </div>
-      <div class="col-12 col-md-3 d-flex flex-column">
+      <div class="col col-md-3 d-flex flex-column">
         <h5>Notes</h5>
         <textarea class="flex-fill" border="0">
         </textarea>
