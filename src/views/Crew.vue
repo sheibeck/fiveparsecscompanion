@@ -718,5 +718,6 @@ export default {
     .attributes {
         flex-wrap: unset !important;
     }
+    
   }
 </style>
