@@ -1,3 +1,19 @@
+type World @model @auth(rules: [{allow: public}]) @key(name: "byCrew", fields: ["crewID"]) {
+  id: ID!
+  crewID: ID
+  name: String!
+  licensing_required: Boolean
+  license_obtained: Boolean
+  invading_forces: String
+  war_progress: String
+  patrons_known: AWSJSON
+  rivals_known: AWSJSON
+  traits: String
+  notes: String
+  user: String!
+  current_location: Boolean
+}
+
 type CrewMember @model @auth(rules: [{allow: public}]) @key(name: "byCrew", fields: ["crewID"]) {
   id: ID!
   user: String!
@@ -45,5 +61,6 @@ type Crew @model @auth(rules: [{allow: public}]) {
   campaign_turn: Int
   campaign_difficulty: String
   campaign_victory: String
+  Worlds: [World] @connection(keyName: "byCrew", fields: ["id"])
 }
  

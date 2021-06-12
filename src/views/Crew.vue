@@ -136,14 +136,14 @@
 
     <div class="row mt-1  d-print-none">
       <div class="d-flex">
-        <button v-if="editing" type="button" class="btn btn-primary btn-sm mx-1" @click="saveCrew()">Save Crew Log <i class="fas fa-save"></i></button>
-        <button v-if="!editing" type="button" class="btn btn-primary btn-sm mx-1" @click="toggleEdit()">Edit Crew Log <i class="fas fa-pencil"></i></button>        
+        <button v-if="editing" type="button" class="btn btn-primary btn-sm mx-1" @click="saveCrew()">Save Crew Log <i class="fas fa-save"></i></button>        
+        <button v-if="!editing" type="button" class="btn btn-primary btn-sm mx-1" @click="toggleEdit()">Edit Crew Log <i class="fas fa-pencil"></i></button>
+        <button type="button" class="btn btn-secondary btn-sm mx-1" @click="print()">Print <i class="fas fa-print"></i></button>
         <button type="button" class="ms-auto btn btn-danger btn-sm mx-1" @click="removeCrew()">Delete Crew Log <i class="fas fa-trash"></i></button>
       </div>
     </div>
 
     <div class="row mt-2">
-
       <!-- crew members -->
       <div class="accordion" id="accordionMembers">
         <div class="accordion-item d-print-none">
@@ -157,19 +157,20 @@
    
         <div id="collapseMembers" class="accordion-collapse collapse show" aria-labelledby="headingMembers" data-bs-parent="#accordionMembers">
           <div class="accordion-body d-flex flex-wrap p-1">          
-            <div class="border border-1 p-1 col-12 col-md-6 p-1" :class="{ 'bg-dead': member.kia, 'bg-leader': member.leader, 'bg-sick': member.sick_bay }" v-for="member in crewMembers" :key="member.id">                           
+            <div class="border border-1 p-1 col-12 col-md-6 p-1 print-keep-together d-flex flex-column" :class="{ 'bg-dead': member.kia, 'bg-leader': member.leader, 'bg-sick': member.sick_bay }" v-for="member in crewMembers" :key="member.id">
+              <div class="d-flex rounded h5 px-1 mb-0">{{member.name}}</div>
               <div class="d-flex flex-wrap flex-md-nowrap">
                 <!--name -->
-                <div class="w-100">
-                  <div class="d-flex w-100">
-                    <div class="d-flex">
+                <div class="flex-fill">
+                  <div class="d-flex flex-fill flex-wrap">
+                    <div class="d-flex" :class="{ 'd-none': !isEditingCrew(member.id) }">
                       <i :class="{ 'd-none': !isEditingCrew(member.id) }" class="fas fa-dice pe-auto" @click="member.name = rollOnTable('name')"></i>
                       <div class="form-text">Name</div>
                       <span :class="{ 'd-none': isEditingCrew(member.id) }">: {{member.name}}</span>
                     </div>                        
                     <input :class="{ 'd-none': !isEditingCrew(member.id) }" v-model="member.name" type="text" class="form-control" placeholder="" />
                   
-                    <div class="d-flex ms-2">
+                    <div class="d-flex">
                       <i :class="{ 'd-none': !isEditingCrew(member.id) }" class="fas fa-dice pe-auto" @click="member.species = rollOnTable('crewtype')"></i>
                       <div class="form-text">Species</div>
                       <span :class="{ 'd-none': isEditingCrew(member.id) }">: {{member.species}}</span>
@@ -210,7 +211,7 @@
                 </div>
 
                 <!-- attributes -->
-                <div class="d-flex flex-wrap flex-shrink-1 attributes">
+                <div class="flex-wrap flex-shrink-1 attributes" :class="{ 'd-flex': !isEditingCrew(member.id) }">
                   <div class="text-center">                        
                     <div class="form-text">Reactions</div>
                     <span class="border border-3 px-2 ms-1 rounded" :class="{ 'd-none': isEditingCrew(member.id) }">{{member.reactions}}</span>
@@ -239,7 +240,7 @@
                 </div>
               </div>
 
-              <div class="d-flex flex-wrap flex-md-nowrap">
+              <div class="d-flex flex-wrap flex-md-nowrap flex-fill">
                 <div class="d-flex w-auto align-items-start flex-column">                  
                   <table class="table small mb-auto">
                     <thead>
@@ -317,27 +318,25 @@
                 
               </div>
                                          
-              <div class="d-flex justify-content-end">
-               
-                  <div class="form-check">
-                    <input :disabled="!isEditingCrew(member.id)" v-model="member.leader" class="form-check-input" type="checkbox" value="" id="leader">
-                    <label class="form-check-label small" for="leader">
-                      Leader
-                    </label>
-                  </div>
-                  <div class="form-check ms-4">
-                    <input :disabled="!isEditingCrew(member.id)" v-model="member.sick_bay" class="form-check-input" type="checkbox" value="" id="sickbay" checked>
-                    <label class="form-check-label small" for="sickbay">
-                      Sick Bay
-                    </label>
-                  </div>
-                  <div class="form-check ms-4">
-                    <input :disabled="!isEditingCrew(member.id)" v-model="member.kia" class="form-check-input" type="checkbox" value="" id="kia" checked>
-                    <label class="form-check-label small" for="kia">
-                      KIA
-                    </label>
-                  </div>
-               
+              <div class="d-flex justify-content-end">              
+                <div class="form-check">
+                  <input :disabled="!isEditingCrew(member.id)" v-model="member.leader" class="form-check-input" type="checkbox" value="" />
+                  <label class="form-check-label small" for="leader">
+                    Leader
+                  </label>
+                </div>
+                <div class="form-check ms-4">
+                  <input :disabled="!isEditingCrew(member.id)" v-model="member.sick_bay" class="form-check-input" type="checkbox" value="" />
+                  <label class="form-check-label small" for="sickbay">
+                    Sick Bay
+                  </label>
+                </div>
+                <div class="form-check ms-4">
+                  <input :disabled="!isEditingCrew(member.id)" v-model="member.kia" class="form-check-input" type="checkbox" value="" />
+                  <label class="form-check-label small" for="kia">
+                    KIA
+                  </label>
+                </div>               
               </div>
             
               <div class="d-flex d-print-none">
@@ -356,16 +355,140 @@
           <h2 class="accordion-header d-flex" id="headingWorlds">
             <button type="button" class="btn btn-primary btn-sm mx-1 d-print-none" @click="addWorld()">Add <i class="fas fa-plus"></i></button>
             <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseWorlds" aria-expanded="false" aria-controls="collapseWorlds">              
-              Worlds
+              Worlds (Tracked Worlds: {{worlds.length}})
             </button>
-          </h2>
+          </h2>          
         </div>
-      
-        <div id="collapseWorlds" class="accordion-collapse collapse" aria-labelledby="headingWorlds" data-bs-parent="#accordionWorlds">
-          <div class="accordion-body">
-            <div class="card">
-              <div class="card-body">
-                Coming Soon
+        <hr class="d-none d-print-block page-break-before" />
+        <h5 class="d-none d-print-block worldrecordsheet mb-1">World Record Sheet</h5>
+        <div id="collapseWorlds" class="accordion-collapse collapse p-1" aria-labelledby="headingWorlds" data-bs-parent="#accordionWorlds">
+          <div class="accordion-body d-flex flex-wrap p-1">
+            <div class="border border-1 p-1 col-12 col-md-6 d-flex flex-column print-keep-together" :class="{ 'bg-leader': world.current_location }" v-for="world in worlds" :key="world.id">
+              <div class="d-flex rounded h5 px-1 mb-0">
+                {{world.name}}
+                <div class="ms-4 small ms-auto">
+                  <label class="form-check-label small p-0">
+                    Current Location
+                  </label>
+                  <input :disabled="!isEditingWorld(world.id)" v-model="world.current_location" class="form-check-input" type="checkbox" value="" />                  
+                </div>
+              </div>
+              <div class="d-flex">
+                <div class="d-flex flex-column flex-md-row flex-fill">
+                  <div class="d-flex flex-column">
+                    <div class="" :class="{ 'd-none': !isEditingWorld(world.id) }">
+                      <div class="form-text">Name</div>
+                      <input v-model="world.name" type="text" class="form-control" placeholder="" />                                     
+                    </div>                                      
+
+                    <div class="form-check ms-4">
+                      <input :disabled="!isEditingWorld(world.id)" v-model="world.licensing_required" class="form-check-input" type="checkbox" value="" />
+                      <label class="form-check-label small" for="kia">
+                        Licensing Required
+                      </label>
+                    </div>
+
+                    <div class="form-check ms-4">
+                      <input :disabled="!isEditingWorld(world.id) || !world.licensing_required" v-model="world.license_obtained" class="form-check-input" type="checkbox" value="" />
+                      <label class="form-check-label small" for="kia">
+                        License Obtained
+                      </label>
+                    </div>                  
+                    
+                  </div>
+
+                  <div class="d-flex flex-fill border border-1 flex-fill">
+                    <div class="flex-column flex-fill">
+                      <label class="form-text small">Traits</label>
+                      <textarea v-model="world.notes" class="form-control" :class="{ 'd-none': !isEditingWorld(world.id) }" placeholder=""></textarea>
+                      <span :class="{ 'd-none': !isEditingWorld(world.id) }">{{world.traits}}</span>
+                    </div>
+                  </div>
+                              
+                </div>
+
+                
+                <div class="d-flex flex-column flex-fill border border-1">
+                  <div class="flex-column flex-fill">
+                    <label class="form-text small">Invading Force</label>
+                    <textarea v-model="world.invading_forces" class="form-control" :class="{ 'd-none': !isEditingWorld(world.id) }" placeholder=""></textarea>
+                    <span :class="{ 'd-none': isEditingWorld(world.id) }">{{world.invading_forces}}</span>
+                  </div>
+
+                  <div class="flex-column flex-fill border border-1">
+                    <label class="form-text small">War Progress</label>
+                    <textarea v-model="world.war_progress" class="form-control" :class="{ 'd-none': !isEditingWorld(world.id) }" placeholder=""></textarea>
+                    <span :class="{ 'd-none': isEditingWorld(world.id) }">{{world.war_progress}}</span>
+                  </div>
+                </div>              
+              </div>
+
+              <div class="d-flex d-flex flex-fill">
+                <div class="d-flex flex-column flex-fill">
+                  <h6 class="p-1 rounded bg-light">Local Patrons Known ({{world.patrons_known.patrons.length}})
+                    <button type="button" :class="{ 'd-none': !isEditingWorld(world.id) }" class="btn btn-primary btn-sm d-print-none py-0 m-0" @click="addPatronToWorld(world.id)"><i class="fas fa-plus"></i></button>
+                  </h6>
+                  <div class="d-flex flex-column flex-fill border border-1" v-for="patron in world.patrons_known.patrons" :key="patron.id">                    
+                    <div class="d-flex">
+                      <div class="d-flex">
+                        <i :class="{ 'd-none': !isEditingWorld(world.id) }" class="fas fa-dice pe-auto" @click="patron.name = rollOnTable('name')"></i>
+                        <div class="form-text">Name</div>
+                        <span :class="{ 'd-none': isEditingWorld(world.id) }">: {{patron.name}}</span>
+                      </div>                        
+                      <input :class="{ 'd-none': !isEditingWorld(world.id) }" v-model="patron.name" type="text" class="form-control" placeholder="" />                                     
+                    </div>    
+                    <div class="d-flex">
+                      <div class="d-flex">
+                        <i :class="{ 'd-none': !isEditingWorld(world.id) }" class="fas fa-dice pe-auto" @click="patron.type = rollOnTable('patron')"></i>
+                        <div class="form-text">Type</div>
+                        <span :class="{ 'd-none': isEditingWorld(world.id) }">: {{patron.type}}</span>
+                      </div>                        
+                      <input :class="{ 'd-none': !isEditingWorld(world.id) }" v-model="patron.type" type="text" class="form-control" placeholder="" />                                     
+                    </div>    
+
+                    <div class="d-flex flex-column flex-fill border border-1">
+                      <label class="form-text small">Benefit</label>
+                      <textarea v-model="patron.benefit" class="form-control" :class="{ 'd-none': !isEditingWorld(world.id) }" placeholder=""></textarea>
+                      <span :class="{ 'd-none': isEditingWorld(world.id) }">{{patron.benefit}}</span>
+                    </div>
+                  </div>              
+                </div>
+
+                <div class="d-flex flex-column flex-fill">
+                  <h6 class="p-1 rounded bg-light">Local Rivals Known ({{world.rivals_known.rivals.length}})
+                    <button type="button" :class="{ 'd-none': !isEditingWorld(world.id) }" class="btn btn-primary btn-sm d-print-none py-0 m-0" @click="addRivalToWorld(world.id)"><i class="fas fa-plus"></i></button>
+                  </h6>                  
+                  <div class="d-flex flex-column flex-fill border border-1" v-for="rival in world.rivals_known.rivals" :key="rival.id">
+                    <div class="d-flex">
+                      <div class="d-flex">
+                        <i :class="{ 'd-none': !isEditingWorld(world.id) }" class="fas fa-dice pe-auto" @click="rival.name = rollOnTable('name')"></i>
+                        <div class="form-text">Name</div>
+                        <span :class="{ 'd-none': isEditingWorld(world.id) }">: {{rival.name}}</span>
+                      </div>                        
+                      <input :class="{ 'd-none': !isEditingWorld(world.id) }" v-model="rival.name" type="text" class="form-control" placeholder="" />                                     
+                    </div>    
+                    <div class="d-flex">
+                      <div class="d-flex">
+                        <i :class="{ 'd-none': !isEditingWorld(world.id) }" class="fas fa-dice pe-auto" @click="rival.type = getRivalType()"></i>
+                        <div class="form-text">Type</div>
+                        <span :class="{ 'd-none': isEditingWorld(world.id) }">: {{rival.type}}</span>
+                      </div>                        
+                      <input :class="{ 'd-none': !isEditingWorld(world.id) }" v-model="rival.type" type="text" class="form-control" placeholder="" />                                     
+                    </div>    
+
+                    <div class="d-flex flex-column flex-fill border border-1">
+                      <label class="form-text small">Notes</label>
+                      <textarea v-model="rival.notes" class="form-control" :class="{ 'd-none': !isEditingWorld(world.id) }" placeholder=""></textarea>
+                      <span :class="{ 'd-none': isEditingWorld(world.id) }">{{rival.notes}}</span>
+                    </div>
+                  </div>              
+                </div>
+              </div>
+
+              <div class="d-flex d-print-none">
+                <button v-if="isEditingWorld(world.id)" type="button" class="btn btn-primary btn-sm mx-1" @click="saveWorld(world.id)">Save <i class="fas fa-save"></i></button>
+                <button v-if="!isEditingWorld(world.id)" type="button" class="btn btn-primary btn-sm mx-1" @click="toggleWorldEdit(world.id)">Edit <i class="fas fa-pen"></i></button>
+                <button type="button" class="ms-auto btn btn-danger btn-sm mx-1" @click="removeWorld(world.id)">Delete <i class="fas fa-trash"></i></button>
               </div>
             </div>
           </div>
@@ -381,7 +504,9 @@
 import { DataStore } from '@aws-amplify/datastore';
 import { Crew } from '../models';
 import { CrewMember } from '../models';
+import { World } from '../models';
 import { FPFHTables } from '../js/tables.js';
+import { Collapse } from 'bootstrap';
 
 var shortid = require('shortid');
 
@@ -390,14 +515,16 @@ export default {
   components: {    
   },
   mounted() {    
-    this.fetchCrew();    
+    this.fetchCrew();
   }, 
   data() {
     return {
       crew: null,      
-      crewMembers: [],      
+      crewMembers: [],
+      worlds: [],
       editing: false,
       crewEdit: [],
+      worldEdit: [],
     }
   },  
   tables: new FPFHTables(),
@@ -426,8 +553,18 @@ export default {
     isEditingCrew: function(crewId) {
       return this.crewEdit.includes(crewId);
     },
+    toggleWorldEdit: function(worldId) {
+      if (this.worldEdit.includes(worldId)) {
+        this.worldEdit = this.worldEdit.filter(item => item !== worldId)
+      } else {
+        this.worldEdit.push(worldId);
+      }
+    },
+    isEditingWorld: function(worldId) {
+      return this.worldEdit.includes(worldId);
+    },
     rollOnTable: function(table) {
-      if (table != "name") {
+      if (table !== "name") {
         this.$root.showUserMsg(`Rolled on table ${table}`);
         return this.$options.tables.GetTableResult(table);
       } else {
@@ -438,7 +575,8 @@ export default {
       const crew = await DataStore.query(Crew, this.crewId);      
       this.crew = JSON.parse(JSON.stringify(crew));      
 
-      this.fetchCrewMembers();      
+      this.fetchCrewMembers();
+      this.fetchWorlds();      
     },
 
     async fetchCrewMembers() {
@@ -450,12 +588,22 @@ export default {
       }      
     },
 
+    async fetchWorlds() {
+      const worlds = await DataStore.query(World, c => c.crewID("eq", this.crewId));      
+      this.worlds = JSON.parse(JSON.stringify(worlds));
+      //handle patrons and rivals
+      for(var m = 0; m < this.worlds.length; m++) {
+        this.worlds[m].patrons_known = JSON.parse(this.worlds[m].patrons_known);
+        this.worlds[m].rivals_known = JSON.parse(this.worlds[m].rivals_known);
+      }      
+    },
+
     async saveCrew() {      
       let UPDATED_CREW = this.crew;
       const CURRENT_CREW = await DataStore.query(Crew, this.crewId);
       await DataStore.save(Crew.copyOf(CURRENT_CREW, item => {        
-        item.id = UPDATED_CREW.id,
-        item.user = UPDATED_CREW.user,
+        //item.id = UPDATED_CREW.id,
+        //item.user = UPDATED_CREW.user,
         item.name = UPDATED_CREW.name,
         item.notes =UPDATED_CREW.notes,
         item.story_points = UPDATED_CREW.story_points,
@@ -473,11 +621,12 @@ export default {
         item.clock = UPDATED_CREW.clock,
         item.quest_rumors = UPDATED_CREW.quest_rumors,
         item.CrewMembers = UPDATED_CREW.CrewMembers,
+        item.Worlds = UPDATED_CREW.Worlds,
         item.campaign_turn = UPDATED_CREW.campaign_turn,
         item.campaign_difficulty = UPDATED_CREW.campaign_difficulty,
-        item.campaign_victory = UPDATED_CREW.campaign_victory,
-        item.createdAt = UPDATED_CREW.createdAt,
-        item.updatedAt = UPDATED_CREW.updatedAt
+        item.campaign_victory = UPDATED_CREW.campaign_victory
+        //item.createdAt = UPDATED_CREW.createdAt,
+        //item.updatedAt = UPDATED_CREW.updatedAt
       }));
 
       this.$root.showUserMsg(`Crew log saved`);
@@ -599,10 +748,10 @@ export default {
       let UPDATED_MEMBER = this.crewMembers.find( m => m.id === id);
             
       await DataStore.save(CrewMember.copyOf(CURRENT_MEMBER, item => {        
-        item.id = UPDATED_MEMBER.id,
-        item.createdAt = UPDATED_MEMBER.createdAt,
-        item.updatedAt = UPDATED_MEMBER.updatedAt,
-        item.crewID = UPDATED_MEMBER.crewID,
+        //item.id = UPDATED_MEMBER.id,
+        //item.createdAt = UPDATED_MEMBER.createdAt,
+        //item.updatedAt = UPDATED_MEMBER.updatedAt,
+        //item.crewID = UPDATED_MEMBER.crewID,
         item.name = UPDATED_MEMBER.name,
         item.species = UPDATED_MEMBER.species,
         item.reactions = UPDATED_MEMBER.reactions,
@@ -649,7 +798,104 @@ export default {
     },
 
     async addWorld() {
+      const name = this.$options.tables.RandomName("name");
+      await DataStore.save(
+          new World({
+          "user": this.username,
+          "name": name,        
+          "crewID": this.crewId,
+          "patrons_known":  "{\"patrons\":[]}",
+          "rivals_known":  "{\"rivals\":[]}",
+          "licensing_required": false,
+          "license_obtained": false,
+          "invading_forces": "",
+          "war_progress": "",		
+          "notes": "",
+          "traits": "",
+          "current_location": false,
+        })
+      );
+      this.$root.showUserMsg(`Discovered planet ${name}`);
+      this.fetchWorlds();   
+    },
 
+    async saveWorld(id) {
+      let CURRENT = await DataStore.query(World, id);
+      let UPDATED = this.worlds.find( w => w.id === id);
+            
+      await DataStore.save(CrewMember.copyOf(CURRENT, item => {    
+          //item.id = UPDATED.id,
+          //item.createdAt = UPDATED.createdAt,
+          //item.updatedAt = UPDATED.updatedAt,
+          //item.crewID = UPDATED.crewID,
+          item.name = UPDATED.name,
+          item.patrons_known = JSON.stringify(UPDATED.patrons_known),
+          item.rivals_known = JSON.stringify(UPDATED.rivals_known),         
+          item.license_obtained = UPDATED.license_obtained,
+          item.licensing_required = UPDATED.licensing_required,
+          item.invading_forces = UPDATED.invading_forces,
+          item.war_progress = UPDATED.war_progress,
+          item.traits = UPDATED.traits,
+          item.notes = UPDATED.notes,
+          item.current_location = UPDATED.current_location
+        }));      
+
+      this.$root.showUserMsg(`World ${UPDATED.name} saved`);
+      this.toggleWorldEdit(id);
+    },
+
+    async removeWorld(id) {
+      if (!confirm("Are you sure you want to delete this world?")) return;
+
+      const modelToDelete = await DataStore.query(World, id);
+      DataStore.delete(modelToDelete);
+      this.fetchWorlds();
+      
+      this.$root.showUserMsg(`Removed world.`);
+    },
+    
+    //add a patron
+    async addPatronToWorld(id)
+    {
+      const patronType = this.rollOnTable("patron");
+      let modelToAdd = { "id": shortid.generate(), "name": "", "type": patronType, "benefit": "", "notes": "" };
+      let world = this.worlds.find(w => w.id === id);
+      world.patrons_known.patrons.push(modelToAdd);
+    },
+    //add a rival
+    async addRivalToWorld(id)
+    {
+      const rivalType = this.getRivalType();
+      let modelToAdd = { "id": shortid.generate(), "name": "", "type": rivalType, "notes": "" };
+      let world = this.worlds.find(w => w.id === id);
+      world.rivals_known.rivals.push(modelToAdd);
+    },
+
+    getRivalType() {
+      const roll = this.$options.tables.GetFullTableResult('enemyencountercategory');
+      return roll.find(x => x.table == "unknownrival").result;
+    },
+
+    print() {
+      if (this.editing) {
+        this.saveCrew();
+      }      
+      this.worldEdit.forEach( (id) => {
+        this.saveWorld(id);
+      });
+      this.crewEdit.forEach( (id) => {
+        this.saveCrewMember(id);
+      });
+    
+      const myCollapse = document.getElementById('collapseMembers');
+      const mCollapse = new Collapse(myCollapse, { toggle: false});
+      mCollapse.show();
+
+      const worldCollapse = document.getElementById('collapseWorlds')
+      const wCollapse = new Collapse(worldCollapse, { toggle: false});
+      wCollapse.show();
+           
+      setTimeout(function() {window.print();}, 1000);      
     }
   }
 }
@@ -661,7 +907,8 @@ export default {
     margin-bottom: 0px;
   }
 
-  h4, .h4 {
+  h4, .h4
+  h5, .h5 {
     background-color: #ccc;
   }
 
@@ -703,13 +950,23 @@ export default {
 
   @media print
   {
-    div.crewmember { 
+    .print-keep-together {
       page-break-inside: avoid;
     }
 
-    #accordionWorlds {
-      page-break-before: always;
+    .print-keep-together::after {
+        content: "";
+        display: block;
+        height: 100px;
+        margin-bottom: -100px;
     }
+
+    .page-break-before {
+      page-break-after: always;  
+      height: 0;
+      display: block; 
+      clear: both;
+    }    
 
     #accordionMembers {
       font-size: .7em !important;
