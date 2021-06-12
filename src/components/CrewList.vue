@@ -90,7 +90,8 @@ export default {
           "campaign_turn": 0,
           "campaign_difficulty": "Normal",
           "campaign_victory": "",
-          "CrewMembers": []
+          "CrewMembers": [],
+          "Worlds": [],
         })
       );          
       this.$root.showUserMsg(`Added new crew`);
