@@ -28,12 +28,15 @@
       
       <div class="col">
         <div class="card">
-          <p class="card-text">            
+          <p class="card-text">
             <ul class="list-group">
               <li v-for="(item, idx) in tableResults" :key="item.key" class="d-flex flex-column flex-md-row list-group-item" :class="{'bg-light': idx%2 == 0}">
                 <div class="col col-md-6">
                   <i class="fas fa-dice me-1 mt-1 d-print-none" @click="rollOnTable(item)"></i>                
                   <span class="h5">{{item.label}}</span>
+                  <div v-if="idx === 3">
+                    <label>Specific Enemy:</label><input type="text" @change="getSpecificEnemy($event.target.value)" />
+                  </div>
                 </div>
                 <label class="" v-html="item.result"></label>                
               </li>
@@ -177,9 +180,15 @@ export default {
           tableResult: null,
           label: "Determine the Enemy (Pg. 92)",          
           result: "",
-
         }
-      ]
+      ],      
+      broughtFriends: false,
+      opponent: {
+        number: 0,
+        data: null,
+        type: "",
+        name: ""
+      }
     }        
   },  
   tables: new FPFHTables(),
@@ -213,7 +222,7 @@ export default {
           this.missionObjectives(step);
           break;
         case "enemyencountercategory":
-          this.determineOpponents(step);
+          this.getRandomOpponent(step);
           break;
       }
     },
@@ -235,11 +244,16 @@ export default {
           result = step.tableResult[0]
           break;
 
-        case "rival":
+        case "rival": {
           result = step.tableResult[1];
-          result += ` (Rival attack? ${this.$options.tables.GetFullTableResult("rivalattack")[0].result})`;
+          let rivalAttack = `${this.$options.tables.GetFullTableResult("rivalattack")[0].result}`;
+          if (rivalAttack === "Brought friends") {
+            this.broughtFriends = true;
+            this.getSpecificEnemy(this.opponent.name);
+          }
+          result += `(Rival attack? ${rivalAttack})`;
           break;
-
+        }
         case "quest":
           result = step.tableResult[2];
           break;
@@ -299,53 +313,55 @@ export default {
     getOpponentData(table, idx) {
       return JSON.parse(table.tableResult[idx].desc);
     },
-    determineOpponents(step, silent) {
+    getRandomOpponent(step, silent) {
+      switch(this.battleType) {
+        case "patron":
+          this.opponent.type = `${step.tableResult[0]}`;
+          this.opponent.name = `${step.tableResult[1]}`;          
+          this.opponent.data = this.getOpponentData(step, 1);            
+          break;
+
+        case "opportunity":           
+          this.opponent.type = `${step.tableResult[2]}`;
+          this.opponent.name = `${step.tableResult[3]}`;          
+          this.opponent.data = this.getOpponentData(step, 3);            
+          break;       
+
+        case "quest":
+          this.opponent.type = `${step.tableResult[4]}`;
+          this.opponent.name = `${step.tableResult[5]}`;          
+          this.opponent.data = this.getOpponentData(step, 5);            
+          break;
+
+        case "rival":
+          this.opponent.type = `${step.tableResult[6]}`;
+          this.opponent.name = `${step.tableResult[7]}`;          
+          this.opponent.data = this.getOpponentData(step, 7);            
+          break;
+
+        case "invasion":
+          this.opponent.type = "Invasion";
+          step.result = "Invasion!";
+          break;   
+      }
+      this.formatOpponentData();
+
+      if (!silent) this.$root.showUserMsg(`Determined Opponents`);
+    },
+    formatOpponentData() {
       this.enemyTablePrint = [];
       this.enemyWeaponTablePrint = [];
       
       let difficulty = "Normal";
 
       let result = "<div>"
-      let opponentNumber = 0;
-      let opponentData = null;
-      let opponentType = "";
-      let opponentName = "";
-      switch(this.battleType) {
-        case "patron":
-          opponentType = `${step.tableResult[0]}`;
-          opponentName = `${step.tableResult[1]}`;
-          result += `${opponentType}: ${opponentName}`;
-          opponentData = this.getOpponentData(step, 1);            
-          break;
-
-        case "opportunity":           
-          opponentType = `${step.tableResult[2]}`;
-          opponentName = `${step.tableResult[3]}`;
-          result += `${opponentType}: ${opponentName}`;
-          opponentData = this.getOpponentData(step, 3);            
-          break;       
-
-        case "quest":
-          opponentType = `${step.tableResult[4]}`;
-          opponentName = `${step.tableResult[5]}`;
-          result += `${opponentType}: ${opponentName}`;
-          opponentData = this.getOpponentData(step, 5);            
-          break;
-
-        case "rival":
-          opponentType = `${step.tableResult[6]}`;
-          opponentName = `${step.tableResult[7]}`;
-          result += `${opponentType}: ${opponentName}`;
-          opponentData = this.getOpponentData(step, 7);            
-          break;
-
-        case "invasion":
-          opponentType = "Invasion";
-          step.result = "Invasion!";
-          return;   
-      }
-
+      let opponentNumber = this.opponent.number;
+      let opponentData = this.opponent.data;
+      let opponentType = this.opponent.type;
+      let opponentName = this.opponent.name;
       
+      result += this.battleType !== "Invasion" ? `${opponentType}: ${opponentName}` : "Invasion!";
+
       let pageNumber = "";
       let extraInfo = "";
       let uniqueRollBonus = 0;
@@ -400,9 +416,13 @@ export default {
       } else if (crewSize === 5) {
         totalOpponents += minRoll;
       } else {
-        totalOpponents += roll1        
+        totalOpponents += roll1
       }
 
+      if (this.broughtFriends) {
+        totalOpponents++;
+      }
+ 
       let specialists = 0;
       if (totalOpponents >= 3 && totalOpponents <=6) {
         specialists = 1;
@@ -465,7 +485,9 @@ export default {
         });
       }
       for(var i = 0; i<uniqueOpponents; i++) {
-        this.enemyTablePrint.push({name: "", numbers: i+1});        
+        this.enemyTablePrint.push({name: "Unique", numbers: i+1});
+        this.addPrintableWeaponEntry(`*${i+1}:`);
+        this.addPrintableWeaponEntry(`**${i+1}:`);
       }
 
       // formatted results
@@ -479,8 +501,7 @@ export default {
 
       result += `<div class='small fw-normal'>${pageNumber} <span class='fw-bold text-secondary'>${extraInfo}</span></div>`;
 
-      step.result = result;    
-      if (!silent) this.$root.showUserMsg(`Determined Opponents`);
+      this.tableResults[3].result = result;
     },
     addPrintableWeaponEntry(entry) {     
       entry = `${entry}`.replace(/ *\([^)]*\) */g, "");
@@ -488,6 +509,55 @@ export default {
       if (weaponArray.indexOf(entry) === -1) {
          weaponArray.push(entry);
       }
+    },
+    getSpecificEnemy(enemy) {
+      let result = null;
+      let enemyFound = false;
+
+      result = this.$options.tables.tables.enemyencountercategory.tables.criminalelements.find(x => x.label.toLowerCase() == enemy.toLowerCase());
+      if (result) {         
+        this.opponent.data = JSON.parse(result.description);
+        this.opponent.type = "Criminal Elements";
+        this.opponent.name = enemy;
+        enemyFound = true;
+      } 
+
+      if (!enemyFound) {
+        result = this.$options.tables.tables.enemyencountercategory.tables.hiredmuscle.find(x => x.label.toLowerCase() == enemy.toLowerCase());
+        if (result) {         
+          this.opponent.data = JSON.parse(result.description);
+          this.opponent.type = "Hired Muscle";
+          this.opponent.name = enemy;
+          enemyFound = true;
+        } 
+      }
+
+      if (!enemyFound) {
+      result = this.$options.tables.tables.enemyencountercategory.tables.interestedparties.find(x => x.label.toLowerCase() == enemy.toLowerCase());
+        if (result) {         
+          this.opponent.data = JSON.parse(result.description);
+          this.opponent.type = "Interested Parties";
+          this.opponent.name = enemy;
+          enemyFound = true;
+        } 
+      }
+
+      if (!enemyFound) {
+        result = this.$options.tables.tables.enemyencountercategory.tables.rovingthreats.find(x => x.label.toLowerCase() == enemy.toLowerCase());
+        if (result) {         
+          this.opponent.data = JSON.parse(result.description);
+          this.opponent.type = "Roving Threat";
+          this.opponent.name = enemy;
+          enemyFound = true;
+        } 
+      }
+
+      if (!enemyFound) {
+        this.$root.showUserMsg("No enemy found!", "error")
+        return;
+      }
+
+      this.formatOpponentData();
     }
 
   }

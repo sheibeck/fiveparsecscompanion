@@ -157,8 +157,30 @@
    
         <div id="collapseMembers" class="accordion-collapse collapse show" aria-labelledby="headingMembers" data-bs-parent="#accordionMembers">
           <div class="accordion-body d-flex flex-wrap p-1">          
-            <div class="border border-1 p-1 col-12 col-md-6 p-1 print-keep-together d-flex flex-column" :class="{ 'bg-dead': member.kia, 'bg-leader': member.leader, 'bg-sick': member.sick_bay }" v-for="member in crewMembers" :key="member.id">
-              <div class="d-flex rounded h5 px-1 mb-0">{{member.name}}</div>
+            <div class="border border-1 p-1 col-12 col-md-6 print-keep-together d-flex flex-column my-1" :class="{ 'bg-dead': member.kia, 'bg-leader': member.leader, 'bg-sick': member.sick_bay }" v-for="member in crewMembers" :key="member.id">
+              <div class="d-flex rounded h5 px-1 mb-0">
+                {{member.name}}
+                <div class="d-flex small ms-auto">
+                  <div class="form-check">
+                    <input :disabled="!isEditingCrew(member.id)" v-model="member.leader" class="form-check-input" type="checkbox" value="" />
+                    <label class="form-check-label small" for="leader">
+                      Leader
+                    </label>
+                  </div>
+                  <div class="form-check ms-4">
+                    <input :disabled="!isEditingCrew(member.id)" v-model="member.sick_bay" class="form-check-input" type="checkbox" value="" />
+                    <label class="form-check-label small" for="sickbay">
+                      Sick Bay
+                    </label>
+                  </div>
+                  <div class="form-check ms-4">
+                    <input :disabled="!isEditingCrew(member.id)" v-model="member.kia" class="form-check-input" type="checkbox" value="" />
+                    <label class="form-check-label small" for="kia">
+                      KIA
+                    </label>
+                  </div>               
+                </div>
+              </div>
               <div class="d-flex flex-wrap flex-md-nowrap">
                 <!--name -->
                 <div class="flex-fill">
@@ -241,7 +263,7 @@
               </div>
 
               <div class="d-flex flex-wrap flex-md-nowrap flex-fill">
-                <div class="d-flex w-auto align-items-start flex-column">                  
+                <div class="d-flex w-auto align-items-start flex-column">  
                   <table class="table small mb-auto">
                     <thead>
                       <tr>
@@ -316,28 +338,7 @@
                   </div>
                 </div>
                 
-              </div>
-                                         
-              <div class="d-flex justify-content-end">              
-                <div class="form-check">
-                  <input :disabled="!isEditingCrew(member.id)" v-model="member.leader" class="form-check-input" type="checkbox" value="" />
-                  <label class="form-check-label small" for="leader">
-                    Leader
-                  </label>
-                </div>
-                <div class="form-check ms-4">
-                  <input :disabled="!isEditingCrew(member.id)" v-model="member.sick_bay" class="form-check-input" type="checkbox" value="" />
-                  <label class="form-check-label small" for="sickbay">
-                    Sick Bay
-                  </label>
-                </div>
-                <div class="form-check ms-4">
-                  <input :disabled="!isEditingCrew(member.id)" v-model="member.kia" class="form-check-input" type="checkbox" value="" />
-                  <label class="form-check-label small" for="kia">
-                    KIA
-                  </label>
-                </div>               
-              </div>
+              </div>             
             
               <div class="d-flex d-print-none">
                 <button v-if="isEditingCrew(member.id)" type="button" class="btn btn-primary btn-sm mx-1" @click="saveCrewMember(member.id)">Save <i class="fas fa-save"></i></button>
@@ -359,11 +360,11 @@
             </button>
           </h2>          
         </div>
-        <hr class="d-none d-print-block page-break-before" />
-        <h5 class="d-none d-print-block worldrecordsheet mb-1">World Record Sheet</h5>
+        <hr class="d-none d-print-block page-break-after" />
+        <h5 class="d-none d-print-block worldrecordsheet mb-1 page-break-before">World Record Sheet</h5>
         <div id="collapseWorlds" class="accordion-collapse collapse p-1" aria-labelledby="headingWorlds" data-bs-parent="#accordionWorlds">
           <div class="accordion-body d-flex flex-wrap p-1">
-            <div class="border border-1 p-1 col-12 col-md-6 d-flex flex-column print-keep-together" :class="{ 'bg-leader': world.current_location }" v-for="world in worlds" :key="world.id">
+            <div class="border border-1 p-1 col-12 col-md-6 d-flex flex-column print-keep-together my-1" :class="{ 'bg-leader': world.current_location }" v-for="world in worlds" :key="world.id">
               <div class="d-flex rounded h5 px-1 mb-0">
                 {{world.name}}
                 <div class="ms-4 small ms-auto">
@@ -942,6 +943,11 @@ export default {
     width: 50% !important;
   }
 
+  td,th {
+    padding-top: 0px;
+    padding-bottom: 0px;
+  }
+
   @media (max-width: 991.98px) {
     .w-md-50 {
       width: 100% !important;
@@ -951,17 +957,10 @@ export default {
   @media print
   {
     .print-keep-together {
-      page-break-inside: avoid;
+      page-break-after: avoid;      
     }
 
-    .print-keep-together::after {
-        content: "";
-        display: block;
-        height: 100px;
-        margin-bottom: -100px;
-    }
-
-    .page-break-before {
+    .page-break-after {
       page-break-after: always;  
       height: 0;
       display: block; 

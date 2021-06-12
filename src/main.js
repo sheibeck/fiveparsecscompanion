@@ -87,6 +87,7 @@ const store = new Vuex.Store({
     user: null,
     develop: Vue.config.devtools ?? false,
     feedbackMsg: "",
+    feedbackMsgType: "",
     feedbackToast: null,
   },
   mutations: {
@@ -100,8 +101,9 @@ new Vue({
   router,
   store,
   methods : {
-    showUserMsg: function(msg) {
+    showUserMsg: function(msg, type) {
       this.$store.state.feedbackMsg = msg;
+      this.$store.state.feedbackMsgType = type;
       this.$store.state.feedbackToast.show();
     }
   },
