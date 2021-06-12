@@ -69,7 +69,7 @@
       <div class="container">
         <span class="text-muted">This is not an official 5PFH app.</span>
         <div class="position-fixed bottom-0 end-0 p-2" style="z-index: 5">
-          <div id="userFeedback" class="toast fade hide bg-success text-white d-flex" role="alert" aria-live="polite" aria-atomic="true">        
+          <div id="userFeedback" class="toast fade hide text-white d-flex" :class="{ 'bg-success': !$store.state.feedbackMsgType, 'bg-danger': $store.state.feedbackMsgType === 'error' }" role="alert" aria-live="polite" aria-atomic="true">        
             <div class="toast-body" id="feedbackMsg">
               {{this.$store.state.feedbackMsg}}          
             </div>
