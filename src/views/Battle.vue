@@ -24,8 +24,7 @@
       </div>
     </div>
 
-    <div class="row row-cols-1 mt-1"> 
-      
+    <div class="row row-cols-1 mt-1 d-print-none">       
       <div class="col">
         <div class="card">
           <p class="card-text">
@@ -46,9 +45,33 @@
       </div>
     </div>  
 
+    <div class="d-none d-print-block">
+      <div class="d-flex justify-content-between">
+        <div>
+          <label>Deployment Conditions (Pg.88):</label>
+          <div>{{tableResults[0].result}}</div>
+        </div>
+        <div>
+          <label>Notable Sights (Pg.89)</label>
+          <div>{{tableResults[1].result}}</div>
+        </div>
+        <div>
+          <label>Mission Objective (Pg.89)</label>
+          <div>{{tableResults[2].result}}</div>
+        </div>
+      </div>
+      <div class="d-flex flex-column mt-2">
+        <label>Enemies (Pg.92)</label>
+        <div v-html="tableResults[3].result"></div>
+      </div>
+    </div>
+    
+
     <div v-if="enemyTablePrint.length > 0" class=" d-md-flex d-print-flex">
       <div class="flex-fill">
-        <h5 class="mt-3">Enemies</h5>
+        <h5 class="mt-3">Enemies 
+          <button type="button" class="btn btn-secondary btn-sm mx-1 d-print-none" @click="print()">Print <i class="fas fa-print"></i></button>
+        </h5>
         <div class="table-responsive">
           <table class="table table-responsive small">
             <thead>
@@ -491,7 +514,7 @@ export default {
       }
 
       // formatted results
-      result += ` (+${opponentData.numbers} numbers, ${opponentData.weapons} weapons) </div>`
+      result += `<div class="small text-secondary">+${opponentData.numbers} numbers, ${opponentData.weapons} weapons, ${pageNumber}</div>`
       result += `<ul class='small'>`;
       result += `<li>${standardOpponents}x Standard: ${standardWeapon}</li>`;
       result += `<li>${specialists}x Specialists: ${specialistWeapon}</li>`;
@@ -499,7 +522,7 @@ export default {
       result += `<li>${uniqueOpponents}x Unique Individuals (Pg. 105)</li>`;
       result += `</ul>`;
 
-      result += `<div class='small fw-normal'>${pageNumber} <span class='fw-bold text-secondary'>${extraInfo}</span></div>`;
+      result += `<div class='small fw-normal'><span class='fw-bold text-secondary'>${extraInfo}</span></div>`;
 
       this.tableResults[3].result = result;
     },
@@ -558,6 +581,9 @@ export default {
       }
 
       this.formatOpponentData();
+    },
+    print() {
+      window.print();
     }
 
   }

@@ -896,7 +896,7 @@ export default {
       const wCollapse = new Collapse(worldCollapse, { toggle: false});
       wCollapse.show();
            
-      setTimeout(function() {window.print();}, 1000);      
+      setTimeout(function() {window.print();}, 1000);
     }
   }
 }
