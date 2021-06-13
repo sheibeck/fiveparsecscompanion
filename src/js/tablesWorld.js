@@ -211,7 +211,7 @@ export const worldTables = [
                 { "label": "Clean", "weight": 1, "description": "You cannot ever have made law enforcement Rivals" },
                 { "label": "Busy", "weight": 2, "description": "If the mission succeeds, the Patron offers a new job next campaign turn." },
                 { "label": "Onetime Contract", "weight": 1, "description": "This Patron cannot be retained as contact." },
-                { "label": "Reputation Required", "weight": 1, "description": "You must have cmopleted a prior Patron job on this world." },
+                { "label": "Reputation Required", "weight": 1, "description": "You must have completed a prior Patron job on this world." },
             ]               
         }
     },

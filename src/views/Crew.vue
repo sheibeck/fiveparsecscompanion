@@ -401,8 +401,16 @@
                   <div class="d-flex flex-fill border border-1 flex-fill">
                     <div class="flex-column flex-fill">
                       <label class="form-text small">Traits</label>
+                      <textarea v-model="world.traits" class="form-control" :class="{ 'd-none': !isEditingWorld(world.id) }" placeholder=""></textarea>
+                      <span :class="{ 'd-none': isEditingWorld(world.id) }">: {{world.traits}}</span>
+                    </div>
+                  </div>
+
+                  <div class="d-flex flex-fill border border-1 flex-fill">
+                    <div class="flex-column flex-fill">
+                      <label class="form-text small">Notes</label>
                       <textarea v-model="world.notes" class="form-control" :class="{ 'd-none': !isEditingWorld(world.id) }" placeholder=""></textarea>
-                      <span :class="{ 'd-none': !isEditingWorld(world.id) }">{{world.traits}}</span>
+                      <span :class="{ 'd-none': isEditingWorld(world.id) }">: {{world.notes}}</span>
                     </div>
                   </div>
                               
@@ -413,7 +421,7 @@
                   <div class="flex-column flex-fill">
                     <label class="form-text small">Invading Force</label>
                     <textarea v-model="world.invading_forces" class="form-control" :class="{ 'd-none': !isEditingWorld(world.id) }" placeholder=""></textarea>
-                    <span :class="{ 'd-none': isEditingWorld(world.id) }">{{world.invading_forces}}</span>
+                    <span :class="{ 'd-none': isEditingWorld(world.id) }">: {{world.invading_forces}}</span>
                   </div>
 
                   <div class="flex-column flex-fill border border-1">
@@ -426,7 +434,7 @@
 
               <div class="d-flex d-flex flex-fill">
                 <div class="d-flex flex-column flex-fill">
-                  <h6 class="p-1 rounded bg-light">Local Patrons Known ({{world.patrons_known.patrons.length}})
+                  <h6 class="p-1 rounded bg-light">Patrons Known ({{world.patrons_known.patrons.length}})
                     <button type="button" :class="{ 'd-none': !isEditingWorld(world.id) }" class="btn btn-primary btn-sm d-print-none py-0 m-0" @click="addPatronToWorld(world.id)"><i class="fas fa-plus"></i></button>
                   </h6>
                   <div class="d-flex flex-column flex-fill border border-1" v-for="patron in world.patrons_known.patrons" :key="patron.id">                    
@@ -447,7 +455,7 @@
                       <input :class="{ 'd-none': !isEditingWorld(world.id) }" v-model="patron.type" type="text" class="form-control" placeholder="" />                                     
                     </div>    
 
-                    <div class="d-flex flex-column flex-fill border border-1">
+                    <div class="d-flex flex-fill flex-column border border-1">
                       <label class="form-text small">Benefit</label>
                       <textarea v-model="patron.benefit" class="form-control" :class="{ 'd-none': !isEditingWorld(world.id) }" placeholder=""></textarea>
                       <span :class="{ 'd-none': isEditingWorld(world.id) }">{{patron.benefit}}</span>
@@ -456,7 +464,7 @@
                 </div>
 
                 <div class="d-flex flex-column flex-fill">
-                  <h6 class="p-1 rounded bg-light">Local Rivals Known ({{world.rivals_known.rivals.length}})
+                  <h6 class="p-1 rounded bg-light">Rivals Known ({{world.rivals_known.rivals.length}})
                     <button type="button" :class="{ 'd-none': !isEditingWorld(world.id) }" class="btn btn-primary btn-sm d-print-none py-0 m-0" @click="addRivalToWorld(world.id)"><i class="fas fa-plus"></i></button>
                   </h6>                  
                   <div class="d-flex flex-column flex-fill border border-1" v-for="rival in world.rivals_known.rivals" :key="rival.id">
