@@ -40,6 +40,13 @@
               <input type="number" class="form-control" placeholder="0" aria-label="rivals" aria-describedby="rivals-addon" 
                 min="0" v-model.number="newWorld.rivalNum" />
             </div>
+            <div class="input-group mb-3 input-group-sm">
+              <div class="input-group-text">
+                <input class="form-check-input mt-0" type="checkbox" value="" aria-label="Wild Galaxy" 
+                  v-model="newWorld.wildGalaxy" />
+              </div>
+              <span class="input-group-text" id="savvy-addon">WildGalaxy</span>
+            </div>
             <p class="card-text" v-html="getNewWorldResult">              
             </p>
           </div>
@@ -76,8 +83,10 @@ export default {
         rivalNum: 0,
         rivalsRolls: [],
         licenseRoll: 0,
-        licenseCredits: 0,
-      },
+        licenseCredits: 0,        
+        wildGalaxy: false,
+        traits: [], 
+      },      
     }
   },  
   tables: new FPFHTables(),
@@ -96,7 +105,7 @@ export default {
         result += "You safely get off-world."; 
       }
       else {       
-       result += "You have failed. Assign equipment and proceed to Battle!";
+       result += "Invasion! Assign equipment and proceed to Battle!";
       }       
       return result;
     },
@@ -128,7 +137,11 @@ export default {
       result+= `<div>World ${this.newWorld.licenseRoll >= 5 ? 'requires a license which costs ' + this.newWorld.licenseCredits + ' credits.' : 'does not require a license.'}</div>`;
       result += "</div>"
 
-      result += "<div class='d-flex flex-column mt-3'><h6>4. World Traits</h6><div>TBD</div></div>";
+      result += "<div class='d-flex flex-column mt-3'><h6>4. World Traits</h6><ul>";
+      this.newWorld.traits.forEach( (trait) => {
+        result += `<li>${trait}</li>`;
+      });
+      result += "</ul></div>";
 
       return result;
     }
@@ -164,6 +177,12 @@ export default {
       this.newWorld.licenseRoll = this.rollDice(dice);    
       this.newWorld.licenseCredits = this.rollDice(dice);
 
+      this.newWorld.traits = [];
+      this.newWorld.traits.push(this.$options.tables.GetFullTableResult("newworldtraits"));
+      if (this.newWorld.wildGalaxy) {
+        this.newWorld.traits.push(this.$options.tables.GetFullTableResult("newworldtraits"));
+      }
+      
       this.newWorld.hasRolled = true;
     }
 

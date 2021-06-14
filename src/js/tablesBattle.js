@@ -176,7 +176,7 @@ export const battleTables = [
                 { "label": "Gun Slingers", "description": "{ \"numbers\": 1, \"weapons\": \"1B\" }", "weight": 6 },
             ],
             hiredmuscle: [                
-                { "label": "Unkown Mercs", "description": "{ \"numbers\": 0, \"weapons\": \"2B\" }", "weight": 15 },
+                { "label": "Unknown Mercs", "description": "{ \"numbers\": 0, \"weapons\": \"2B\" }", "weight": 15 },
                 { "label": "Enforcers", "description": "{ \"numbers\": 0, \"weapons\": \"2A\" }", "weight": 12 },
                 { "label": "Guild Troops", "description": "{ \"numbers\": 0, \"weapons\": \"2C\" }", "weight": 8 },
                 { "label": "Roid-gangers", "description": "{ \"numbers\": 1, \"weapons\": \"1A\" }", "weight": 5 },

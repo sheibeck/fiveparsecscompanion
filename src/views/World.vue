@@ -431,9 +431,10 @@ export default {
       const credits = this.crewTasks.find(t => t.task === 'patron').credits;
       const contacts = this.crewTasks.find(t => t.task === 'patron').contacts;
       const crew = this.crewTasks.find(t => t.task === 'patron').numCrew;
+      const corpState =  this.worldTrait.CorporateState ? 1 : 0;
       const finalResult = roll + contacts + credits;
 
-      let result = `Rolled ${roll} (+ ${crew} crew + ${contacts} contacts + ${credits} credits): `;
+      let result = `Rolled ${roll} (+ ${crew} crew + ${contacts} contacts + ${credits} credits + ${corpState} corporate state): `;
       if (finalResult >= 6) {
         result += "Found 2 Patrons.";
       }
@@ -455,7 +456,7 @@ export default {
       const easyRecruit = this.worldTrait.EasyRecruiting ? 1 : 0;
       const finalResult = roll + easyRecruit + crew;
 
-      let result = `Rolled ${roll} (+${crew} crew): `;
+      let result = `Rolled ${roll} (+${crew} crew + ${easyRecruit} easy recruiting): `;
       if (finalResult >= 6) {
         result += "Recruitment successful!";
       }     
@@ -495,7 +496,7 @@ export default {
       const savvy = repair.savvy;
       const finalResult = roll + savvy + isEngineer + techKnowledge + credits;
 
-      let result = `Rolled ${roll} (+ ${savvy} savvy + ${isEngineer} engineer + ${credits} credits): `;
+      let result = `Rolled ${roll} (+ ${savvy} savvy + ${isEngineer} engineer + ${credits} credits + ${techKnowledge} technical knowledge): `;
       if (roll == 1) {
         result = "Rolled natural 1. Item destroyed!"; 
       }
@@ -695,8 +696,11 @@ export default {
       }
 
       const dice = `1d6`;
+      let roll = this.rollDice(dice);
+      if (this.worldTrait.easyRecruit) {
+        roll++;
+      }
 
-      const roll = this.rollDice(dice);
       recruit.roll = roll;
       recruit.hasRolled = true;
     },
@@ -730,7 +734,11 @@ export default {
       let repair = this.crewTasks.find(t => t.task === 'repair');
       const dice = `1d6`;
 
-      const roll = this.rollDice(dice);
+      let roll = this.rollDice(dice);
+      if (this.worldTrait.TechnicalKnowledge) {
+        roll++;
+      }
+      
       repair.roll = roll;
       repair.hasRolled = true;
     },
