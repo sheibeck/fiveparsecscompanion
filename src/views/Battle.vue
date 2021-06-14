@@ -55,7 +55,7 @@
                   <i class="fas fa-dice me-1 mt-1 d-print-none" @click="rollOnTable(item)"></i>                
                   <span class="h5">{{item.label}}</span>
                   <div v-if="idx === 3">
-                    <label>Specific Enemy:</label><input type="text" @change="getSpecificEnemy($event.target.value)" />
+                    <label>Specific Enemy:</label><input type="text" ref="specificEnemy" @change="getSpecificEnemy($event.target.value)" />
                   </div>
                 </div>
                 <label class="" v-html="item.result"></label>                
@@ -271,7 +271,11 @@ export default {
           this.missionObjectives(step);
           break;
         case "enemyencountercategory":
-          this.getRandomOpponent(step);
+          if (this.$refs.specificEnemy[0].value) {
+            this.getSpecificEnemy(this.$refs.specificEnemy[0].value);
+          } else {
+            this.getRandomOpponent(step);
+          }
           break;
       }
     },
@@ -474,8 +478,7 @@ export default {
         default:
           totalOpponents += maxRoll;
           break;
-      }    
-
+      }
 
       if (this.broughtFriends) {
         totalOpponents++;
@@ -562,7 +565,7 @@ export default {
       }
 
       // formatted results
-      result += `<div class="small text-secondary">+${opponentData.numbers} numbers, ${opponentData.weapons} weapons, ${pageNumber}</div>`
+      result += `<div class="small text-secondary">+${opponentData.numbers} numbers (roll1: ${roll1} , roll2: ${roll2}), ${opponentData.weapons} weapons, ${pageNumber}</div>`
       result += `<ul class='small'>`;
       result += `<li>${standardOpponents}x Standard: ${standardWeapon}</li>`;
       result += `<li>${specialists}x Specialists: ${specialistWeapon}</li>`;
