@@ -136,12 +136,12 @@ export const worldTables = [
         title: 'Patron',           
         tables: {
             default: [
-                { "label": "Corporation", "weight": 2, "description": "+1 to the roll on the Danger Pay Table" },
-                { "label": "Local Government", "weight": 2 },
-                { "label": "Sector Government", "weight": 1 },
-                { "label": "Wealthy Individual", "weight": 2 },
-                { "label": "Private Organization", "weight": 2 },
-                { "label": "Secretive Group", "weight": 1, "description": "+1 to the roll on the Time Frame Table"},
+                { "label": "Corporation", "weight": 2, "description": "{ \"desc\": \"+1 to the roll on the Danger Pay Table\", \"rolls\": [8,8,5] }" },
+                { "label": "Local Government", "weight": 2, "description": "{ \"desc\": \"\", \"rolls\": [8,8,8] }" },
+                { "label": "Sector Government", "weight": 1, "description": "{ \"desc\": \"\", \"rolls\": [8,8,8] }" },
+                { "label": "Wealthy Individual", "weight": 2, "description": "{ \"desc\": \"\", \"rolls\": [5,8,8] }" },
+                { "label": "Private Organization", "weight": 2, "description": "{ \"desc\": \"\", \"rolls\": [8,8,8] }" },
+                { "label": "Secretive Group", "weight": 1, "description": "{ \"desc\": \"+1 to the roll on the Time Frame Table\", \"rolls\": [8,8,8] }" }
             ]
         }
     },
@@ -162,7 +162,7 @@ export const worldTables = [
         key: 'timeframe',
         title: 'Time Frame',           
         tables: {                
-            timeframe: [
+            default: [
                 { "label": "This campaign turn", "weight": 5 },
                 { "label": "This or next campaign turn", "weight": 2 },
                 { "label": "This or following 2 campaign turns", "weight": 2 },

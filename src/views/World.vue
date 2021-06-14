@@ -262,7 +262,7 @@
               <label v-if="jobOffer.length == 0">Waiting on roll ...</label>
               <ul v-else class="list-group">
                 <li v-for="(step, idx) in jobOffer" :key="idx" class="d-flex list-group-item" :class="{'bg-light': idx%2 == 0}">
-                  <div class="col-4">
+                  <div class="col-4 d-flex">
                     <i class="fas fa-dice me-1 mt-1 d-print-none" @click="rerollTable(step.id)"></i>
                     <label class="">{{step.label}}:</label>
                   </div>
@@ -527,25 +527,107 @@ export default {
       this.$root.showUserMsg(`Rolled ${dice}`);
       return roll;   
     },
+    rollOnDangerPay(rollBonus) {
+      let dangerPayTable = this.$options.tables.tables.dangerpay.tables.default;
+      const dangerRoll = this.rollDice("1d10")+(rollBonus ? rollBonus : 0);
+      let result = null;
+      switch(dangerRoll) {
+        case 1:
+        case 2:
+        case 3:
+        case 4:
+          result = dangerPayTable[0];
+          break;
+        case 5:
+        case 6:
+        case 7:
+        case 8:
+          result = dangerPayTable[1];
+          break;
+        case 9:
+          result = dangerPayTable[2];
+          break;
+        default:
+          result = dangerPayTable[3];
+      }             
+      return result.label;   
+    },
+    rollOnTimeFrame(rollBonus) {
+      let timeFrameTable = this.$options.tables.tables.timeframe.tables.default;
+      const timeFrameRoll = this.rollDice("1d10")+(rollBonus ? rollBonus : 0);
+      let result = null;
+      switch(timeFrameRoll) {
+        case 1:
+        case 2:
+        case 3:
+        case 4:
+        case 5:
+          result = timeFrameTable[0];
+          break;        
+        case 6:
+        case 7:
+          result = timeFrameTable[1];
+          break;
+        case 8:
+        case 9:
+          result = timeFrameTable[2];
+          break;                      
+        default:
+          result = timeFrameTable[3];
+      }             
+      return result.label;   
+    },
     findJob() {   
+      const dice = `1d10`;
       this.jobOffer = [];
 
-      let result = this.$options.tables.GetFullTableResult("patron");      
+      let result = this.$options.tables.GetFullTableResult("patron");
+      const patron = result[0].label;
+            
+      let data = JSON.parse(result[0].desc);
+      result[0].desc = data.desc;
+
+      let rolls = data.rolls;
       this.jobOffer.push({ id: "patron", label: "Patron", result: result[0] });
-      
+
       result = this.$options.tables.GetFullTableResult("dangerpay");
+      const dangerPayRollBonus = patron === "Corporation";
+      let dangerPayResult = this.rollOnDangerPay(dangerPayRollBonus ? 1 : 0);
+      result[0].result = dangerPayResult;      
       this.jobOffer.push({ id: "dangerpay", label: "Danger Pay", result: result[0] });
       
       result = this.$options.tables.GetFullTableResult("timeframe");
+      const timeFrameRollBonus = patron === "Secretive Group";
+      let timeFrameResult = this.rollOnTimeFrame(timeFrameRollBonus ? 1 : 0);
+      result[0].result = timeFrameResult;      
       this.jobOffer.push({ id: "timeframe", label: "Time Frame", result: result[0] });
 
-      result = this.$options.tables.GetFullTableResult("benefit");
+      //check for benefits
+      result = this.$options.tables.GetFullTableResult("benefit");      
+      let roll = this.rollDice(dice);
+      if (roll < rolls[0]) { 
+        result[0].result = `None. (Rolled less than ${rolls[0]}.)`;
+        result[0].desc = "";
+      }
       this.jobOffer.push({ id: "benefit", label: "Benefit", result: result[0] });
       
-      result = this.$options.tables.GetFullTableResult("hazard");
+      //check for hazards
+      result = this.$options.tables.GetFullTableResult("hazard");       
+      roll = this.rollDice(dice);
+      if (roll < rolls[1]) { 
+        result[0].result = `None. (Rolled less than ${rolls[1]}.)`;
+        result[0].desc = "";
+      }
       this.jobOffer.push({ id: "hazard", label: "Hazard", result: result[0] });
       
+      //check for conditions
       result = this.$options.tables.GetFullTableResult("condition");
+       result = this.$options.tables.GetFullTableResult("hazard");       
+      roll = this.rollDice(dice);
+      if (roll < rolls[2]) { 
+        result[0].result = `None. (Rolled less than ${rolls[2]}.)`;
+        result[0].desc = "";
+      }
       this.jobOffer.push({ id: "condition", label: "Condition", result: result[0] });
 
       this.$root.showUserMsg(`Created job offer`);
