@@ -439,12 +439,13 @@
                   </h6>
                   <div class="d-flex flex-column flex-fill border border-1" v-for="patron in world.patrons_known.patrons" :key="patron.id">                    
                     <div class="d-flex">
-                      <div class="d-flex">
+                      <div class="d-flex">                        
                         <i :class="{ 'd-none': !isEditingWorld(world.id) }" class="fas fa-dice pe-auto" @click="patron.name = rollOnTable('name')"></i>
                         <div class="form-text">Name</div>
                         <span :class="{ 'd-none': isEditingWorld(world.id) }">: {{patron.name}}</span>
                       </div>                        
-                      <input :class="{ 'd-none': !isEditingWorld(world.id) }" v-model="patron.name" type="text" class="form-control" placeholder="" />                                     
+                      <input :class="{ 'd-none': !isEditingWorld(world.id) }" v-model="patron.name" type="text" class="form-control" placeholder="" />
+                      <button :class="{ 'd-none': !isEditingWorld(world.id) }" type="button" class="ms-auto btn btn-danger btn-sm mx-1" @click="removePatronFromWorld(world.id, patron.id)"><i class="fas fa-trash"></i></button>
                     </div>    
                     <div class="d-flex">
                       <div class="d-flex">
@@ -452,7 +453,7 @@
                         <div class="form-text">Type</div>
                         <span :class="{ 'd-none': isEditingWorld(world.id) }">: {{patron.type}}</span>
                       </div>                        
-                      <input :class="{ 'd-none': !isEditingWorld(world.id) }" v-model="patron.type" type="text" class="form-control" placeholder="" />                                     
+                      <input :class="{ 'd-none': !isEditingWorld(world.id) }" v-model="patron.type" type="text" class="form-control" placeholder="" />
                     </div>    
 
                     <div class="d-flex flex-fill flex-column border border-1">
@@ -469,12 +470,13 @@
                   </h6>                  
                   <div class="d-flex flex-column flex-fill border border-1" v-for="rival in world.rivals_known.rivals" :key="rival.id">
                     <div class="d-flex">
-                      <div class="d-flex">
+                      <div class="d-flex">                        
                         <i :class="{ 'd-none': !isEditingWorld(world.id) }" class="fas fa-dice pe-auto" @click="rival.name = rollOnTable('name')"></i>
                         <div class="form-text">Name</div>
-                        <span :class="{ 'd-none': isEditingWorld(world.id) }">: {{rival.name}}</span>
+                        <span :class="{ 'd-none': isEditingWorld(world.id) }">: {{rival.name}} </span>
                       </div>                        
-                      <input :class="{ 'd-none': !isEditingWorld(world.id) }" v-model="rival.name" type="text" class="form-control" placeholder="" />                                     
+                      <input :class="{ 'd-none': !isEditingWorld(world.id) }" v-model="rival.name" type="text" class="form-control" placeholder="" />
+                      <button type="button" :class="{ 'd-none': !isEditingWorld(world.id) }" class="ms-auto btn btn-danger btn-sm mx-1" @click="removeRivalFromWorld(world.id, rival.id)"><i class="fas fa-trash"></i></button>
                     </div>    
                     <div class="d-flex">
                       <div class="d-flex">
@@ -871,6 +873,14 @@ export default {
       let world = this.worlds.find(w => w.id === id);
       world.patrons_known.patrons.push(modelToAdd);
     },
+    //remove patron
+    removePatronFromWorld(worldId, id)
+    {      
+      if (!confirm("Are you sure you want to delete this patron?")) return;
+      let world = this.worlds.find(w => w.id === worldId);
+      world.patrons_known.patrons = world.patrons_known.patrons.filter( r => r.id !== id);      
+    },
+
     //add a rival
     async addRivalToWorld(id)
     {
@@ -878,6 +888,13 @@ export default {
       let modelToAdd = { "id": shortid.generate(), "name": "", "type": rivalType, "notes": "" };
       let world = this.worlds.find(w => w.id === id);
       world.rivals_known.rivals.push(modelToAdd);
+    },
+    //remove rival
+    removeRivalFromWorld(worldId, id)
+    {      
+      if (!confirm("Are you sure you want to delete this rival?")) return;
+      let world = this.worlds.find(w => w.id === worldId);
+      world.rivals_known.rivals = world.rivals_known.rivals.filter( r => r.id !== id);
     },
 
     getRivalType() {
