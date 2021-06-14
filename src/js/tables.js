@@ -3,8 +3,10 @@ import RandomTable from 'rpg-table-randomizer/src/random_table.js';
 import random_name from 'rpg-table-randomizer/src/random_name.js';
 import names from 'rpg-table-randomizer/sample/names.js';
 
+import { travelTables } from './tablesTravel';
 import { worldTables } from './tablesWorld';
 import { battleTables } from './tablesBattle';
+
 
 export class FPFHTables {
     constructor() {
@@ -21,6 +23,10 @@ export class FPFHTables {
 
         random_name.setNameData(names);
         random_name.setRandomizer(this.randomizer);
+
+        travelTables.forEach((table) =>  {
+            this.tables[table.key] = table;
+        });
 
         worldTables.forEach((table) =>  {
             this.tables[table.key] = table;
