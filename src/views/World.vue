@@ -48,7 +48,7 @@
               </h2>
               <div id="collapsePatron" class="accordion-collapse collapse" aria-labelledby="headingPatron" data-bs-parent="#accordianTasks">
                 <div class="accordion-body">
-                  <div class="col d-flex flex-column">
+                  <div class="col d-flex flex-column">                    
                     <div class="mb-3 text-center">
                       <i class="fas fa-dice me-1 mt-1 d-print-none fa-2x" @click="findPatron()"></i>
                     </div>
@@ -66,6 +66,13 @@
                       <span class="input-group-text" id="credits-addon">Spend Credits</span>
                       <input type="number" class="form-control" placeholder="0" aria-label="Contacts" aria-describedby="credits-addon" 
                         min="0" v-model.number="crewTasks.find(t => t.task === 'patron').credits" />
+                    </div>
+                    <div class="input-group mb-3 input-group-sm">
+                      <div class="input-group-text">
+                        <input class="form-check-input mt-0" type="checkbox" value="" aria-label="Corporate State" 
+                          v-model="worldTrait.CorporateState" />
+                      </div>
+                      <span class="input-group-text" id="savvy-addon">Corporate State</span>
                     </div>
                     <label>{{getFindPatronResult}}</label>
                   </div>
@@ -132,6 +139,13 @@
                       <span class="input-group-text" id="crew-addon">Crew looking</span>
                       <input type="number" class="form-control" placeholder="0" aria-label="Crew looking" aria-describedby="crew-addon" 
                         min="0" v-model.number="crewTasks.find(t => t.task === 'recruit').numCrew" />
+                    </div>
+                    <div class="input-group mb-3 input-group-sm">
+                      <div class="input-group-text">
+                        <input class="form-check-input mt-0" type="checkbox" value="" aria-label="Easy Recruiting" 
+                          v-model="worldTrait.EasyRecruiting" />
+                      </div>
+                      <span class="input-group-text" id="savvy-addon">Easy Recruiting</span>
                     </div>
                     <label>{{getRecruitResult}}</label>
                   </div>
@@ -212,12 +226,19 @@
                       <input type="number" class="form-control" placeholder="0" aria-label="savvy" aria-describedby="savvy-addon" 
                         min="0" v-model.number="crewTasks.find(t => t.task === 'repair').savvy" />
                     </div>
-                    <div class="input-group mb-3">
+                    <div class="input-group mb-3 input-group-sm">
                       <div class="input-group-text">
-                        <input class="form-check-input mt-0" type="checkbox" value="" aria-label="Checkbox for following text input" 
+                        <input class="form-check-input mt-0" type="checkbox" value="" aria-label="Is Engineer" 
                           v-model="crewTasks.find(t => t.task === 'repair').isEngineer" />
                       </div>
                       <span class="input-group-text" id="savvy-addon">Is Engineer?</span>
+                    </div>
+                    <div class="input-group mb-3 input-group-sm">
+                      <div class="input-group-text">
+                        <input class="form-check-input mt-0" type="checkbox" value="" aria-label="Technical Knowledge" 
+                          v-model="worldTrait.TechnicalKnowledge" />
+                      </div>
+                      <span class="input-group-text" id="savvy-addon">Technical Knowledge</span>
                     </div>
                     <div class="input-group mb-3 input-group-sm">
                       <span class="input-group-text" id="credits-addon">Spend Credits</span>
@@ -388,6 +409,11 @@ export default {
         totalDecoys: 0,
         roll: 0,
         hasRolled: false,
+      },
+      worldTrait: {
+        CorporateState: false,   
+        TechnicalKnowledge: false,
+        EasyRecruiting: false,
       }
     }
   },  
@@ -426,7 +452,8 @@ export default {
 
       const roll = this.crewTasks.find(t => t.task === 'recruit').roll;
       const crew = this.crewTasks.find(t => t.task === 'recruit').numCrew;
-      const finalResult = roll + crew;
+      const easyRecruit = this.worldTrait.EasyRecruiting ? 1 : 0;
+      const finalResult = roll + easyRecruit + crew;
 
       let result = `Rolled ${roll} (+${crew} crew): `;
       if (finalResult >= 6) {
@@ -463,9 +490,10 @@ export default {
       }
       const roll = repair.roll;
       const credits = repair.credits;
-      const isEngineer = repair.isEngineer ? 1 : 0;      
+      const isEngineer = repair.isEngineer ? 1 : 0;
+      const techKnowledge = this.worldTrait.TechnicalKnowledge ? 1 : 0;
       const savvy = repair.savvy;
-      const finalResult = roll + savvy + isEngineer + credits;
+      const finalResult = roll + savvy + isEngineer + techKnowledge + credits;
 
       let result = `Rolled ${roll} (+ ${savvy} savvy + ${isEngineer} engineer + ${credits} credits): `;
       if (roll == 1) {
@@ -639,8 +667,10 @@ export default {
       }
 
       const dice = `1d6`;
-
-      const roll = this.rollDice(dice);
+      let roll = this.rollDice(dice);
+      if (this.worldTrait.CorporateState) {
+        roll = roll + 2;
+      }
       patron.roll = roll;
       patron.hasRolled = true;
     },

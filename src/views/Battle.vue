@@ -21,6 +21,27 @@
           <div class="input-group-text col-form-label-sm">Crew Size</div>
           <input type="number" max="6" min="1" class="form-control form-control-sm" id="crewSize" placeholder="Crew Size" v-model.number="crewSize" />
         </div>
+      </div>      
+    </div>
+
+    <div class="d-flex ms-0 ms-md-5 mt-1">
+      <div class="form-check">
+        <input v-model="worldTrait.Dangerous" class="form-check-input" type="checkbox" />
+        <label class="form-check-label small" for="leader">
+          Dangerous
+        </label>
+      </div>
+      <div class="form-check ms-2">
+        <input v-model="worldTrait.HeavilyEnforced" class="form-check-input" type="checkbox" />
+        <label class="form-check-label small" for="leader">
+          Heavily Enforced
+        </label>
+      </div>
+      <div class="form-check ms-2">
+        <input v-model="worldTrait.RampantCrime" class="form-check-input" type="checkbox" />
+        <label class="form-check-label small" for="leader">
+          Rampant Crime
+        </label>
       </div>
     </div>
 
@@ -211,6 +232,11 @@ export default {
         data: null,
         type: "",
         name: ""
+      },
+      worldTrait: {
+        Dangerous: false,
+        HeavilyEnforced: false,
+        RampantCrime: false,
       }
     }        
   },  
@@ -430,20 +456,42 @@ export default {
       }
 
       const maxRoll = Math.max(roll1,roll2);
-      const minRoll = Math.max(roll1,roll2);
+      const minRoll = Math.min(roll1,roll2);
 
       let totalOpponents = opponentNumber;
-      let crewSize = this.crewSize;      
-      if (crewSize === 6) {
-        totalOpponents += maxRoll;
-      } else if (crewSize === 5) {
-        totalOpponents += minRoll;
-      } else {
-        totalOpponents += roll1
-      }
+      let crewSize = this.crewSize;
+      switch(crewSize) 
+      {
+        case 1:
+        case 2:
+        case 3:
+        case 4:
+          totalOpponents += minRoll;
+          break;
+        case 5:
+          totalOpponents += roll1;
+          break;
+        default:
+          totalOpponents += maxRoll;
+          break;
+      }    
+
 
       if (this.broughtFriends) {
         totalOpponents++;
+      }
+
+      if ( opponentType === 'Roving Threats' && this.worldTrait.Dangerous ) {
+        totalOpponents++;
+      }
+
+      if (opponentType === 'Criminal Elements') {
+        if (this.worldTrait.HeavilyEnforced) {
+          totalOpponents--;
+        }
+        if (this.worldTrait.RampantCrime) {
+          totalOpponents++;
+        }
       }
  
       let specialists = 0;
