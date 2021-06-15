@@ -5,23 +5,25 @@
     <div class="d-flex flex-column flex-md-row d-print-none">
       <i class="fas fa-dice me-1 mt-1 d-print-none fa-2x text-center mb-2 mb-md-0" @click="readyForBattle()"></i>
       <div class="d-flex flex-column flex-md-row">
-        <div class="input-group-text me-2">Battle Type</div>
-        <div class="d-flex flex-wrap">
-          <div class="form-check pe-2 mt-2" v-for="btype in battleTypes" :key="btype">
-            <input class="form-check-input" :checked="battleType===btype" type="radio" name="battleType" :id="`battle${btype}`" @change="readyForBattle()" v-model="battleType" :value="btype">
-            <label class="form-check-label" for="battlePatron">
-              {{btype}}
-            </label>
-          </div>
+        <div class="input-group me-3">
+          <label class="input-group-text" for="inputGroupSelect01">Battle Type</label>
+          <select class="form-select" aria-label="Default select example" v-model="battleType">
+            <option v-for="btype in battleTypes" :key="btype" :value="btype" :selected="battleType===btype">{{btype}}</option>            
+          </select>      
         </div>
-      </div>
-      <div class="col-auto ms-md-2">
-        <label class="visually-hidden" for="crewSize">Crew Size</label>
-        <div class="input-group">
+                  
+        <div class="input-group me-3">
           <div class="input-group-text col-form-label-sm">Crew Size</div>
           <input type="number" max="6" min="1" class="form-control form-control-sm" id="crewSize" placeholder="Crew Size" v-model.number="crewSize" />
+        </div>      
+     
+        <div class="input-group">
+          <label class="input-group-text" for="inputGroupSelect01">Difficulty</label>        
+          <select class="form-select" aria-label="Default select example" v-model="difficulty">
+            <option v-for="level in difficultyLevels" :key="level" :value="level" :selected="difficulty===level">{{level}}</option>            
+          </select>      
         </div>
-      </div>      
+      </div>     
     </div>
 
     <div class="d-flex ms-0 ms-md-5 mt-1">
@@ -200,6 +202,14 @@ export default {
         "invasion",
       ],
       battleType: "patron",
+      difficultyLevels: [
+        "easy",             
+        "normal",
+        "challenging",
+        "hardcore",
+        "insanity",
+      ],
+      difficulty: "normal",
       tableResults: [
         {          
           key: "deploymentconditions",
@@ -453,10 +463,19 @@ export default {
       const dice = `1d6`;
       let roll1 = this.rollDice(dice);      
       let roll2 = this.rollDice(dice);
-      
+          
       if (rerollNumberIfOne) {
         if (roll1 == 1) roll1 = this.rollDice(dice);
         if (roll2 == 1) roll2 = this.rollDice(dice);
+      }
+
+      if (this.difficulty !== "easy" && this.difficulty !== "normal") {
+        while (roll1 <= 2) {
+          roll1 = this.rollDice(dice);
+        }
+        while (roll2 <= 2) {
+          roll2 = this.rollDice(dice);
+        }
       }
 
       const maxRoll = Math.max(roll1,roll2);
@@ -502,7 +521,11 @@ export default {
         specialists = 1;
       } 
       else if (totalOpponents >= 7) {
-        specialists = 2
+        specialists = 2;
+      }
+
+      if (this.difficulty === "insanity") {
+        specialists++;
       }
 
       let lieutenant = 0;
@@ -511,15 +534,29 @@ export default {
       }
       
       let uniqueOpponents = 0;      
-      if (opponentType !== "Roving Threats" ||  (opponentType !== "Roving Threats" && difficulty !== "Insanity")) {       
-        const rollUnique = this.rollDice(`2d6`);
+      if (opponentType !== "Roving Threats" ||  (opponentType !== "Roving Threats" && difficulty !== "insanity")) {       
+        let rollUnique = this.rollDice(`2d6`);
+        
+        if (this.difficulty === "hardcore" || this.difficulty === "insanity") {
+          uniqueRollBonus++;
+        }
+        
         if (rollUnique + uniqueRollBonus >= 9) {
           uniqueOpponents = 1;
-        }      
+        }
+       
       }
 
-      const standardOpponents = totalOpponents - specialists - lieutenant;
-                  
+      if (this.difficulty === "hardcore" || this.difficulty === "insanity") {
+        totalOpponents++;
+      }
+
+      let standardOpponents = totalOpponents - specialists - lieutenant;
+
+      if (this.difficulty === "easy" && totalOpponents >= 5 ) {
+        standardOpponents--;
+      }
+            
       //result += `${roll1} + ${roll2} + ${rollUnique} == ${totalOpponents}`;
       
       let standardWeapon = "";
@@ -565,7 +602,7 @@ export default {
       }
 
       // formatted results
-      result += `<div class="small text-secondary">+${opponentData.numbers} numbers (roll1: ${roll1} , roll2: ${roll2}), ${opponentData.weapons} weapons, ${pageNumber}</div>`
+      result += `<div class="small text-secondary">+${opponentData.numbers} numbers (roll1: ${roll1} , roll2: ${roll2}, difficulty: ${this.difficulty}), ${opponentData.weapons} weapons, ${pageNumber}</div>`
       result += `<ul class='small'>`;
       result += `<li>${standardOpponents}x Standard: ${standardWeapon}</li>`;
       result += `<li>${specialists}x Specialists: ${specialistWeapon}</li>`;
