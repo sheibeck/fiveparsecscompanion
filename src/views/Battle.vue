@@ -36,13 +36,19 @@
       <div class="form-check ms-2">
         <input v-model="worldTrait.HeavilyEnforced" class="form-check-input" type="checkbox" />
         <label class="form-check-label small" for="leader">
-          Heavily Enforced
+          Heavily enforced
         </label>
       </div>
       <div class="form-check ms-2">
         <input v-model="worldTrait.RampantCrime" class="form-check-input" type="checkbox" />
         <label class="form-check-label small" for="leader">
-          Rampant Crime
+          Rampant crime
+        </label>
+      </div>
+      <div class="form-check ms-2" v-if="battleType=='rival'">
+        <input v-model="worldTrait.RivalHatred" class="form-check-input" type="checkbox" />
+        <label class="form-check-label small" for="leader">
+          Rival hates you
         </label>
       </div>
     </div>
@@ -247,6 +253,7 @@ export default {
         Dangerous: false,
         HeavilyEnforced: false,
         RampantCrime: false,
+        RivalHatred: false,
       }
     }        
   },  
@@ -481,6 +488,7 @@ export default {
       const maxRoll = Math.max(roll1,roll2);
       const minRoll = Math.min(roll1,roll2);
 
+      //determine total opponents
       let totalOpponents = opponentNumber;
       let crewSize = this.crewSize;
       switch(crewSize) 
@@ -515,7 +523,14 @@ export default {
           totalOpponents++;
         }
       }
+      
+      if ( (this.difficulty === "hardcore" || this.difficulty === "insanity")
+        || (this.worldTrait.RivalHatred && this.battleType === "rival") ) 
+      {
+        totalOpponents++;
+      }
  
+      //determine specialists
       let specialists = 0;
       if (totalOpponents >= 3 && totalOpponents <=6) {
         specialists = 1;
@@ -528,37 +543,48 @@ export default {
         specialists++;
       }
 
+      //determine lieutenants
       let lieutenant = 0;
       if (totalOpponents >= 4) {
         lieutenant = 1;        
       }
       
+
+      //determine unique opponents
       let uniqueOpponents = 0;      
-      if (opponentType !== "Roving Threats" ||  (opponentType !== "Roving Threats" && difficulty !== "insanity")) {       
+      if (this.difficulty === "insanity") {
+        uniqueOpponents++;
         let rollUnique = this.rollDice(`2d6`);
-        
-        if (this.difficulty === "hardcore" || this.difficulty === "insanity") {
-          uniqueRollBonus++;
+        if (rollUnique >= 11) {
+          uniqueOpponents++;
         }
-        
-        if (rollUnique + uniqueRollBonus >= 9) {
-          uniqueOpponents = 1;
+      }
+      else {
+        if (opponentType !== "Roving Threats" ||  (opponentType !== "Roving Threats" && difficulty !== "insanity")) {       
+          let rollUnique = this.rollDice(`2d6`);
+          
+          if (this.difficulty === "hardcore" || this.difficulty === "insanity") {
+            uniqueRollBonus++;
+          }
+          
+          if (rollUnique + uniqueRollBonus >= 9) {
+            uniqueOpponents++;
+          }          
         }
-       
       }
 
-      if (this.difficulty === "hardcore" || this.difficulty === "insanity") {
-        totalOpponents++;
-      }
-
+      //determine standard opponents
       let standardOpponents = totalOpponents - specialists - lieutenant;
 
       if (this.difficulty === "easy" && totalOpponents >= 5 ) {
         standardOpponents--;
       }
+      if (this.difficulty === "hardcore" || this.difficulty === "insanity") {
+        standardOpponents++;
+      }
             
-      //result += `${roll1} + ${roll2} + ${rollUnique} == ${totalOpponents}`;
-      
+
+      //get weapons            
       let standardWeapon = "";
       let specialistWeapon = "";
       if (opponentData.weapons.length > 2) {
