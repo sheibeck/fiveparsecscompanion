@@ -11,7 +11,7 @@
             <span :class="{ 'd-none': editing }">: {{crew.name}}</span>
           </div> 
           <div class="d-flex flex-shrink-1 me-auto">
-            <label for="crewStoryPoints" class="form-text small">Story Point</label>
+            <label for="crewStoryPoints" class="form-text small">Story Points</label>
             <input v-model.number="crew.story_points" type="number" class="form-control" :class="{ 'd-none': !editing }" id="crewStoryPoints" placeholder="0" />
             <span class="border border-3 px-2 ms-1 rounded" :class="{ 'd-none': editing }">{{crew.story_points}}</span>
           </div>
@@ -192,12 +192,20 @@
                     </div>                        
                     <input :class="{ 'd-none': !isEditingCrew(member.id) }" v-model="member.name" type="text" class="form-control" placeholder="" />
                   
-                    <div class="d-flex">
-                      <i :class="{ 'd-none': !isEditingCrew(member.id) }" class="fas fa-dice pe-auto" @click="member.species = rollOnTable('crewtype')"></i>
-                      <div class="form-text">Species</div>
-                      <span :class="{ 'd-none': isEditingCrew(member.id) }">: {{member.species}}</span>
-                    </div>                        
-                    <input :class="{ 'd-none': !isEditingCrew(member.id) }" v-model="member.species" type="text" class="form-control" placeholder="" /> 
+                    <div class="d-print-none flex-fill">
+                      <div class="d-flex">
+                        <i :class="{ 'd-none': !isEditingCrew(member.id) }" class="fas fa-dice pe-auto" @click="member.species = rollOnTable('crewtype')"></i>
+                        <div class="form-text">Species</div>
+                        <span :class="{ 'd-none': isEditingCrew(member.id) }">: {{member.species}}</span>
+                      </div>                        
+                      <input :class="{ 'd-none': !isEditingCrew(member.id) }" v-model="member.species" type="text" class="form-control" placeholder="" /> 
+                    </div>
+                    <div class="d-none d-print-block">
+                      <span v-if="member.species">{{member.species}}</span>
+                      <span v-if="member.background">, {{member.background}}</span>
+                      <span v-if="member.motivation">, {{member.motivation}}</span>
+                      <span v-if="member.class">, {{member.class}}</span>
+                    </div>
                   </div>
 
                   <div class="d-flex flex-column d-print-none">
@@ -262,14 +270,18 @@
                 </div>
               </div>
 
-              <div class="d-flex flex-wrap flex-md-nowrap flex-fill">
-                <div class="d-flex w-auto align-items-start flex-column">  
+              <div class="d-flex flex-wrap flex-md-nowrap flex-fill" :class="{ 'flex-column': isEditingCrew(member.id) }">
+                <div class="d-flex flex-column flex-grow-1">  
                   <table class="table small mb-auto">
                     <thead>
                       <tr>
-                        <th scope="" width="25%">
-                          Weapon
-                          <button type="button" :class="{ 'd-none': !isEditingCrew(member.id) }" class="btn btn-primary btn-sm d-print-none py-0 m-0" @click="addWeaponToCrew(member.id)"><i class="fas fa-plus"></i></button>                              
+                        <th scope="" width="33%">
+                          <div class="d-flex">
+                            Weapon
+                            <button type="button" :class="{ 'd-none': !isEditingCrew(member.id) }" class="btn btn-primary btn-sm d-print-none py-0 m-0" @click="addWeaponToCrew(member.id)">
+                              <i class="fas fa-plus"></i>
+                            </button>
+                          </div>
                         </th>
                         <th scope="col" width="">Rng</th>
                         <th scope="col" width="">Shot</th>
@@ -308,7 +320,7 @@
                   </table>                 
                 </div>
                 
-                <div class="d-flex flex-column w-auto me-auto">
+                <div class="d-flex flex-column flex-fill">
                   <div class="h-50">
                     <div class="form-text">Gear/Gadgets</div>            
                     <p class="card-text">
@@ -316,7 +328,7 @@
                       <span :class="{ 'd-none': isEditingCrew(member.id) }">{{member.gear}}</span>
                     </p>
                   </div>
-                  <div class="h-50">
+                  <div class="h-50 mt-2">
                     <div class="form-text">Notes</div>
                     <p class="card-text">
                       <textarea v-model="member.notes" type="text" class="form-control" :class="{ 'd-none': !isEditingCrew(member.id) }" placeholder=""></textarea>
