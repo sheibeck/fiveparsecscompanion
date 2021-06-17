@@ -424,11 +424,11 @@ export default {
       
       let difficulty = "Normal";
 
-      let result = "<div>"
-      let opponentNumber = this.opponent.number;
+      let result = "<div>"      
       let opponentData = this.opponent.data;
       let opponentType = this.opponent.type;
       let opponentName = this.opponent.name;
+      let opponentNumber = opponentData.numbers;
       
       result += this.battleType !== "Invasion" ? `${opponentType}: ${opponentName}` : "Invasion!";
 
