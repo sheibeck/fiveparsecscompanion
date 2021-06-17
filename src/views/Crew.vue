@@ -357,7 +357,9 @@
                 <button v-if="!isEditingCrew(member.id)" type="button" class="btn btn-primary btn-sm mx-1" @click="toggleCrewEdit(member.id)">Edit <i class="fas fa-pen"></i></button>
                 <button type="button" class="ms-auto btn btn-danger btn-sm mx-1" @click="removeCrewMember(member.id)">Delete <i class="fas fa-trash"></i></button>
               </div>
-            </div>
+
+              <div class="page-break-after"></div>
+            </div>            
           </div>
         </div>
       </div>
@@ -372,11 +374,11 @@
             </button>
           </h2>          
         </div>
-        <hr class="d-none d-print-block page-break-after" />
-        <h5 class="d-none d-print-block worldrecordsheet mb-1 page-break-before">World Record Sheet</h5>
+        <div class="d-none d-print-block page-break-after"></div>
+        <h5 class="d-none d-print-block worldrecordsheet mb-1">World Record Sheet</h5>
         <div id="collapseWorlds" class="accordion-collapse collapse p-1" aria-labelledby="headingWorlds" data-bs-parent="#accordionWorlds">
           <div class="accordion-body d-flex flex-wrap p-1">
-            <div class="border border-1 p-1 col-12 col-md-6 d-flex flex-column print-keep-together my-1" :class="{ 'bg-leader': world.current_location }" v-for="world in worlds" :key="world.id">
+            <div class="border border-1 p-1 col-12 col-md-6 d-flex flex-column my-1" :class="{ 'bg-leader': world.current_location }" v-for="world in worlds" :key="world.id">
               <div class="d-flex rounded h5 px-1 mb-0">
                 {{world.name}}
                 <div class="ms-4 small ms-auto">
@@ -993,16 +995,16 @@ export default {
 
   @media print
   {
-    .print-keep-together {
-      page-break-after: avoid;      
-    }
-
     .page-break-after {
-      page-break-after: always;  
-      height: 0;
-      display: block; 
-      clear: both;
+      clear: both !important;
+      display: block !important;
+      page-break-after: always !important;
+      break-after: page !important;
     }    
+
+    div {
+      float: none !important;
+    }  
 
     #accordionMembers {
       font-size: .7em !important;
