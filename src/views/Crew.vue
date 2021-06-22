@@ -2,7 +2,7 @@
   <div v-if="crew">    
     <div class="d-md-flex justify">
       <!-- crew log -->      
-      <div class="d-flex flex-column flex-fill m-1 border border-2 p-1 col-4">
+      <div class="d-flex flex-column flex-fill m-1 border border-2 p-1 col-12 col-md-4">
         <h4 class="p-1 rounded d-print-none border">Crew Log</h4>
         <div class="d-flex">
           <div class="d-flex flex-fill me-auto">
@@ -44,7 +44,7 @@
       </div>
 
       <!-- stash -->
-      <div class="d-flex flex-column flex-fill m-1  border border-2 p-1 col-4">        
+      <div class="d-flex flex-column flex-fill m-1  border border-2 p-1 col-12 col-md-4">        
           <h4 class="p-1 rounded d-print-none">Stash</h4>
           <div class="d-flex">
             <div class="d-flex flex-fill flex-column w-100">
@@ -75,7 +75,7 @@
       </div>
 
       <!-- ship details -->          
-      <div class="d-flex flex-column flex-fill m-1 border border-2 p-1 col-4">      
+      <div class="d-flex flex-column flex-fill m-1 border border-2 p-1 col-12 col-md-4">      
         <h4 class="p-1 rounded d-print-none">Ship Details</h4>
         <div class="d-flex">
           <div class="d-flex flex-fill me-auto">
