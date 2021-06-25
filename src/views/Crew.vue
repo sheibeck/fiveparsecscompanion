@@ -437,6 +437,16 @@ export default {
       this.toggleEdit();
     },   
 
+    async removeCrew() {
+      if (!confirm("Are you sure you want to delete the entire crew?")) return;
+
+      const modelToDelete = await DataStore.query(Crew, this.crewId)
+      await DataStore.delete(modelToDelete);
+      
+      this.$root.showUserMsg(`Removed crew`);
+
+      this.$router.push('/');
+    },
   
     async addWorld() {
       const name = this.$options.tables.RandomName("name");
