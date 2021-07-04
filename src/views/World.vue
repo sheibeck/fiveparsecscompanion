@@ -7,10 +7,11 @@
       <div class="col">
         <div class="card">
           <div class="card-header bg-light border-success">
-            <h5>1. Upkeep/Ship Repairs</h5>
-          </div>
+            <h5>1. Upkeep/Ship Repairs (Pg.76)</h5>
+          </div>          
           <div class="card-body">            
-            <p class="card-text">
+            <div class="h6">Upkeep</div>
+            <p>
               <ul class="list-group">
                 <li class="d-flex list-group-item bg-light">
                   <div class="col-4">                    
@@ -28,6 +29,24 @@
                     +1 credit per member past 6
                   </div>
                 </li>
+              </ul>
+            </p>            
+            <div class="h6">Ship Debt</div>
+            <p>              
+              Increase ship debt by 1.
+            </p>
+            <div class="h6">Ship Repairs</div>
+            <p>              
+              <ul>
+                <li>Repair 1 point of hull damage automatically.</li>
+                <li>Pay credits 1/additional point of damage.</li>
+              </ul>
+            </p>
+            <div class="h6">Medical Care</div>
+            <p>
+              <ul>
+                <li>Pay 4 credits to remove 1 campaign turn from a single character's recovery time.</li>
+                <li>Mark off 1 campaign turn from duration</li>
               </ul>
             </p>
           </div>
