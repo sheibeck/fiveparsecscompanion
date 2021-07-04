@@ -26,34 +26,48 @@
       </div>     
     </div>
 
-    <div class="d-flex ms-0 ms-md-5 mt-1">
+    <div class="d-flex ms-0 ms-md-5 mt-1 flex-wrap">
       <div class="form-check">
-        <input v-model="worldTrait.Dangerous" class="form-check-input" type="checkbox" />
-        <label class="form-check-label small" for="leader">
+        <input v-model="worldTrait.Dangerous" class="form-check-input" type="checkbox" id="dangerous" />
+        <label class="form-check-label small" for="dangerous">
           Dangerous
         </label>
       </div>
       <div class="form-check ms-2">
-        <input v-model="worldTrait.HeavilyEnforced" class="form-check-input" type="checkbox" />
-        <label class="form-check-label small" for="leader">
+        <input v-model="worldTrait.HeavilyEnforced" class="form-check-input" type="checkbox" id="heavilyEnforced" />
+        <label class="form-check-label small" for="heavilyEnforced">
           Heavily enforced
         </label>
       </div>
       <div class="form-check ms-2">
-        <input v-model="worldTrait.RampantCrime" class="form-check-input" type="checkbox" />
-        <label class="form-check-label small" for="leader">
+        <input v-model="worldTrait.RampantCrime" class="form-check-input" type="checkbox" id="rampantCrime" />
+        <label class="form-check-label small" for="rampantCrime">
           Rampant crime
         </label>
       </div>
       <div class="form-check ms-2" v-if="battleType=='rival'">
-        <input v-model="worldTrait.RivalHatred" class="form-check-input" type="checkbox" />
-        <label class="form-check-label small" for="leader">
+        <input v-model="RivalHatred" class="form-check-input" type="checkbox" id="rival" />
+        <label class="form-check-label small" for="rival">
           Rival hates you
         </label>
       </div>
+      <div class="form-check ms-2" v-if="this.battleType === 'quest'">
+        <input v-model="QuestFinalBattle" class="form-check-input" type="checkbox" id="questFinalBattle" />
+        <label class="form-check-label small" for="questFinalBattle">
+          Final quest battle
+        </label>
+      </div>
+      <div class="ms-2 pr-2 small">
+        <label class="me-2">Specific Enemy</label>
+        <input class="" type="text" ref="specificEnemy" @change="updateEnemy($event.target.value)" />        
+      </div>
     </div>
 
-    <div class="row row-cols-1 mt-1 d-print-none">       
+    <div class="mt-5" v-if="!hasRolled">
+      <h3>Waiting on roll ...</h3>
+    </div>
+
+    <div v-else class="row row-cols-1 mt-1 d-print-none">       
       <div class="col">
         <div class="card">
           <p class="card-text">
@@ -62,9 +76,6 @@
                 <div class="col col-md-6">
                   <i class="fas fa-dice me-1 mt-1 d-print-none" @click="rollOnTable(item)"></i>                
                   <span class="h5">{{item.label}}</span>
-                  <div v-if="idx === 3">
-                    <label>Specific Enemy:</label><input type="text" ref="specificEnemy" @change="getSpecificEnemy($event.target.value)" />
-                  </div>
                 </div>
                 <label class="" v-html="item.result"></label>                
               </li>
@@ -192,11 +203,11 @@ export default {
   name: 'Battle',  
   components: {    
   },  
-  mounted() {
-    this.readyForBattle();
+  mounted() {    
   }, 
   data() {
     return {
+      hasRolled: false,
       enemyTablePrint: [],      
       enemyWeaponTablePrint: [],
       crewSize: 6,
@@ -252,9 +263,10 @@ export default {
       worldTrait: {
         Dangerous: false,
         HeavilyEnforced: false,
-        RampantCrime: false,
-        RivalHatred: false,
-      }
+        RampantCrime: false,        
+      },
+      RivalHatred: false,
+      QuestFinalBattle: false,
     }        
   },  
   tables: new FPFHTables(),
@@ -287,13 +299,16 @@ export default {
         case "missionobjective":
           this.missionObjectives(step);
           break;
-        case "enemyencountercategory":
-          if (this.$refs.specificEnemy[0].value) {
-            this.getSpecificEnemy(this.$refs.specificEnemy[0].value);
+        case "enemyencountercategory": {
+          const specificEnemy = this.$refs.specificEnemy.value;
+          if (specificEnemy) {
+            this.getSpecificEnemy(specificEnemy);
           } else {
             this.getRandomOpponent(step);
           }
+                  
           break;
+        }
       }
     },
     rollDice(dice) {
@@ -301,10 +316,13 @@ export default {
       return roll;   
     },
     readyForBattle() {
+      this.hasRolled = true;
       this.tableResults.forEach( (step) => {
         this.rollOnTable(step, true);
       });
-      this.$root.showUserMsg(`Readied for battle!`);
+      if (!this.specificEnemyError) {
+        this.$root.showUserMsg(`Readied for battle!`);
+      }
     },
     deploymentConditions(step, silent) {
       let result = step.tableResult[0];
@@ -369,7 +387,12 @@ export default {
           break;
 
         case "quest":
-          result = step.tableResult[2].result;
+          if (this.QuestFinalBattle) {
+            result = "Fight Off";
+          }
+          else {
+            result = step.tableResult[2].result;
+          }
           break;
 
         default:
@@ -507,6 +530,14 @@ export default {
           break;
       }
 
+      if (this.QuestFinalBattle) {
+        totalOpponents++;
+      }
+
+      if (this.tableResults[2].result === "Defend") {
+        totalOpponents++;
+      }
+
       if (this.broughtFriends) {
         totalOpponents++;
       }
@@ -525,7 +556,7 @@ export default {
       }
       
       if ( (this.difficulty === "hardcore" || this.difficulty === "insanity")
-        || (this.worldTrait.RivalHatred && this.battleType === "rival") ) 
+        || (this.RivalHatred && this.battleType === "rival") ) 
       {
         totalOpponents++;
       }
@@ -647,10 +678,16 @@ export default {
          weaponArray.push(entry);
       }
     },
+    updateEnemy(enemy) {
+      if (this.hasRolled) {
+        this.getSpecificEnemy(enemy);
+      }
+    },
     getSpecificEnemy(enemy) {
       let result = null;
       let enemyFound = false;
-
+      this.specificEnemyError = false;
+      
       result = this.$options.tables.tables.enemyencountercategory.tables.criminalelements.find(x => x.label.toLowerCase() == enemy.toLowerCase());
       if (result) {         
         this.opponent.data = JSON.parse(result.description);
@@ -690,7 +727,8 @@ export default {
       }
 
       if (!enemyFound) {
-        this.$root.showUserMsg("No enemy found!", "error")
+        this.$root.showUserMsg("Invalid specific enemy!", "error")
+        this.specificEnemyError = true;
         return;
       }
 
