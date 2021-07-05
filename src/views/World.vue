@@ -32,8 +32,11 @@
               </ul>
             </p>            
             <div class="h6">Ship Debt</div>
-            <p>              
-              Increase ship debt by 1.
+            <p>
+              <ul>          
+                <li>Make payment.</li>
+                <li>Increase ship debt by 1.</li>
+              </ul>
             </p>
             <div class="h6">Ship Repairs</div>
             <p>              
@@ -245,26 +248,46 @@
                       <input type="number" class="form-control" placeholder="0" aria-label="savvy" aria-describedby="savvy-addon" 
                         min="0" v-model.number="crewTasks.find(t => t.task === 'repair').savvy" />
                     </div>
-                    <div class="input-group mb-3 input-group-sm">
-                      <div class="input-group-text">
-                        <input class="form-check-input mt-0" type="checkbox" value="" aria-label="Is Engineer" 
-                          v-model="crewTasks.find(t => t.task === 'repair').isEngineer" />
+                    <div class="row">
+                      <div class="col">
+                        <div class="input-group mb-3 input-group-sm">
+                          <div class="input-group-text">
+                            <input class="form-check-input mt-0" type="checkbox" value="" aria-label="Is Engineer" 
+                              v-model="crewTasks.find(t => t.task === 'repair').isEngineer" />
+                          </div>
+                          <span class="input-group-text" id="savvy-addon">Is Engineer?</span>
+                        </div>
+                        <div class="input-group mb-3 input-group-sm">
+                          <div class="input-group-text">
+                            <input class="form-check-input mt-0" type="checkbox" value="" aria-label="Technical Knowledge" 
+                              v-model="worldTrait.TechnicalKnowledge" />
+                          </div>
+                          <span class="input-group-text" id="savvy-addon">Technical Knowledge</span>
+                        </div>
                       </div>
-                      <span class="input-group-text" id="savvy-addon">Is Engineer?</span>
-                    </div>
-                    <div class="input-group mb-3 input-group-sm">
-                      <div class="input-group-text">
-                        <input class="form-check-input mt-0" type="checkbox" value="" aria-label="Technical Knowledge" 
-                          v-model="worldTrait.TechnicalKnowledge" />
+                      <div class="col">
+                        <div class="input-group mb-3 input-group-sm">
+                          <div class="input-group-text">
+                            <input class="form-check-input mt-0" type="checkbox" value="" aria-label="Repair Bot" 
+                              v-model="RepairBot" />
+                          </div>
+                          <span class="input-group-text" id="repairbot-addon">Repair Bot</span>
+                        </div>
+                        <div class="input-group mb-3 input-group-sm">
+                          <div class="input-group-text">
+                            <input class="form-check-input mt-0" type="checkbox" value="" aria-label="Spare Parts" 
+                              v-model="SpareParts" />
+                          </div>
+                          <span class="input-group-text" id="spareparts-addon">Spare Parts</span>
+                        </div>
                       </div>
-                      <span class="input-group-text" id="savvy-addon">Technical Knowledge</span>
                     </div>
                     <div class="input-group mb-3 input-group-sm">
                       <span class="input-group-text" id="credits-addon">Spend Credits</span>
                       <input type="number" class="form-control" placeholder="0" aria-label="Credits" aria-describedby="credits-addon" 
                         min="0" v-model.number="crewTasks.find(t => t.task === 'repair').credits" />
-                    </div>
-                    <label>{{getRepairResults}}</label>
+                    </div>                                        
+                    <label v-html="getRepairResults"></label>                    
                   </div>
                 </div>
               </div>
@@ -433,7 +456,9 @@ export default {
         CorporateState: false,   
         TechnicalKnowledge: false,
         EasyRecruiting: false,
-      }
+      },
+      RepairBot: false,
+      SpareParts: false
     }
   },  
   tables: new FPFHTables(),
@@ -513,11 +538,16 @@ export default {
       const isEngineer = repair.isEngineer ? 1 : 0;
       const techKnowledge = this.worldTrait.TechnicalKnowledge ? 1 : 0;
       const savvy = repair.savvy;
-      const finalResult = roll + savvy + isEngineer + techKnowledge + credits;
+      const spareParts = this.SpareParts ? 1 : 0;
+      const repairBot = this.RepairBot ? 1 : 0;
+      const finalResult = roll + savvy + isEngineer + techKnowledge + spareParts + repairBot + credits;
 
-      let result = `Rolled ${roll} (+ ${savvy} savvy + ${isEngineer} engineer + ${credits} credits + ${techKnowledge} technical knowledge): `;
+      let result = `Result ${finalResult}: `;
       if (roll == 1) {
         result = "Rolled natural 1. Item destroyed!"; 
+        if (this.SpareParts) {
+          result += " Spare parts used up."
+        }
       }
       else {
         if (finalResult >= 6) {
@@ -527,6 +557,15 @@ export default {
           result += "Failed!";
         } 
       }
+      result += `<div class='small'>
+        (roll ${roll}
+        + ${savvy} savvy 
+        + ${isEngineer} engineer 
+        + ${techKnowledge} technical knowledge 
+        + ${repairBot} repair bot
+        + ${spareParts} spare parts
+        + ${credits} credits)
+      </div>`;
       return result;
     },
     getResolveRumorsResults() {     
