@@ -339,7 +339,8 @@ export default {
   .form-text {
     margin-top: 0px;
     font-size: 1em;
-    font-style: italic;
+    font-style: italic;   
+    font-weight: 700;  
   }
 
   input[type=number] {
@@ -355,6 +356,7 @@ export default {
     padding-bottom: 0px !important;
   }
 
+ 
   @media (max-width: 991.98px) {
     .w-md-50 {
       width: 100% !important;
@@ -378,7 +380,6 @@ export default {
    
     .attributes {
         flex-wrap: unset !important;
-    }
-    
+    }      
   }
 </style>
