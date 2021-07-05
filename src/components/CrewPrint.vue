@@ -198,11 +198,7 @@ export default {
     page-break-before: always !important;
     break-before: page !important;
   }
-
-  .crewmember {
-    font-size: .7em !important;
-  }
-  
+    
   td {
     padding-top: 0px;
     padding-bottom: 0px;
