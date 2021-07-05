@@ -351,8 +351,8 @@ export default {
   }
 
   td,th {
-    padding-top: 0px;
-    padding-bottom: 0px;
+    padding-top: 0px !important;
+    padding-bottom: 0px !important;
   }
 
   @media (max-width: 991.98px) {
