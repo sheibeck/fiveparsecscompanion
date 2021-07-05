@@ -1,5 +1,5 @@
 <template>  
-  <div>
+  <div class="page-break">
     <div v-for="(chunk, idx) in chunkCrew" :key="idx" class="page-break">
       <div class="d-flex flex-wrap">
         <div class="crewmember border border-1 p-2 d-flex flex-column my-1 w-50" :class="{ 'bg-dead': member.kia, 'bg-leader': member.leader, 'bg-sick': member.sick_bay }" v-for="(member) in chunk" :key="member.id">
@@ -182,22 +182,11 @@ export default {
 }
 </script>
 
-<style scoped>
-  .print-keep-together {
-    page-break-inside: avoid;
-  }
-  .page-break-clear { 
-    clear: both;
-  }
+<style scoped>  
   .page-break {
     page-break-after: always !important;
     break-after: page !important;
-  }
-
-  .page-break-before {
-    page-break-before: always !important;
-    break-before: page !important;
-  }
+  }  
     
   td {
     padding-top: 0px;
