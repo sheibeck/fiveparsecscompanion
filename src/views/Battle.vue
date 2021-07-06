@@ -6,20 +6,24 @@
       <i class="fas fa-dice me-1 mt-1 d-print-none fa-2x text-center mb-2 mb-md-0" @click="readyForBattle()"></i>
       <div class="d-flex flex-column flex-md-row">
         <div class="input-group me-3">
-          <label class="input-group-text" for="inputGroupSelect01">Battle Type</label>
-          <select class="form-select" aria-label="Default select example" v-model="battleType">
+          <label class="input-group-text" for="battleType">Battle Type</label>
+          <select class="form-select" aria-label="Battle Type" v-model="battleType" id="battleType">
             <option v-for="btype in battleTypes" :key="btype" :value="btype" :selected="battleType===btype">{{btype}}</option>            
           </select>      
         </div>
                   
         <div class="input-group me-3">
-          <div class="input-group-text col-form-label-sm">Crew Size</div>
-          <input type="number" max="6" min="1" class="form-control form-control-sm" id="crewSize" placeholder="Crew Size" v-model.number="crewSize" />
+          <label class="input-group-text col-form-label-sm" for="crewSize">Cmpgn Crew Size</label>
+          <select class="form-select" aria-label="Crew Size" v-model="crewSize" id="crewSize">
+            <option class="pr-2" value="4">4</option>
+            <option value="5">5</option>
+            <option value="6" selected>6</option>
+          </select> 
         </div>      
      
         <div class="input-group">
-          <label class="input-group-text" for="inputGroupSelect01">Difficulty</label>        
-          <select class="form-select" aria-label="Default select example" v-model="difficulty">
+          <label class="input-group-text" for="difficulty">Difficulty</label>        
+          <select class="form-select" aria-label="Difficulty" v-model="difficulty" id="difficulty">
             <option v-for="level in difficultyLevels" :key="level" :value="level" :selected="difficulty===level">{{level}}</option>            
           </select>      
         </div>
@@ -659,7 +663,8 @@ export default {
       }
 
       // formatted results
-      result += `<div class="small text-secondary">+${opponentData.numbers} numbers (roll1: ${roll1} , roll2: ${roll2}, difficulty: ${this.difficulty}), ${opponentData.weapons} weapons, ${pageNumber}</div>`
+      const extraRoll = (crewSize !== 5) ? `roll2: ${roll2},` : "";
+      result += `<div class="small text-secondary">+${opponentData.numbers} numbers (roll1: ${roll1}, ${extraRoll} difficulty: ${this.difficulty}), ${opponentData.weapons} weapons, ${pageNumber}</div>`
       result += `<ul class='small'>`;
       result += `<li>${standardOpponents}x Standard: ${standardWeapon}</li>`;
       result += `<li>${specialists}x Specialists: ${specialistWeapon}</li>`;
