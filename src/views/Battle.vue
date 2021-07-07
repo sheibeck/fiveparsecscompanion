@@ -5,14 +5,14 @@
     <div class="d-flex flex-column flex-md-row d-print-none">
       <i class="fas fa-dice me-1 mt-1 d-print-none fa-2x text-center mb-2 mb-md-0" @click="readyForBattle()"></i>
       <div class="d-flex flex-column flex-md-row">
-        <div class="input-group me-3">
+        <div class="input-group me-3 mb-1">
           <label class="input-group-text" for="battleType">Battle Type</label>
           <select class="form-select" aria-label="Battle Type" v-model="battleType" id="battleType">
             <option v-for="btype in battleTypes" :key="btype" :value="btype" :selected="battleType===btype">{{btype}}</option>            
           </select>      
         </div>
                   
-        <div class="input-group me-3">
+        <div class="input-group me-3 mb-1">
           <label class="input-group-text col-form-label-sm" for="crewSize">Cmpgn Crew Size</label>
           <select class="form-select" aria-label="Crew Size" v-model="crewSize" id="crewSize">
             <option class="pr-2" value="4">4</option>
@@ -21,12 +21,18 @@
           </select> 
         </div>      
      
-        <div class="input-group">
+        <div class="input-group me-3 mb-1">
           <label class="input-group-text" for="difficulty">Difficulty</label>        
           <select class="form-select" aria-label="Difficulty" v-model="difficulty" id="difficulty">
             <option v-for="level in difficultyLevels" :key="level" :value="level" :selected="difficulty===level">{{level}}</option>            
           </select>      
         </div>
+
+        <div class="input-group me-3 mb-1">
+          <label class="input-group-text" for="adjustNumbers">Adjust Numbers</label>        
+          <input type="number" class="form-control" aria-label="Adjust numbers" v-model="adjustNumbers" id="adjustNumbers" />            
+        </div>
+
       </div>     
     </div>
 
@@ -61,7 +67,7 @@
           Final quest battle
         </label>
       </div>
-      <div class="ms-2 pr-2 small">
+      <div class="d-print-none ms-2 pr-2 small">
         <label class="me-2">Specific Enemy</label>
         <input class="" type="text" ref="specificEnemy" @change="updateEnemy($event.target.value)" />        
       </div>
@@ -214,6 +220,7 @@ export default {
       hasRolled: false,
       enemyTablePrint: [],      
       enemyWeaponTablePrint: [],
+      adjustNumbers: 0,
       crewSize: 6,
       battleTypes: [
         "patron",             
@@ -271,6 +278,13 @@ export default {
       },
       RivalHatred: false,
       QuestFinalBattle: false,
+      opponentDataFormatSuccess: true,
+      uniqueRoll: 0,
+      bountyRoll: 0,
+      roll1: 0,
+      roll2: 0,
+      enemyWeapons: {},
+      specialistWeapons: {},
     }        
   },  
   tables: new FPFHTables(),
@@ -289,7 +303,7 @@ export default {
     },   
   },
   methods: {
-    rollOnTable(step) {        
+    rollOnTable(step) {      
       let table = step.key;      
       step.tableResult = this.$options.tables.GetFullTableResult(table);
       
@@ -305,6 +319,8 @@ export default {
           break;
         case "enemyencountercategory": {
           const specificEnemy = this.$refs.specificEnemy.value;
+          this.specificEnemyError = false;
+
           if (specificEnemy) {
             this.getSpecificEnemy(specificEnemy);
           } else {
@@ -320,13 +336,51 @@ export default {
       return roll;   
     },
     readyForBattle() {
-      this.hasRolled = true;
+      this.hasRolled = false;
       this.tableResults.forEach( (step) => {
         this.rollOnTable(step, true);
       });
-      if (!this.specificEnemyError) {
-        this.$root.showUserMsg(`Readied for battle!`);
+
+      this.bountyRoll = this.rollDice("1d6");
+
+      //roll numbers dice
+      const dice = `1d6`;
+      let roll1 = this.rollDice(dice);      
+      let roll2 = this.rollDice(dice);
+          
+      const rerollNumberIfOne = this.battleType == "quest" ? true : false;
+
+      if (rerollNumberIfOne) {
+        if (roll1 == 1) roll1 = this.rollDice(dice);
+        if (roll2 == 1) roll2 = this.rollDice(dice);
       }
+
+      if (this.difficulty !== "easy" && this.difficulty !== "normal") {
+        while (roll1 <= 2) {
+          roll1 = this.rollDice(dice);
+        }
+        while (roll2 <= 2) {
+          roll2 = this.rollDice(dice);
+        }
+      }
+
+      this.roll1 = roll1;
+      this.roll2 = roll2;
+
+      //unique roll
+      this.uniqueRoll = this.rollDice(`2d6`);
+
+      //opponent weapons      
+      this.enemyWeapons = this.$options.tables.GetFullTableResult("enemyweapons");
+      this.specialistWeapons = this.$options.tables.GetFullTableResult("specialistweapons");
+
+      //the dice have been cast!
+      this.hasRolled = true;
+
+      if (!this.specificEnemyError && this.opponentDataFormatSuccess) {
+        this.$root.showUserMsg(`Readied for battle!`);
+        this.formatOpponentData();
+      }          
     },
     deploymentConditions(step, silent) {
       let result = step.tableResult[0];
@@ -351,7 +405,13 @@ export default {
           break;
       }     
       step.result = result;     
-      if (!silent) this.$root.showUserMsg(`Re-rolled Deployment Conditions`);
+      if (!silent) {
+        this.$root.showUserMsg(`Re-rolled Deployment Conditions`);
+      }
+
+      if (this.hasRolled) {
+        this.formatOpponentData();
+      }
     },
     notableSights(step, silent) {
       let result = "";
@@ -376,7 +436,13 @@ export default {
       }
       
       step.result = result;   
-      if (!silent) this.$root.showUserMsg(`Re-rolled Notable Sights`);    
+      if (!silent) {
+        this.$root.showUserMsg(`Re-rolled Notable Sights`);
+      }
+
+      if (this.hasRolled) {
+        this.formatOpponentData();
+      }
     },
     missionObjectives(step, silent) {
       let result = null;
@@ -405,7 +471,13 @@ export default {
       }
      
       step.result = result;
-      if (!silent) this.$root.showUserMsg(`Re-rolled Mission Objective`);
+      if (!silent) {
+        this.$root.showUserMsg(`Re-rolled Mission Objective`);
+      }
+
+      if (this.hasRolled) {
+        this.formatOpponentData();
+      }
     },
     getOpponentData(table, idx) {
       return JSON.parse(table.tableResult[idx].desc);
@@ -441,11 +513,17 @@ export default {
           step.result = "Invasion!";
           break;   
       }
-      this.formatOpponentData();
 
-      if (!silent) this.$root.showUserMsg(`Determined Opponents`);
+      if (this.hasRolled) {
+        this.formatOpponentData();
+      }
+
+      if (!silent && this.opponentDataFormatSuccess) {
+       this.$root.showUserMsg(`Determined Opponents`);
+      }
     },
     formatOpponentData() {
+      this.opponentDataFormatSuccess = true;
       this.enemyTablePrint = [];
       this.enemyWeaponTablePrint = [];
       
@@ -462,11 +540,11 @@ export default {
       let pageNumber = "";
       let extraInfo = "";
       let uniqueRollBonus = 0;
-      let rerollNumberIfOne = false;
+      
       switch(opponentType) {
         case "Criminal Elements": {
           pageNumber = "Pg.94";
-          let bountyRoll = this.rollDice("1d6");
+          const bountyRoll = this.bountyRoll;
           if ( bountyRoll <= 3) {
             extraInfo += ` Bounty available: ${bountyRoll} credits.`;
           }
@@ -483,8 +561,7 @@ export default {
         }
         case "Interested Parties": {
           pageNumber = "Pg.98";
-          uniqueRollBonus = 1;
-          rerollNumberIfOne = this.battleType == "quest" ? true : false;
+          uniqueRollBonus = 1;          
           break;
         }
         case "Roving Threats": {
@@ -494,24 +571,9 @@ export default {
         }
       }
      
-      const dice = `1d6`;
-      let roll1 = this.rollDice(dice);      
-      let roll2 = this.rollDice(dice);
-          
-      if (rerollNumberIfOne) {
-        if (roll1 == 1) roll1 = this.rollDice(dice);
-        if (roll2 == 1) roll2 = this.rollDice(dice);
-      }
-
-      if (this.difficulty !== "easy" && this.difficulty !== "normal") {
-        while (roll1 <= 2) {
-          roll1 = this.rollDice(dice);
-        }
-        while (roll2 <= 2) {
-          roll2 = this.rollDice(dice);
-        }
-      }
-
+      //get the dice rolls for numbers rolled in the ReadyForBattle() method
+      let roll1 = this.roll1;      
+      let roll2 = this.roll2;     
       const maxRoll = Math.max(roll1,roll2);
       const minRoll = Math.min(roll1,roll2);
 
@@ -538,7 +600,8 @@ export default {
         totalOpponents++;
       }
 
-      if (this.tableResults[2].result === "Defend") {
+      const defenseOpponentIncrease = this.tableResults[2].result === "Defend";
+      if (defenseOpponentIncrease) {
         totalOpponents++;
       }
 
@@ -596,7 +659,7 @@ export default {
       }
       else {
         if (opponentType !== "Roving Threats" ||  (opponentType !== "Roving Threats" && difficulty !== "insanity")) {       
-          let rollUnique = this.rollDice(`2d6`);
+          let rollUnique = this.uniqueRoll;
           
           if (this.difficulty === "hardcore" || this.difficulty === "insanity") {
             uniqueRollBonus++;
@@ -608,8 +671,16 @@ export default {
         }
       }
 
+      //add any final adjustments with the adjuster input
+      totalOpponents += parseInt(this.adjustNumbers);          
+
       //determine standard opponents
       let standardOpponents = totalOpponents - specialists - lieutenant;
+
+      if (standardOpponents < 0) {        
+        this.opponentDataFormatSuccess = false;
+        this.$root.showUserMsg("Not enough standard enemies!", "error");        
+      }
 
       if (this.difficulty === "easy" && totalOpponents >= 5 ) {
         standardOpponents--;
@@ -625,13 +696,13 @@ export default {
       if (opponentData.weapons.length > 2) {
           const customWeapon = opponentData.weapons.split(","); 
           standardWeapon = customWeapon[0];                 
-          specialistWeapon = customWeapon[customWeapon.length-1];          
+          specialistWeapon = customWeapon[customWeapon.length-1];
       } else {
-        const weapons = this.$options.tables.GetFullTableResult("enemyweapons");
+        const weapons = this.enemyWeapons;
         standardWeapon = weapons[opponentData.weapons[0]-1];
                       
         if (specialists > 0) {
-          const specialistWeapons = this.$options.tables.GetFullTableResult("specialistweapons");
+          const specialistWeapons = this.specialistWeapons;
           const specialWeaponMapping = {
             A: 0,
             B: 1,
@@ -663,8 +734,9 @@ export default {
       }
 
       // formatted results
-      const extraRoll = (crewSize !== 5) ? `roll2: ${roll2},` : "";
-      result += `<div class="small text-secondary">+${opponentData.numbers} numbers (roll1: ${roll1}, ${extraRoll} difficulty: ${this.difficulty}), ${opponentData.weapons} weapons, ${pageNumber}</div>`
+      const extraRoll = (crewSize !== 5) ? `Roll 2: ${roll2},` : "";      
+      result += `<div class="small text-secondary">+${opponentData.numbers} numbers, ${opponentData.weapons} weapons, ${pageNumber}</div>`;
+      result += `<div class="small">(Roll 1: ${roll1}, ${extraRoll} Difficulty: ${this.difficulty}${defenseOpponentIncrease ? ", +1 for Defend Objective " : ""})</div>`;
       result += `<ul class='small'>`;
       result += `<li>${standardOpponents}x Standard: ${standardWeapon}</li>`;
       result += `<li>${specialists}x Specialists: ${specialistWeapon}</li>`;
@@ -691,8 +763,7 @@ export default {
     getSpecificEnemy(enemy) {
       let result = null;
       let enemyFound = false;
-      this.specificEnemyError = false;
-      
+            
       result = this.$options.tables.tables.enemyencountercategory.tables.criminalelements.find(x => x.label.toLowerCase() == enemy.toLowerCase());
       if (result) {         
         this.opponent.data = JSON.parse(result.description);
@@ -737,7 +808,9 @@ export default {
         return;
       }
 
-      this.formatOpponentData();
+      if (this.hasRolled) {
+        this.formatOpponentData();
+      }
     },
     print() {
       window.print();
