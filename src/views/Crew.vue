@@ -49,7 +49,7 @@
           <div class="d-flex">
             <div class="d-flex flex-fill flex-column w-100">
               <label for="crewStash" class="form-text small">Stash</label>
-              <textarea v-model.number="crew.stash" class="form-control" :class="{ 'd-none': !editing }" id="crewStash" placeholder="" rows="7"></textarea>
+              <textarea v-model="crew.stash" class="form-control" :class="{ 'd-none': !editing }" id="crewStash" placeholder="" rows="7"></textarea>
               <span :class="{ 'd-none': editing }">{{crew.stash}}</span>       
             </div>
           

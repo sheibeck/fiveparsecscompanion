@@ -2,10 +2,6 @@
   <div>
     <h1>
       Crew <button type="button" class="btn btn-success btn-sm mx-1 d-print-none" @click="createCrew">New Crew<i class="fas fa-plus"></i></button>      
-      <div v-if="isDev" class="d-print-none">        
-        <button type="button" class="btn btn-secondary btn-sm mx-1" @click="listLocalData">List Local Data <i class="fas fa-trash"></i></button>      
-        <button type="button" class="btn btn-danger btn-sm mx-1" @click="clearLocalData">Clear Local Data <i class="fas fa-trash"></i></button>         
-      </div>
     </h1>
     
     <div class="row row-cols-1 row-cols-md-3 g-4">
@@ -96,22 +92,7 @@ export default {
       );          
       this.$root.showUserMsg(`Added new crew`);
       this.fetchCrew();
-    },    
-    
-    async clearLocalData() {      
-      await DataStore.stop();
-      await DataStore.clear();
-      await DataStore.start();
-      this.fetchCrew();
-    },  
-
-    async listLocalData() {
-      const crew = await DataStore.query(Crew);
-      console.log(crew);
-
-      const members = await DataStore.query(CrewMember);
-      console.log(members);
-    }
+    }      
   }
 }
 </script>
