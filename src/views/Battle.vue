@@ -15,11 +15,23 @@
         <div class="input-group me-3 mb-1">
           <label class="input-group-text col-form-label-sm" for="crewSize">Cmpgn Crew Size</label>
           <select class="form-select" aria-label="Crew Size" v-model="crewSize" id="crewSize">
-            <option class="pr-2" value="4">4</option>
+            <option value="4">4</option>
             <option value="5">5</option>
             <option value="6" selected>6</option>
           </select> 
-        </div>      
+        </div>    
+
+        <div class="input-group me-3 mb-1">
+          <label class="input-group-text col-form-label-sm" for="numberOfCrew">No. of Crew</label>
+          <select class="form-select" aria-label="Crew Size" v-model="numberOfCrew" id="numberOfCrew">
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6" selected>6</option>
+          </select> 
+        </div>    
      
         <div class="input-group me-3 mb-1">
           <label class="input-group-text" for="difficulty">Difficulty</label>        
@@ -222,6 +234,7 @@ export default {
       enemyWeaponTablePrint: [],
       adjustNumbers: 0,
       crewSize: 6,
+      numberOfCrew: 6,
       battleTypes: [
         "patron",             
         "rival",
@@ -398,6 +411,9 @@ export default {
             this.getSpecificEnemy(this.opponent.name);
           }
           result += `(Rival attack? ${rivalAttack})`;
+          if (rivalAttack == "Ambush") {
+            this.numberOfCrew--;
+          }
           break;
         }
         case "quest":
@@ -604,7 +620,7 @@ export default {
       if (defenseOpponentIncrease) {
         totalOpponents++;
       }
-
+     
       if (this.broughtFriends) {
         totalOpponents++;
       }
@@ -627,6 +643,21 @@ export default {
       {
         totalOpponents++;
       }
+
+      //add any final adjustments with the adjuster input
+      totalOpponents += parseInt(this.adjustNumbers);          
+      
+      const smallEncounter = this.tableResults[0].result === "Small encounter";
+      if (smallEncounter) {
+        let reduceBy = 1;
+        if (this.numberOfCrew < totalOpponents) {
+          reduceBy = 2;
+        }
+        totalOpponents = totalOpponents - reduceBy;        
+      }
+
+      //make sure that specialists, lietenants and unique are determined AFTER
+      // all number adjustments are made
  
       //determine specialists
       let specialists = 0;
@@ -671,8 +702,6 @@ export default {
         }
       }
 
-      //add any final adjustments with the adjuster input
-      totalOpponents += parseInt(this.adjustNumbers);          
 
       //determine standard opponents
       let standardOpponents = totalOpponents - specialists - lieutenant;
