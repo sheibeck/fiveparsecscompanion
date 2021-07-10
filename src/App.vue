@@ -4,7 +4,7 @@
       <div class="container-fluid">
         <a href="/" class="navbar-brand d-flex">
           <img src="./assets/logo.png" alt="5 Parsecs Companion" class="d-inline-block align-text-top rounded-circle" />
-          <div class="ms-2 mt-2">Parsecs Companion</div>
+          <div class="ms-2 mt-2">5 Parsecs Companion</div>
         </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
@@ -27,12 +27,20 @@
               <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                 Resources
               </a>
-              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">                
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                 <li><a class="dropdown-item" href="https://www.modiphius.net/products/five-parsecs-from-home"  target="_blank"><i class="fas fa-book-open"></i> 5 Parsecs From Home</a></li>
                 <li><a class="dropdown-item" href="https://discord.gg/vFVmE59" target="_blank"><i class="fab fa-discord"></i> NWG Discord</a></li>                
               </ul>
             </li>
-            <a class="nav-link" href="https://github.com/sheibeck/fiveparsecscompanion/issues" target="_blank"><i class="fas fa-bug"></i> Report Issues</a>
+            <li class="nav-item dropdown">              
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Support
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <li><a class="dropdown-item" href="https://github.com/sheibeck/fiveparsecscompanion/issues" target="_blank"><i class="fas fa-bug"></i> Report Issues</a></li>
+                <li><a class="dropdown-item" href="https://github.com/sheibeck/fiveparsecscompanion/wiki" target="_blank"><i class="fas fa-question"></i> Help</a></li>
+              </ul>
+            </li>
           </ul>
           <div class="text-end">
             <div v-if="authState !== 'signedin'">You are signed out.</div>
