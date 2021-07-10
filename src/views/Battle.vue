@@ -7,14 +7,14 @@
       <div class="d-flex flex-column flex-md-row">
         <div class="input-group me-3 mb-1">
           <label class="input-group-text" for="battleType">Battle Type</label>
-          <select class="form-select" aria-label="Battle Type" v-model="battleType" id="battleType">
+          <select class="form-select" aria-label="Battle Type" v-model="battleType" id="battleType" @change="triggerSetupChange()">
             <option v-for="btype in battleTypes" :key="btype" :value="btype" :selected="battleType===btype">{{btype}}</option>            
           </select>      
         </div>
                   
         <div class="input-group me-3 mb-1">
           <label class="input-group-text col-form-label-sm" for="crewSize">Cmpgn Crew Size</label>
-          <select class="form-select" aria-label="Crew Size" v-model="crewSize" id="crewSize">
+          <select class="form-select" aria-label="Crew Size" v-model.number="crewSize" id="crewSize" @change="triggerSetupChange()">
             <option value="4">4</option>
             <option value="5">5</option>
             <option value="6" selected>6</option>
@@ -23,7 +23,7 @@
 
         <div class="input-group me-3 mb-1">
           <label class="input-group-text col-form-label-sm" for="numberOfCrew">No. of Crew</label>
-          <select class="form-select" aria-label="Crew Size" v-model="numberOfCrew" id="numberOfCrew">
+          <select class="form-select" aria-label="Crew Size" v-model.number="numberOfCrew" id="numberOfCrew" @change="triggerSetupChange()">
             <option value="1">1</option>
             <option value="2">2</option>
             <option value="3">3</option>
@@ -35,14 +35,14 @@
      
         <div class="input-group me-3 mb-1">
           <label class="input-group-text" for="difficulty">Difficulty</label>        
-          <select class="form-select" aria-label="Difficulty" v-model="difficulty" id="difficulty">
+          <select class="form-select" aria-label="Difficulty" v-model="difficulty" id="difficulty" @change="triggerSetupChange()">
             <option v-for="level in difficultyLevels" :key="level" :value="level" :selected="difficulty===level">{{level}}</option>            
           </select>      
         </div>
 
         <div class="input-group me-3 mb-1">
           <label class="input-group-text" for="adjustNumbers">Adjust Numbers</label>        
-          <input type="number" class="form-control" aria-label="Adjust numbers" v-model="adjustNumbers" id="adjustNumbers" />            
+          <input type="number" class="form-control" aria-label="Adjust numbers" v-model.number="adjustNumbers" id="adjustNumbers" @change="triggerSetupChange()" />                      
         </div>
 
       </div>     
@@ -50,31 +50,31 @@
 
     <div class="d-flex ms-0 ms-md-5 mt-1 flex-wrap">
       <div class="form-check">
-        <input v-model="worldTrait.Dangerous" class="form-check-input" type="checkbox" id="dangerous" />
+        <input v-model="worldTrait.Dangerous" class="form-check-input" type="checkbox" id="dangerous" @change="triggerSetupChange()" />
         <label class="form-check-label small" for="dangerous">
           Dangerous
         </label>
       </div>
       <div class="form-check ms-2">
-        <input v-model="worldTrait.HeavilyEnforced" class="form-check-input" type="checkbox" id="heavilyEnforced" />
+        <input v-model="worldTrait.HeavilyEnforced" class="form-check-input" type="checkbox" id="heavilyEnforced" @change="triggerSetupChange()" />
         <label class="form-check-label small" for="heavilyEnforced">
           Heavily enforced
         </label>
       </div>
       <div class="form-check ms-2">
-        <input v-model="worldTrait.RampantCrime" class="form-check-input" type="checkbox" id="rampantCrime" />
+        <input v-model="worldTrait.RampantCrime" class="form-check-input" type="checkbox" id="rampantCrime" @change="triggerSetupChange()" />
         <label class="form-check-label small" for="rampantCrime">
           Rampant crime
         </label>
       </div>
       <div class="form-check ms-2" v-if="battleType=='rival'">
-        <input v-model="RivalHatred" class="form-check-input" type="checkbox" id="rival" />
+        <input v-model="RivalHatred" class="form-check-input" type="checkbox" id="rival" @change="triggerSetupChange()" />
         <label class="form-check-label small" for="rival">
           Rival hates you
         </label>
       </div>
       <div class="form-check ms-2" v-if="this.battleType === 'quest'">
-        <input v-model="QuestFinalBattle" class="form-check-input" type="checkbox" id="questFinalBattle" />
+        <input v-model="QuestFinalBattle" class="form-check-input" type="checkbox" id="questFinalBattle" @change="triggerSetupChange()" />
         <label class="form-check-label small" for="questFinalBattle">
           Final quest battle
         </label>
@@ -313,9 +313,14 @@ export default {
   computed : {    
     username: function() {
       return this.$store.state.user.username;
-    },   
+    },       
   },
   methods: {
+    triggerSetupChange: function() {
+      if (this.hasRolled) {
+        this.formatOpponentData();
+      }
+    },
     rollOnTable(step) {      
       let table = step.key;      
       step.tableResult = this.$options.tables.GetFullTableResult(table);
