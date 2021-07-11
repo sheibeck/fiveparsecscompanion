@@ -785,7 +785,7 @@ export default {
     addPrintableEnemyEntry(type, name, label, numbers, isLieutenant) {
       let entry = {};
       if (type === "Unique") {
-        entry = { numbers: 1, panic: "", speed: "4", combat: 0, toughness: 3, ai: "", weapons: "" };
+        entry = { numbers: 1, panic: "", speed: "", combat: "", toughness: "", ai: "", weapons: "" };
       }
       else {
         entry = this.getSpecificTableEntry("enemyencountercategory", name, type.replace(/\s/g,'').toLowerCase());
