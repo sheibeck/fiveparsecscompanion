@@ -140,24 +140,24 @@
               <tr>
                 <th scope="col"></th>
                 <th scope="col">Name/Type</th>
-                <th scope="col">Number</th>
-                <th scope="col">Panic</th>
-                <th scope="col">Speed</th>
-                <th scope="col">Combat</th>
-                <th scope="col">Toughness</th>
-                <th scope="col">AI</th>
+                <th scope="col" style="text-align: center;">Number</th>
+                <th scope="col" style="text-align: center;">Panic</th>
+                <th scope="col" style="text-align: center;">Speed</th>
+                <th scope="col" style="text-align: center;">Combat</th>
+                <th scope="col" style="text-align: center;">Toughness</th>
+                <th scope="col" style="text-align: center;">AI</th>
               </tr>
             </thead>
             <tbody>
               <tr v-for="(item,idx) in enemyTablePrint" :key="idx">
                 <th scope="row">{{idx+1}}</th>
                 <td>{{item.name}}</td>
-                <td>{{item.numbers}}</td>
-                <td></td>   
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
+                <td style="text-align: center;">{{item.numbers}}</td>
+                <td style="text-align: center;">{{item.panic}}</td>
+                <td style="text-align: center;">{{item.speed}}</td>
+                <td style="text-align: center;">{{item.combat}}</td>
+                <td style="text-align: center;">{{item.toughness}}</td>
+                <td style="text-align: center;">{{item.ai}}</td>
               </tr>
               <tr>
                 <th scope="row">*</th>
@@ -179,21 +179,21 @@
             <thead>
               <tr>
                 <th scope="col"></th>
-                <th scope="col" class="flex-fill">Name/Type</th>
-                <th scope="col">Range</th>
-                <th scope="col">Shots</th>
-                <th scope="col">Damage</th>
+                <th scope="col" class="">Name/Type</th>
+                <th scope="col" style="text-align: center;">Range</th>
+                <th scope="col" style="text-align: center;">Shots</th>
+                <th scope="col" style="text-align: center;">Damage</th>
                 <th scope="col">Traits</th>
               </tr>
             </thead>
             <tbody>
               <tr v-for="(item,idx) in enemyWeaponTablePrint" :key="idx">
                 <th scope="row">{{idx+1}}</th>
-                <td>{{item}}</td>
-                <td></td>
-                <td></td>   
-                <td></td>
-                <td></td>          
+                <td>{{item.name}}</td>
+                <td style="text-align: center;">{{item.range}}</td>
+                <td style="text-align: center;">{{item.shots}}</td>   
+                <td style="text-align: center;">{{item.damage}}</td>
+                <td>{{item.traits}}</td>
               </tr>      
               <tr>
                 <th scope="row">*</th>
@@ -746,23 +746,23 @@ export default {
         }
       }
 
-      //set some printables
-      this.enemyTablePrint.push({name: opponentName, numbers: standardOpponents});      
+      //set some printables      
+      this.addPrintableEnemyEntry(opponentType, opponentName, opponentName, standardOpponents);    
       this.addPrintableWeaponEntry(standardWeapon);
       
       if (lieutenant > 0) {
-        this.enemyTablePrint.push({name: `${opponentName} Lt.`, numbers: lieutenant});        
+        this.addPrintableEnemyEntry(opponentType, opponentName, `${opponentName} Lt.`, lieutenant, true);
         this.addPrintableWeaponEntry("Blade");
       }      
-      if (specialists > 0) {
-        this.enemyTablePrint.push({name: `${opponentName} Spc.`, numbers: specialists});
+      if (specialists > 0) {        
+        this.addPrintableEnemyEntry(opponentType, opponentName, `${opponentName} Spc.`, specialists);
         let spcWeapon = specialistWeapon.replace(/ *\([^)]*\) */g, "").split("+");
         spcWeapon.forEach((w) => {
           this.addPrintableWeaponEntry(w.trim());
         });
       }
-      for(var i = 0; i<uniqueOpponents; i++) {
-        this.enemyTablePrint.push({name: "Unique", numbers: i+1});
+      for(var i = 0; i<uniqueOpponents; i++) {        
+        this.addPrintableEnemyEntry("Unique", "Unique", "Unique", 1);        
         this.addPrintableWeaponEntry(`*${i+1}:`);
         this.addPrintableWeaponEntry(`**${i+1}:`);
       }
@@ -782,11 +782,53 @@ export default {
 
       this.tableResults[3].result = result;
     },
+    addPrintableEnemyEntry(type, name, label, numbers, isLieutenant) {
+      let entry = {};
+      if (type === "Unique") {
+        entry = { numbers: 1, panic: "", speed: "4", combat: 0, toughness: 3, ai: "", weapons: "" };
+      }
+      else {
+        entry = this.getSpecificTableEntry("enemyencountercategory", name, type.replace(/\s/g,'').toLowerCase());
+        const combat = parseInt(entry.combat);
+        if (isLieutenant && !isNaN(combat)) {
+          entry.combat = parseInt(entry.combat) + 1;
+        }
+      }
+      //overwrite this with the exact number of units appearing in the battle
+      entry.numbers = numbers;
+      //add a proper label based on Lt., Specialist, etc
+      entry.name = label;
+      this.enemyTablePrint.push(entry);
+    },
     addPrintableWeaponEntry(entry) {     
-      entry = `${entry}`.replace(/ *\([^)]*\) */g, "");
+      entry = `${entry}`.replace(/ *\([^)]*\) */g, "");      
+      const entryList = entry.split("+");
       let weaponArray = this.enemyWeaponTablePrint;
-      if (weaponArray.indexOf(entry) === -1) {
-         weaponArray.push(entry);
+
+      entryList.forEach( (item) => {
+        entry = item.trim();
+        
+        //try to find the weapon entry in the weapon table
+        const weaponStats = this.getSpecificTableEntry("weapons", entry);
+        if (weaponStats) {
+          entry = weaponStats;
+        }
+        else {
+          entry = { range: "", shots: "", damage:"", traits: "" };
+        }
+
+        if (weaponArray.indexOf(entry) === -1) {
+          weaponArray.push(entry);
+        }
+      });
+    },    
+    getSpecificTableEntry(key, label, subentry) {      
+      const entry = this.$options.tables.tables[key].tables[subentry ?? "default"].find(w => w.label === label);
+      if (entry && entry.description) {
+        return JSON.parse(entry.description);
+      }
+      else {
+        return null;
       }
     },
     updateEnemy(enemy) {
