@@ -800,8 +800,9 @@ export default {
       entry.name = label;
       this.enemyTablePrint.push(entry);
     },
-    addPrintableWeaponEntry(entry) {     
-      entry = `${entry}`.replace(/ *\([^)]*\) */g, "");      
+    addPrintableWeaponEntry(entry) {
+      //TODO: if we find bonus damage in the name entry, add it to the damage listing for weapon
+      entry = `${entry}`.replace(/ *\([^)]*\) */g, "");            
       const entryList = entry.split("+");
       let weaponArray = this.enemyWeaponTablePrint;
 
@@ -814,10 +815,10 @@ export default {
           entry = weaponStats;
         }
         else {
-          entry = { range: "", shots: "", damage:"", traits: "" };
+          entry = { name: entry, range: "", shots: "", damage:"", traits: "" };
         }
 
-        if (weaponArray.indexOf(entry) === -1) {
+        if (weaponArray.findIndex(e => e.name === entry.name) === -1) {
           weaponArray.push(entry);
         }
       });
@@ -872,7 +873,7 @@ export default {
         result = this.$options.tables.tables.enemyencountercategory.tables.rovingthreats.find(x => x.label.toLowerCase() == enemy.toLowerCase());
         if (result) {         
           this.opponent.data = JSON.parse(result.description);
-          this.opponent.type = "Roving Threat";
+          this.opponent.type = "Roving Threats";
           this.opponent.name = enemy;
           enemyFound = true;
         } 
