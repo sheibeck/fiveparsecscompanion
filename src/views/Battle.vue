@@ -762,14 +762,14 @@ export default {
         });
       }
       for(var i = 0; i<uniqueOpponents; i++) {        
-        this.addPrintableEnemyEntry("Unique", "Unique", "Unique", 1);        
+        this.addPrintableEnemyEntry("Unique", "Unique", "Unique", false);        
         this.addPrintableWeaponEntry(`*${i+1}:`);
         this.addPrintableWeaponEntry(`**${i+1}:`);
       }
 
       // formatted results
       const extraRoll = (crewSize !== 5) ? `Roll 2: ${roll2},` : "";      
-      result += `<div class="small text-secondary">+${opponentData.numbers} numbers, ${opponentData.weapons} weapons, ${pageNumber}</div>`;
+      result += `<span class="small text-secondary"> (+${opponentData.numbers} numbers, ${opponentData.weapons} weapons, ${pageNumber})</span>`;
       result += `<div class="small">(Roll 1: ${roll1}, ${extraRoll} Difficulty: ${this.difficulty}${defenseOpponentIncrease ? ", +1 for Defend Objective " : ""})</div>`;
       result += `<ul class='small'>`;
       result += `<li>${standardOpponents}x Standard: ${standardWeapon}</li>`;
@@ -785,13 +785,16 @@ export default {
     addPrintableEnemyEntry(type, name, label, numbers, isLieutenant) {
       let entry = {};
       if (type === "Unique") {
-        entry = { numbers: 1, panic: "", speed: "", combat: "", toughness: "", ai: "", weapons: "" };
+        entry = { numbers: 1, panic: "NA", speed: "", combat: "", toughness: "", ai: "", weapons: "" };
       }
       else {
         entry = this.getSpecificTableEntry("enemyencountercategory", name, type.replace(/\s/g,'').toLowerCase());
         const combat = parseInt(entry.combat);
-        if (isLieutenant && !isNaN(combat)) {
-          entry.combat = parseInt(entry.combat) + 1;
+        if (isLieutenant) {
+          if (!isNaN(combat)) {
+            entry.combat = parseInt(entry.combat) + 1;
+          }
+          entry.panic = "NA";
         }
       }
       //overwrite this with the exact number of units appearing in the battle
