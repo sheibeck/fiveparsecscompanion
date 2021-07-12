@@ -148,7 +148,7 @@
                 <tbody>
                   <tr v-for="weapon in member.weapons.weapons" :key="weapon.id">
                     <td th scope="row">
-                      <input v-model="weapon.name" type="text" class="form-control" :class="{ 'd-none': !isEditingCrew(member.id) }" placeholder="" />
+                      <input v-model="weapon.name" type="text" class="form-control" :class="{ 'd-none': !isEditingCrew(member.id) }" placeholder="" @change="addWeaponEntry($event, member, weapon.id)" />
                       <span :class="{ 'd-none': isEditingCrew(member.id) }">{{weapon.name}}</span>
                     </td>
                     <td>
@@ -156,11 +156,11 @@
                       <span :class="{ 'd-none': isEditingCrew(member.id) }">{{weapon.range}}</span>
                     </td>
                     <td>
-                      <input v-model="weapon.shots" type="number" class="form-control" :class="{ 'd-none': !isEditingCrew(member.id) }" placeholder="" />
+                      <input v-model="weapon.shots" type="text" class="form-control" :class="{ 'd-none': !isEditingCrew(member.id) }" placeholder="" />
                       <span :class="{ 'd-none': isEditingCrew(member.id) }">{{weapon.shots}}</span>
                     </td>
                     <td>
-                      <input v-model="weapon.damage" type="number" class="form-control" :class="{ 'd-none': !isEditingCrew(member.id) }" placeholder="" />
+                      <input v-model="weapon.damage" type="text" class="form-control" :class="{ 'd-none': !isEditingCrew(member.id) }" placeholder="" />
                       <span :class="{ 'd-none': isEditingCrew(member.id) }">{{weapon.damage}}</span>
                     </td>
                     <td>
@@ -365,7 +365,28 @@ export default {
       this.$root.showUserMsg(`Added ${name} to crew`);
       this.$emit("fetchcrewmembers");
     },
-
+    addWeaponEntry(e, member, weaponId) {      
+      const entry = e.target.value;      
+      //try to find the weapon entry in the weapon table
+      const weaponStats = this.getSpecificTableEntry("weapons", entry.trim());
+      const weapon = member.weapons.weapons.find( w => w.id === weaponId);
+      if (weaponStats) {
+        weapon.name = weaponStats.name;
+        weapon.range = weaponStats.range;
+        weapon.shots = weaponStats.shots;
+        weapon.damage = weaponStats.damage;
+        weapon.traits = weaponStats.traits;
+      }      
+    },    
+    getSpecificTableEntry(key, label, subentry) {      
+      const entry = this.$options.tables.tables[key].tables[subentry ?? "default"].find(w => w.label.toLowerCase() === label.toLowerCase());
+      if (entry && entry.description) {
+        return JSON.parse(entry.description);
+      }
+      else {
+        return null;
+      }
+    },
     async addWeaponToCrew(id)
     {
       let modelWeapon = { "id": shortid.generate(), "name": "", "range": "", "shots": "0", "damage": "0", "traits": "" };

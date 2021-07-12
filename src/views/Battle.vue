@@ -824,7 +824,7 @@ export default {
       });
     },    
     getSpecificTableEntry(key, label, subentry) {      
-      const entry = this.$options.tables.tables[key].tables[subentry ?? "default"].find(w => w.label === label);
+      const entry = this.$options.tables.tables[key].tables[subentry ?? "default"].find(w => w.label.toLowerCase() === label.toLowerCase());
       if (entry && entry.description) {
         return JSON.parse(entry.description);
       }
