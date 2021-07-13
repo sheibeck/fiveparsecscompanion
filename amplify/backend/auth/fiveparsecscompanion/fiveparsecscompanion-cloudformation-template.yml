@@ -157,10 +157,6 @@ Parameters:
     Type: String
   
             
-  oAuthMetadata:
-    Type: String
-  
-            
   
   usernameCaseSensitive:
     Type: String
@@ -170,6 +166,10 @@ Parameters:
     Type: CommaDelimitedList
       
   hostedUIProviderCreds:
+    Type: String
+  
+            
+  oAuthMetadata:
     Type: String
   
             
