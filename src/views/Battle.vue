@@ -812,36 +812,41 @@ export default {
     },
     addPrintableWeaponEntry(entry) {
       //TODO: if we find bonus damage in the name entry, add it to the damage listing for weapon
-      const matches = `${entry}`.match(/(\w+)/g, "");
-      entry = matches[0];
-      let damageBonus = "0";
-      if (matches.length > 1) {
-        damageBonus = matches[matches.length-1];
-      }      
-      const entryList = entry.split("+");
+      let matches = `${entry}`.match(/^([^(]*)/g);
+      let weapon = "";
+      if (matches) {
+        weapon = matches[0];
+      }
+      let damageBonus = "0";      
+      matches = `${entry}`.match(/^(\d+)/g);
+      if (matches) {
+        damageBonus = matches[0];
+      }
+      
+      const entryList = weapon.split("+");
       let weaponArray = this.enemyWeaponTablePrint;
 
       entryList.forEach( (item) => {
-        entry = item.trim();
+        weapon = item.trim();
         
         //try to find the weapon entry in the weapon table
-        const weaponStats = this.getSpecificTableEntry("weapons", entry);
+        const weaponStats = this.getSpecificTableEntry("weapons", weapon);
         if (weaponStats) {
-          entry = weaponStats;
+          weapon = weaponStats;
         }
         else {
           //if we have special entries like claws/mandibles, etc
-          if (entry.indexOf("*") === -1) {
-            entry = { name: entry, range: "Brawl", shots: "-", damage: `+${damageBonus}`, traits: "Melee" };
+          if (weapon.indexOf("*") === -1) {
+            weapon = { name: weapon, range: "Brawl", shots: "-", damage: `${damageBonus}`, traits: "Melee" };
           }
           else {
             //otherwise, we just want a blank entry
-            entry = { name: entry, range: "", shots: "", damage: "", traits: "" };
+            weapon = { name: weapon, range: "", shots: "", damage: "", traits: "" };
           }
         }
 
-        if (weaponArray.findIndex(e => e.name === entry.name) === -1) {
-          weaponArray.push(entry);
+        if (weaponArray.findIndex(e => e.name === weapon.name) === -1) {
+          weaponArray.push(weapon);
         }
       });
     },    
