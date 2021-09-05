@@ -59,19 +59,19 @@
 
 <script>
 import { FPFHTables } from '../js/tables.js';
+import { FiveParsecs }  from '../js/fiveParsecs';
+import { Steps, SubSteps } from "../js/fiveParsecsEnums";
 
 export default {
   name: 'Travel',  
   components: {    
   },
-  mounted() {
-     
+  mounted() {     
   }, 
   data() {
     return {
-      fleeInvasion : {       
-        roll: 0,
-        hasRolled: false,
+      fleeInvasion : {        
+        result: "Waiting on roll...",
       },
       travelEvent : {
         hasRolled: false,
@@ -90,24 +90,13 @@ export default {
     }
   },  
   tables: new FPFHTables(),
+  fpfh: new FiveParsecs(),
   computed : {    
     username: function() {
       return this.$store.state.user.username;
     },
-    getFleeInvasionResult() {
-      if (!this.fleeInvasion.hasRolled) {
-        return "Waiting on roll..."
-      }
-      const roll = this.fleeInvasion.roll;     
-      
-      let result = `Rolled ${roll}: `;
-      if (roll >= 8) {
-        result += "You safely get off-world."; 
-      }
-      else {       
-       result += "Invasion! Assign equipment and proceed to Battle!";
-      }       
-      return result;
+    getFleeInvasionResult() {      
+      return this.fleeInvasion.result;
     },
     getTravelEventResult() {
       if (!this.travelEvent.hasRolled) {
@@ -146,18 +135,15 @@ export default {
       return result;
     }
   },
-  methods: { 
+  methods: {    
     rollDice(dice) {
-      const roll = this.$options.tables.Roll(dice);      
+      const roll = this.$options.tables.Roll(dice);
       this.$root.showUserMsg(`Rolled ${dice}`);
-      return roll;   
+      
+      return roll;
     }, 
     resolveFleeInvasion() {      
-      const dice = `2d6`;
-
-      const roll = this.rollDice(dice);
-      this.fleeInvasion.roll = roll;
-      this.fleeInvasion.hasRolled = true;
+      this.fleeInvasion.result = this.$options.fpfh.processStep(Steps.Travel, SubSteps.TravelFleeInvasion);      
     },
 
     resolveTravelEvent() {      
