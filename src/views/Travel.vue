@@ -10,8 +10,11 @@
           </div>
           <div class="card-body">            
             <p class="card-text">
-              {{getFleeInvasionResult}}
+              {{fleeInvasion.result}}              
             </p>
+            <small>
+              {{fleeInvasion.breakdown}}
+            </small>
           </div>
         </div>
       </div>
@@ -23,7 +26,7 @@
           </div>
           <div class="card-body">                 
             <p class="card-text">
-              {{getTravelEventResult}}
+              {{travelEvent.result}}
             </p>
           </div>
         </div>
@@ -59,8 +62,8 @@
 
 <script>
 import { FPFHTables } from '../js/tables.js';
-import { FiveParsecs }  from '../js/fiveParsecs';
-import { Steps, SubSteps } from "../js/fiveParsecsEnums";
+import { FiveParsecsStepResult }  from '../js/fiveParsecs';
+import { Step, SubStep } from "../js/fiveParsecsEnums";
 
 export default {
   name: 'Travel',  
@@ -72,6 +75,7 @@ export default {
     return {
       fleeInvasion : {        
         result: "Waiting on roll...",
+        breakdown: "",
       },
       travelEvent : {
         hasRolled: false,
@@ -89,15 +93,11 @@ export default {
       },      
     }
   },  
-  tables: new FPFHTables(),
-  fpfh: new FiveParsecs(),
+  tables: new FPFHTables(),  
   computed : {    
     username: function() {
       return this.$store.state.user.username;
-    },
-    getFleeInvasionResult() {      
-      return this.fleeInvasion.result;
-    },
+    },  
     getTravelEventResult() {
       if (!this.travelEvent.hasRolled) {
         return "Waiting on roll..."
@@ -142,14 +142,17 @@ export default {
       
       return roll;
     }, 
-    resolveFleeInvasion() {      
-      this.fleeInvasion.result = this.$options.fpfh.processStep(Steps.Travel, SubSteps.TravelFleeInvasion);      
+    resolveFleeInvasion() {       
+      const step = new FiveParsecsStepResult(Step.Travel, SubStep.FleeInvasion);
+      step.getStepInput();  
+      this.fleeInvasion.result = step.processStep();
+      this.fleeInvasion.breakdown = step.getStepInputBreakdown();    
     },
 
     resolveTravelEvent() {      
-      let result = this.$options.tables.GetFullTableResult("starshiptravelevent");            
-      this.travelEvent.hasRolled = true;
-      this.travelEvent.result = result[0].result;
+      const step = new FiveParsecsStepResult(Step.Travel, SubStep.DecideToTravel);
+      step.getStepInput();
+      this.travelEvent.result = step.processStep();  
     },
     resolveNewWorld() {
       const dice = `1d6`;
