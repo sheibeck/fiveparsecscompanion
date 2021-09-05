@@ -4,10 +4,11 @@
   </div>
 </template>
 
-<script>
-import CrewList from '../components/CrewList.vue'
+<script lang="ts">
+import Vue from 'vue';
+import CrewList from '@/components/CrewList.vue';
 
-export default {
+export default Vue.extend({
   name: 'Home',  
   components: {
     CrewList
@@ -22,7 +23,7 @@ export default {
   },
   methods: {   
   }
-}
+});
 </script>
 
 <style scoped>
