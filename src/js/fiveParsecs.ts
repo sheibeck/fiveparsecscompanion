@@ -20,15 +20,34 @@ export class FiveParsecsStepResult {
         this.subStep = subStep;
     }
 
-    public getStepInput() {        
+    public get inputs() {        
         const stepDetails = FiveParsecsResultsTables.find( r => r.step === this.step && r.subStep === this.subStep);
         this.title = stepDetails?.title ?? "Unknown Step";
         const inputs = stepDetails?.stepInput;
-        inputs?.forEach( (input) => {
-            input.inputType == StepInputType.Roll ? this.rollResult = this.rpgTable.Roll(input.text) : this.rollResult = 0;
-            input.inputType == StepInputType.TableResult ? this.tableResult = this.rpgTable.GetFullTableResult(input.text) : this.tableResult = "";
-        });
         return inputs;
+    }
+
+    public processInput(input: StepInputItem, event: Event)
+    {
+        switch(input.inputType) {
+            case StepInputType.Roll:
+                this.rollResult = this.rpgTable.Roll(input.text);
+                break;
+
+            case StepInputType.TableResult: 
+                this.tableResult = this.rpgTable.GetFullTableResult(input.text);
+                break;
+        }
+
+        const elem = event.target as Element;
+        if (elem.classList.contains("fa-dice")) {
+            if (elem.classList.contains("roll")) {
+                elem.classList.remove("roll");
+            }
+            else {
+                elem.classList.add("roll");
+            }
+        }
     }
 
     public processStep(vueInstance: any): void {      
@@ -79,11 +98,11 @@ export class FiveParsecsStepResult {
     }
 }
 
-enum StepInputType {
-    YesNo,
-    Roll,
-    Input,
-    TableResult
+export enum StepInputType {
+    YesNo = 1,
+    Roll = 2,
+    Input = 3,
+    TableResult = 4
 }
 
 class StepInputItem {

@@ -6,13 +6,13 @@
       <div class="col">
         <div class="card">
           <div class="card-header bg-light border-success">
-            <h5><a href="#" @click="setActiveStep(fleeInvasion)">Flee Invasion (Pg.69)</a></h5>
+            <h5><button type="button" class="btn btn-link" @click="setActiveStep(fleeInvasion)">Flee Invasion (Pg.69)</button></h5>
           </div>          
         </div>
         <div class="col">
           <div class="card">
             <div class="card-header bg-light border-success">
-              <h5><a href="#" @click="setActiveStep(travelEvent)">Decide Whether To Travel (Pg.69) </a></h5>
+              <h5><button type="button" class="btn btn-link" @click="setActiveStep(travelEvent)">Decide Whether To Travel (Pg.69)</button></h5>
             </div>         
           </div>
         </div>
@@ -21,15 +21,32 @@
       <div class="col">
         <div v-if="activeStep" class="card">
           <h6>{{activeStep.title}} Results</h6>
-          <div class="stepInput">        
-          </div>
-          <div class="card-body">
-            <div>
-              <i class="fas fa-dice pe-auto d-print-none" @click="resolveActiveStep()"></i>
+          <div class="card-body" v-for="(input, index) in activeStep.inputs" :key="index">
+            <div v-if="input.inputType == 2">
+              <i class="fas fa-dice pe-auto d-print-none fa-2x" @click="activeStep.processInput(input, $event)"></i> Roll {{input.text}}
             </div>
-            <div class="stepResults">
-              {{activeStep.results}}
-            </div>          
+            <div v-if="input.inputType == 4">
+              <i class="fas fa-dice pe-auto d-print-none fa-2x" @click="activeStep.processInput(input, $event)"></i> Roll {{input.text}} 
+            </div>   
+
+            <div v-if="input.inputType == 3" class="input-group mb-3 input-group-sm">
+              <span class="input-group-text" id="rivals-addon">{{input.text}}</span>
+              <input type="number" class="form-control" placeholder="0" :aria-label="input.text" 
+                min="0" v-model.number="input.input" />
+            </div>
+            <div v-if="input.inputType == 1" class="input-group mb-3 input-group-sm">
+              <div class="input-group-text">
+                <input class="form-check-input mt-0" type="checkbox" value="" :aria-label="input.text" 
+                  v-model="input.input" />
+              </div>
+              <span class="input-group-text" id="savvy-addon">WildGalaxy</span>
+            </div>
+          </div>
+          <div class="card-header">
+            <i class="fas fa-sync-alt pe-auto d-print-none fa-2x" @click="resolveActiveStep"></i> Get Final Result
+          </div>
+          <div class="card-body">            
+            {{activeStep.results}}                      
           </div>
           <div class="card-footer">
             {{activeStep.breakdown}}
@@ -76,7 +93,7 @@ export default {
   name: 'Travel',  
   components: {    
   },
-  mounted() {     
+  mounted() {   
   }, 
   data() {
     return {
@@ -146,7 +163,6 @@ export default {
     }, 
     setActiveStep(step) {
       this.activeStep = step;
-      this.activeStep.getStepInput();
     },
     resolveActiveStep() {
       this.activeStep.processStep(this);
@@ -192,5 +208,17 @@ export default {
 
   .col { 
     page-break-inside: avoid;
+  }
+
+  
+  .fa-dice {
+    -moz-transition: all .5s linear;
+    -webkit-transition: all .5s linear;
+    transition: all .5s linear;
+  }
+  .fa-dice.roll {
+      -moz-transform:rotate(360deg);
+      -webkit-transform:rotate(360deg);
+      transform:rotate(360deg);
   }
 </style>
