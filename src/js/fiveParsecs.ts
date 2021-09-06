@@ -3,6 +3,7 @@ import { FPFHTables } from "./tables";
 
 
 export class FiveParsecsStepResult {
+    title: string = "";
     step: Step;
     subStep: SubStep;
     stepProcessed: boolean = false;
@@ -11,14 +12,18 @@ export class FiveParsecsStepResult {
     private finalRollResult: number = 0;
     private tableResult: string = "";
     private rpgTable: FPFHTables = new FPFHTables();
+    private results: string = "";
+    private breakdown: string = "";
     
     constructor(step: Step, subStep: SubStep) {
         this.step = step;
         this.subStep = subStep;
     }
 
-    public getStepInput() {
-        const inputs = FiveParsecsResultsTables.find( r => r.step === this.step && r.subStep === this.subStep)?.stepInput;
+    public getStepInput() {        
+        const stepDetails = FiveParsecsResultsTables.find( r => r.step === this.step && r.subStep === this.subStep);
+        this.title = stepDetails?.title ?? "Unknown Step";
+        const inputs = stepDetails?.stepInput;
         inputs?.forEach( (input) => {
             input.inputType == StepInputType.Roll ? this.rollResult = this.rpgTable.Roll(input.text) : this.rollResult = 0;
             input.inputType == StepInputType.TableResult ? this.tableResult = this.rpgTable.GetFullTableResult(input.text) : this.tableResult = "";
@@ -26,7 +31,7 @@ export class FiveParsecsStepResult {
         return inputs;
     }
 
-    public processStep(): string {          
+    public processStep(vueInstance: any): void {      
         const stepDetails = FiveParsecsResultsTables.find( r => r.step === this.step && r.subStep === this.subStep);        
         let results = stepDetails?.pageNumber ? `(Pg.${stepDetails.pageNumber}) ` : "";
         const inputs = stepDetails?.stepInput;
@@ -38,20 +43,24 @@ export class FiveParsecsStepResult {
             if (input.inputType == StepInputType.TableResult) {
                 results += this.tableResult;
             }
-        });                               
+        });
         this.stepProcessed = true;
-        return results;
+
+        vueInstance.$set(this, 'results', results);
+        
+        this.getStepInputBreakdown(vueInstance);
     }
 
-    public getStepInputBreakdown(): string {
-        let result = "";
+    private getStepInputBreakdown(vueInstance: any): void {
+        let results = "";
         const inputs = FiveParsecsResultsTables.find( r => r.step === this.step && r.subStep === this.subStep)?.stepInput;
         inputs?.forEach( (input) => {
             if (input.inputType == StepInputType.Roll) {
-                result += `Rolled: ${this.rollResult}. Total Bonuses: ${this.totalRollBonus}. Final Result ${this.finalRollResult}.`;
+                results += `Rolled: ${this.rollResult}. Total Bonuses: ${this.totalRollBonus}. Final Result ${this.finalRollResult}.`;
             }          
         });        
-        return result;
+        
+        vueInstance.$set(this, 'breakdown', results);
     }
 
     private findResult(roll: Number, possibleResults?: Array<ResultItem>) : string {
@@ -102,13 +111,15 @@ class ResultItem {
 }
 
 class FiveParsecsStep {
+    title: string;
     step: Step;
     subStep: SubStep;
     stepInput: Array<StepInputItem>;
     stepResults: Array<ResultItem>;
     pageNumber: string;
 
-    constructor( step: Step, subStep: SubStep, stepInput: Array<StepInputItem>, stepResults: Array<ResultItem>, pageNumber?: string) {
+    constructor( title: string, step: Step, subStep: SubStep, stepInput: Array<StepInputItem>, stepResults: Array<ResultItem>, pageNumber?: string) {
+        this.title = title;
         this.step = step;
         this.subStep = subStep;
         this.stepInput = stepInput;
@@ -119,6 +130,7 @@ class FiveParsecsStep {
 
 export const FiveParsecsResultsTables: Array<FiveParsecsStep> = [
     new FiveParsecsStep(
+        "Flee Invasion",
         Step.Travel,
         SubStep.FleeInvasion,        
         [
@@ -131,6 +143,7 @@ export const FiveParsecsResultsTables: Array<FiveParsecsStep> = [
         "69"      
     ),
     new FiveParsecsStep(
+        "Decide to Travel",
         Step.Travel,
         SubStep.DecideToTravel,        
         [

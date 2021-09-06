@@ -6,31 +6,38 @@
       <div class="col">
         <div class="card">
           <div class="card-header bg-light border-success">
-            <h5>Flee Invasion (Pg.69) <i class="fas fa-dice pe-auto d-print-none" @click="resolveFleeInvasion()"></i></h5>
+            <h5><a href="#" @click="setActiveStep(fleeInvasion)">Flee Invasion (Pg.69)</a></h5>
+          </div>          
+        </div>
+        <div class="col">
+          <div class="card">
+            <div class="card-header bg-light border-success">
+              <h5><a href="#" @click="setActiveStep(travelEvent)">Decide Whether To Travel (Pg.69) </a></h5>
+            </div>         
           </div>
-          <div class="card-body">            
-            <p class="card-text">
-              {{fleeInvasion.result}}              
-            </p>
-            <small>
-              {{fleeInvasion.breakdown}}
-            </small>
+        </div>
+      </div>
+
+      <div class="col">
+        <div v-if="activeStep" class="card">
+          <h6>{{activeStep.title}} Results</h6>
+          <div class="stepInput">        
+          </div>
+          <div class="card-body">
+            <div>
+              <i class="fas fa-dice pe-auto d-print-none" @click="resolveActiveStep()"></i>
+            </div>
+            <div class="stepResults">
+              {{activeStep.results}}
+            </div>          
+          </div>
+          <div class="card-footer">
+            {{activeStep.breakdown}}
           </div>
         </div>
       </div>
     
-      <div class="col">
-        <div class="card">
-          <div class="card-header bg-light border-success">
-            <h5>Decide Whether To Travel (Pg.69) <i class="fas fa-dice pe-auto d-print-none" @click="resolveTravelEvent()"></i></h5>
-          </div>
-          <div class="card-body">                 
-            <p class="card-text">
-              {{travelEvent.result}}
-            </p>
-          </div>
-        </div>
-      </div>
+    
     
       <div class="col">
         <div class="card">         
@@ -73,14 +80,9 @@ export default {
   }, 
   data() {
     return {
-      fleeInvasion : {        
-        result: "Waiting on roll...",
-        breakdown: "",
-      },
-      travelEvent : {
-        hasRolled: false,
-        result: "",
-      },
+      activeStep: null,
+      fleeInvasion : new FiveParsecsStepResult(Step.Travel, SubStep.FleeInvasion),
+      travelEvent : new FiveParsecsStepResult(Step.Travel, SubStep.DecideToTravel),
       newWorld : {
         hasRolled: false,
         result: "",
@@ -93,7 +95,7 @@ export default {
       },      
     }
   },  
-  tables: new FPFHTables(),  
+  tables: new FPFHTables(),
   computed : {    
     username: function() {
       return this.$store.state.user.username;
@@ -142,17 +144,21 @@ export default {
       
       return roll;
     }, 
-    resolveFleeInvasion() {       
-      const step = new FiveParsecsStepResult(Step.Travel, SubStep.FleeInvasion);
-      step.getStepInput();  
-      this.fleeInvasion.result = step.processStep();
-      this.fleeInvasion.breakdown = step.getStepInputBreakdown();    
+    setActiveStep(step) {
+      this.activeStep = step;
+      this.activeStep.getStepInput();
+    },
+    resolveActiveStep() {
+      this.activeStep.processStep(this);
+    },
+    resolveFleeInvasion() {    
+      this.fleeInvasion.getStepInput();   
+      this.fleeInvasion.processStep(this);
     },
 
-    resolveTravelEvent() {      
-      const step = new FiveParsecsStepResult(Step.Travel, SubStep.DecideToTravel);
-      step.getStepInput();
-      this.travelEvent.result = step.processStep();  
+    resolveTravelEvent() {
+      this.travelEvent.getStepInput();
+      this.travelEvent.processStep(this);  
     },
     resolveNewWorld() {
       const dice = `1d6`;

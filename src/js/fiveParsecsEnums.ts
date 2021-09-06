@@ -5,7 +5,7 @@ export enum Step {
     PostBattle = 4
 }
 
-export enum SubStep {    
+export enum SubStep {
     FleeInvasion = 1,
     DecideToTravel = 2,
     NewWorldArrival = 3,    
