@@ -6,13 +6,13 @@ export enum Step {
 }
 
 export enum SubStep {
-    FleeInvasion,
-    DecideToTravel,
-    NewWorldArrival, 
-    UpkeepRepairs,
-    AssignCrewTasks,
-    JobOffers,
-    AssignEquipment,
-    ResolveRumors,
-    ChooseBattle,
+    FleeInvasion = 1,
+    DecideToTravel = 2,
+    NewWorldArrival = 3, 
+    UpkeepRepairs = 4,
+    AssignCrewTasks = 5,
+    JobOffers = 6,
+    AssignEquipment = 7,
+    ResolveRumors = 8,
+    ChooseBattle = 9,
 }

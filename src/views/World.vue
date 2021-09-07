@@ -3,7 +3,54 @@
     <h1>2. World (Pg.76)</h1>
 
     <div class="row row-cols-1 row-cols-md-3 rows-cols-lg-4 g-4"> 
-           
+      <div class="col">
+        <div class="card" v-for="(step, index) in steps" :key="index">
+          <div class="card-header bg-light border-success">
+            <h5><button type="button" class="btn btn-link" @click="setActiveStep(steps[index])">{{step.stepDetails.title}} (Pg.{{step.stepDetails.pageNumber}})</button></h5>
+          </div>
+        </div>      
+      </div>
+
+     <div v-if="activeStep" class="col">
+        <div class="card">
+          <h6>{{activeStep.stepDetails.title}}</h6>
+          <div class="card-body" v-for="(input, index) in activeStep.inputs" :key="index">
+            <div v-if="input.inputType == stepInputType.Roll">
+              <i class="fas fa-dice pe-auto d-print-none fa-2x" @click="activeStep.processInput(input, $event)"></i> {{input.text}}
+            </div>
+            <div v-if="input.inputType == stepInputType.TableResult">
+              <i class="fas fa-dice pe-auto d-print-none fa-2x" @click="activeStep.processInput(input, $event)"></i> {{input.text}}
+            </div>   
+
+            <div v-if="input.inputType == stepInputType.Input" class="input-group input-group-sm">
+              <span class="input-group-text" id="rivals-addon">{{input.text}}</span>
+              <input type="number" class="form-control" placeholder="0" :aria-label="input.text" 
+                min="0" v-model.number="input.value" />
+            </div>
+            <div v-if="input.inputType == stepInputType.YesNo" class="input-group input-group-sm">
+              <div class="input-group-text">
+                <input class="form-check-input mt-0" type="checkbox" value="" :aria-label="input.text" 
+                  v-model="input.value" />
+              </div>
+              <span class="input-group-text" id="savvy-addon">{{input.text}}</span>
+            </div>
+          </div>
+          <div class="card-header mt-3">
+            <i class="fas fa-sync-alt pe-auto d-print-none fa-2x" @click="resolveActiveStep"></i> Update Result
+          </div>
+          <div class="card-body" v-html="activeStep.results">
+          </div>
+          <div class="card-footer" v-html="activeStep.breakdown">
+            
+          </div>
+        </div>
+      </div> 
+      <div v-else>
+        <div class="card">
+          <h6>Select a step.</h6>
+        </div>
+      </div>  
+      
       <div class="col">
         <div class="card">
           <div class="card-header bg-light border-success">
@@ -421,6 +468,8 @@
 
 <script>
 import { FPFHTables } from '../js/tables.js';
+import { FiveParsecsStepResult, StepInputType }  from '../js/fiveParsecs';
+import { Step, SubStep } from "../js/fiveParsecsEnums";
 
 export default {
   name: 'World',  
@@ -430,6 +479,13 @@ export default {
   }, 
   data() {
     return {
+      activeStep: null,
+      steps: [
+        new FiveParsecsStepResult(Step.World, SubStep.UpkeepRepairs, this),
+        new FiveParsecsStepResult(Step.World, SubStep.AssignCrewTasks, this),
+      ],
+      stepInputType: StepInputType,
+
       jobOffer: [],
       crewTasks: [
         {label: "Patron", task: "patron", numCrew: 0, contacts: 0, credits: 0, roll: 0, hasRolled: false },
@@ -602,6 +658,15 @@ export default {
     },
   },
   methods: {
+    setActiveStep(step) {
+      this.activeStep = step;
+      if (this.activeStep.subStep == SubStep.UpkeepRepairs) {
+        this.resolveActiveStep();
+      }
+    },
+    resolveActiveStep() {
+      this.activeStep.processStep(this);
+    },
     rerollTable(table) {
       const roll = this.$options.tables.GetFullTableResult(table);
       let jobLine = this.jobOffer.find( o => o.id === table);     

@@ -37,7 +37,24 @@ export class FiveParsecsStepResult {
                     let dice: string = "";
                     if (input.notation instanceof DiceRollTableResult) {
                         dice = (input.notation as DiceRollTableResult).dice;
-                        this.vueInstance.$set(input, "value", this.rpgTable.Roll(dice));
+                        const roll = this.rpgTable.Roll(dice);
+                        
+                        let bonus = 0;
+                        if (input.dependentInputs) {
+                            const stepInputs = this.inputs ?? [];
+                            input.dependentInputs.forEach(item => {
+                                const depInputValue = stepInputs[item.index]?.value;
+                                if (item.value && depInputValue) {
+                                    bonus += item.value;
+                                } else {
+                                    bonus +=  depInputValue ? parseInt(depInputValue) : 0;
+                                }
+                            });
+                        }
+
+                        const total = roll + bonus;
+                        this.vueInstance.$set(input, "roll", roll);
+                        this.vueInstance.$set(input, "value", total);
                     }
                     else if (input.notation instanceof MultipleDiceRolls) {                        
                         const multi = (input.notation as MultipleDiceRolls);
@@ -87,7 +104,11 @@ export class FiveParsecsStepResult {
                         if (input.inputType == StepInputType.Roll) {                
                             if (input.notation instanceof DiceRollTableResult) {                    
                                 results += " " + this.findResult(parseInt(input.value), (input.notation as DiceRollTableResult)?.possibleResults);
-                                results += `<br />`
+                                results += ` (Rolled ${input.roll}`;
+                                if (input.dependentInputs) {                                    
+                                    results += `. Total ${input.value}`;
+                                }                                
+                                results += `.)<br />`
                             }
                             else if (input.notation instanceof MultipleDiceRolls) {
                                 const multi = (input.notation as MultipleDiceRolls)
@@ -159,16 +180,17 @@ class StepInputItem {
     text: string; 
     notation: string|DiceRollTableResult|MultipleDiceRolls|null;
     target: number|null;
-    dependentInputIndex: number|null;
+    dependentInputs: Array<DependentInput>|null;
     value: string = "";
+    roll: string = ""; //an original dice roll   
 
     constructor(inputType: StepInputType, text: string, notation?: string|DiceRollTableResult|MultipleDiceRolls|null, 
-        target?: number|null, dependentInputIndex?: number) {
+        target?: number|null, dependentInputs?: Array<DependentInput>|null) {
         this.inputType = inputType;
         this.notation = notation ?? null;
         this.target = target ?? null;
         this.text = text;
-        this.dependentInputIndex = dependentInputIndex ?? null;
+        this.dependentInputs = dependentInputs ?? null;
     }
 }
 
@@ -182,7 +204,7 @@ class ResultItem {
     }    
 }
 
-class FiveParsecsStep {
+export class FiveParsecsStep {
     title: string;
     step: Step;
     subStep: SubStep;
@@ -199,12 +221,12 @@ class FiveParsecsStep {
 }
 
 class DiceRollTableResult {
-    dice: string;
-    possibleResults: Array<ResultItem>
+    dice: string;    
+    possibleResults: Array<ResultItem>;    
 
     constructor(dice: string, possibleResults: Array<ResultItem>) {
-        this.dice = dice;
-        this.possibleResults = possibleResults;
+        this.dice = dice;        
+        this.possibleResults = possibleResults;        
     }
 }
 
@@ -223,9 +245,19 @@ class MultipleDiceRolls {
     }
 }
 
+class DependentInput {
+    index: number;
+    value: number|null;
+
+    constructor( index: number, value?: number|null) {
+        this.index = index;
+        this.value = value ?? null;
+    }
+}
+
 export const FiveParsecsSteps: Array<FiveParsecsStep> = [
     new FiveParsecsStep(
-        "Flee Invasion",
+        "1. Flee Invasion",
         Step.Travel,
         SubStep.FleeInvasion,        
         [
@@ -237,7 +269,7 @@ export const FiveParsecsSteps: Array<FiveParsecsStep> = [
         "69"      
     ),
     new FiveParsecsStep(
-        "Decide to Travel",
+        "2. Decide to Travel",
         Step.Travel,
         SubStep.DecideToTravel,
         [
@@ -246,7 +278,7 @@ export const FiveParsecsSteps: Array<FiveParsecsStep> = [
         "70"
     ),
     new FiveParsecsStep(
-        "New World Arrival",
+        "3. New World Arrival",
         Step.Travel,
         SubStep.NewWorldArrival,
         [
@@ -276,12 +308,31 @@ export const FiveParsecsSteps: Array<FiveParsecsStep> = [
         "70"
     ),
     new FiveParsecsStep(
-        "Flee Invasion",
+        "1. Upkeep/Ship Repairs",
+        Step.World,
+        SubStep.UpkeepRepairs,        
+        [
+            new StepInputItem(StepInputType.Info, "Pay upkeep, ship debt, ship repairs and medical costs")
+        ],      
+        "76"
+    ),
+    new FiveParsecsStep(
+        "2. Crew Task - Find Patron",
         Step.World,
         SubStep.AssignCrewTasks,        
         [
-            new StepInputItem(StepInputType.Info, "Upkeep/Ship Repairs (1-6 Crew: 1 credit, 7+: +1 credit per member past 6)")
+            new StepInputItem(StepInputType.Input, "Patrons"),
+            new StepInputItem(StepInputType.Input, "Credits"),
+            new StepInputItem(StepInputType.Input, "Contacts"),
+            new StepInputItem(StepInputType.Input, "Crew"),
+            new StepInputItem(StepInputType.YesNo, "Corporate State?"),
+            new StepInputItem(StepInputType.Roll, "Find Patron", new DiceRollTableResult("1d6", 
+            [
+                new ResultItem(1, "No patrons found."),
+                new ResultItem(5, "Found 1 patron."),
+                new ResultItem(6, "Found 2 patrons!")
+            ]), null, [new DependentInput(0),new DependentInput(1),new DependentInput(2),new DependentInput(3),new DependentInput(4,2)])
         ],      
-        "76"      
+        "77"      
     ),
 ]
