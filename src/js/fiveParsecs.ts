@@ -9,7 +9,7 @@ export class FiveParsecsStepResult {
     private rollResult: number = 0;
     private totalRollBonus: number = 0;
     private finalRollResult: number = 0;
-    private tableResult: string = "";
+    //private tableResult: string = "";
     private rpgTable: FPFHTables = new FPFHTables();
     private results: string = "";
     private breakdown: string = "";
@@ -104,11 +104,16 @@ export class FiveParsecsStepResult {
                         if (input.inputType == StepInputType.Roll) {                
                             if (input.notation instanceof DiceRollTableResult) {                    
                                 results += " " + this.findResult(parseInt(input.value), (input.notation as DiceRollTableResult)?.possibleResults);
-                                results += ` (Rolled ${input.roll}`;
-                                if (input.dependentInputs) {                                    
-                                    results += `. Total ${input.value}`;
-                                }                                
-                                results += `.)<br />`
+
+                                //roll of "" means we just want information and we aren't "really" rolling
+                                if (input.roll) {
+                                    results += ` (Rolled ${input.roll}`;
+                                    if (input.dependentInputs) {                                    
+                                        results += `. Total ${input.value}`;
+                                    }                                
+                                    results += `.)`;
+                                }
+                                results += `<br />`;
                             }
                             else if (input.notation instanceof MultipleDiceRolls) {
                                 const multi = (input.notation as MultipleDiceRolls)
@@ -312,7 +317,10 @@ export const FiveParsecsSteps: Array<FiveParsecsStep> = [
         Step.World,
         SubStep.UpkeepRepairs,        
         [
-            new StepInputItem(StepInputType.Info, "Pay upkeep, ship debt, ship repairs and medical costs")
+            new StepInputItem(StepInputType.Roll, "Upkeep/Repair", new DiceRollTableResult("", 
+            [
+                new ResultItem(1, "Pay upkeep, ship debt, ship repairs and medical costs."),
+            ]))            
         ],      
         "76"
     ),
@@ -324,7 +332,7 @@ export const FiveParsecsSteps: Array<FiveParsecsStep> = [
             new StepInputItem(StepInputType.Input, "Patrons"),
             new StepInputItem(StepInputType.Input, "Credits"),
             new StepInputItem(StepInputType.Input, "Contacts"),
-            new StepInputItem(StepInputType.Input, "Crew"),
+            new StepInputItem(StepInputType.Input, "Crew Looking"),
             new StepInputItem(StepInputType.YesNo, "Corporate State?"),
             new StepInputItem(StepInputType.Roll, "Find Patron", new DiceRollTableResult("1d6", 
             [
@@ -340,8 +348,35 @@ export const FiveParsecsSteps: Array<FiveParsecsStep> = [
         Step.World,
         SubStep.AssignCrewTasksTrain,
         [
-            new StepInputItem(StepInputType.Info, "Earn 1xp"),            
+            new StepInputItem(StepInputType.Roll, "Train", new DiceRollTableResult("", 
+            [
+                new ResultItem(1, "Gain 1 xp."),
+            ]))       
         ],      
         "77"      
+    ),
+    new FiveParsecsStep(
+        "2. Crew Task - Trade",
+        Step.World,
+        SubStep.AssignCrewTasksTrade,
+        [
+            new StepInputItem(StepInputType.TableResult, "Trade", "traderesult")         
+        ],
+        "78,79"      
+    ),
+    new FiveParsecsStep(
+        "2. Crew Task - Recruit",
+        Step.World,
+        SubStep.AssignCrewTasksRecruit,
+        [
+            new StepInputItem(StepInputType.Input, "Crew Looking"),
+            new StepInputItem(StepInputType.YesNo, "Easy Recruiting?"),
+            new StepInputItem(StepInputType.Roll, "Recruit", new DiceRollTableResult("1d6", 
+            [
+                new ResultItem(1, "No recruits found."),                
+                new ResultItem(6, "Found a recruit!")
+            ]), null, [new DependentInput(0),new DependentInput(1,1)])
+        ],      
+        "78"      
     ),
 ]

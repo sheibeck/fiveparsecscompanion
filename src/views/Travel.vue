@@ -35,9 +35,7 @@
               <span class="input-group-text" id="savvy-addon">{{input.text}}</span>
             </div>
           </div>
-          <div class="card-header mt-3">
-            <i class="fas fa-sync-alt pe-auto d-print-none fa-2x" @click="resolveActiveStep"></i> Update Result
-          </div>
+          <hr />
           <div class="card-body" v-html="activeStep.results">
           </div>
           <div class="card-footer" v-html="activeStep.breakdown">

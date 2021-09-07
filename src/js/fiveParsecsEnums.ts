@@ -12,6 +12,8 @@ export enum SubStep {
     UpkeepRepairs,
     AssignCrewTasksFindPatron,
     AssignCrewTasksTrain,
+    AssignCrewTasksTrade,
+    AssignCrewTasksRecruit,
     JobOffers,
     AssignEquipment,
     ResolveRumors,

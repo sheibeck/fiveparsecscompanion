@@ -35,9 +35,7 @@
               <span class="input-group-text" id="savvy-addon">{{input.text}}</span>
             </div>
           </div>
-          <div class="card-header mt-3">
-            <i class="fas fa-sync-alt pe-auto d-print-none fa-2x" @click="resolveActiveStep"></i> Update Result
-          </div>
+          <hr />
           <div class="card-body" v-html="activeStep.results">
           </div>
           <div class="card-footer" v-html="activeStep.breakdown">
@@ -59,65 +57,6 @@
           </div>
           <div class="accordion" id="accordianTasks">
            
-
-            <div class="accordion-item">
-                <h2 class="accordion-header" id="headingTrade">
-                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTrade" aria-expanded="false" aria-controls="collapseTrade">                  
-                  Trade (Pg.78, 79)
-                </button>
-              </h2>
-              <div id="collapseTrade" class="accordion-collapse collapse" aria-labelledby="headingTrade" data-bs-parent="#accordianTasks">
-                <div class="accordion-body">
-                   <div class="mb-3 text-center">
-                      <i class="fas fa-dice me-1 mt-1 d-print-none fa-2x" @click="findTrade()"></i>
-                    </div>
-                  <div class="col d-flex flex-column">
-                    <div class="input-group mb-3 input-group-sm">
-                      <span class="input-group-text" id="trade-addon">Total rolls</span>
-                      <input type="number" class="form-control" placeholder="0" aria-label="Trade rolls" aria-describedby="trade-addon" 
-                        min="0" v-model.number="crewTasks.find(t => t.task === 'trade').rolls" />
-                    </div>
-                    <label v-if="!crewTasks.find(t => t.task === 'trade').hasRolled">Waiting on roll ...</label>
-                    <ul v-else>
-                      <li v-for="(item, idx) in crewTasks.find(t => t.task === 'trade').items" :key="idx">
-                        {{item}}
-                      </li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div class="accordion-item">
-                <h2 class="accordion-header" id="headingRecruit">
-                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseRecruit" aria-expanded="false" aria-controls="collapseRecruit">                  
-                  Recruit (Pg.78)
-                </button>
-              </h2>
-              <div id="collapseRecruit" class="accordion-collapse collapse" aria-labelledby="headingRecruit" data-bs-parent="#accordianTasks">
-                <div class="accordion-body">
-                  <div class="mb-3 text-center">
-                    <i class="fas fa-dice me-1 mt-1 d-print-none fa-2x" @click="findRecruit()"></i>
-                  </div>
-                  <div class="col d-flex flex-column">
-                    <div class="input-group mb-3 input-group-sm">
-                      <span class="input-group-text" id="crew-addon">Crew looking</span>
-                      <input type="number" class="form-control" placeholder="0" aria-label="Crew looking" aria-describedby="crew-addon" 
-                        min="0" v-model.number="crewTasks.find(t => t.task === 'recruit').numCrew" />
-                    </div>
-                    <div class="input-group mb-3 input-group-sm">
-                      <div class="input-group-text">
-                        <input class="form-check-input mt-0" type="checkbox" value="" aria-label="Easy Recruiting" 
-                          v-model="worldTrait.EasyRecruiting" />
-                      </div>
-                      <span class="input-group-text" id="savvy-addon">Easy Recruiting</span>
-                    </div>
-                    <label>{{getRecruitResult}}</label>
-                  </div>
-                </div>
-              </div>
-            </div>
-
             <div class="accordion-item">
                 <h2 class="accordion-header" id="headingExplore">
                 <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExplore" aria-expanded="false" aria-controls="collapseExplore">                  
@@ -380,6 +319,8 @@ export default {
         new FiveParsecsStepResult(Step.World, SubStep.UpkeepRepairs, this),
         new FiveParsecsStepResult(Step.World, SubStep.AssignCrewTasksFindPatron, this),
         new FiveParsecsStepResult(Step.World, SubStep.AssignCrewTasksTrain, this),
+        new FiveParsecsStepResult(Step.World, SubStep.AssignCrewTasksTrade, this),
+        new FiveParsecsStepResult(Step.World, SubStep.AssignCrewTasksRecruit, this),
       ],
       stepInputType: StepInputType,
 
@@ -405,10 +346,8 @@ export default {
         roll: 0,
         hasRolled: false,
       },
-      worldTrait: {
-        CorporateState: false,   
-        TechnicalKnowledge: false,
-        EasyRecruiting: false,
+      worldTrait: {        
+        TechnicalKnowledge: false,        
       },
       RepairBot: false,
       SpareParts: false
@@ -419,25 +358,6 @@ export default {
     username: function() {
       return this.$store.state.user.username;
     },    
-    getRecruitResult() {
-      if (!this.crewTasks.find(t => t.task === 'recruit').hasRolled) {
-        return "Waiting on roll..."
-      }
-
-      const roll = this.crewTasks.find(t => t.task === 'recruit').roll;
-      const crew = this.crewTasks.find(t => t.task === 'recruit').numCrew;
-      const easyRecruit = this.worldTrait.EasyRecruiting ? 1 : 0;
-      const finalResult = roll + easyRecruit + crew;
-
-      let result = `Rolled ${roll} (+${crew} crew + ${easyRecruit} easy recruiting): `;
-      if (finalResult >= 6) {
-        result += "Recruitment successful!";
-      }     
-      else {
-        result += "Failed!";
-      } 
-      return result;
-    },
     getTrackResults() {
       if (!this.crewTasks.find(t => t.task === 'track').hasRolled) {
         return "Waiting on roll..."
@@ -532,11 +452,7 @@ export default {
   },
   methods: {
     setActiveStep(step) {
-      this.activeStep = step;
-      if (this.activeStep.subStep == SubStep.UpkeepRepairs ||
-          this.activeStep.subStep == SubStep.AssignCrewTasksTrain ) {
-        this.resolveActiveStep();
-      }
+      this.activeStep = step;     
     },
     resolveActiveStep() {
       this.activeStep.processStep(this);
@@ -657,36 +573,7 @@ export default {
       this.jobOffer.push({ id: "condition", label: "Condition", result: result[0] });
 
       this.$root.showUserMsg(`Created job offer`);
-    },
-    findTrade() {
-      let trade = this.crewTasks.find(t => t.task === 'trade');
-      let numRolls = trade.rolls;
-
-      if (numRolls > 0) {
-        let items = [];
-        for(var i = 0; i < numRolls; i++) {
-          let result = this.$options.tables.GetTableResult("traderesult");
-          items.push(result);
-        }
-        trade.items = items;
-        trade.hasRolled = true;
-      }
-    },
-    findRecruit() {      
-      let recruit = this.crewTasks.find(t => t.task === 'recruit');
-      if (recruit.numCrew == 0) {
-        return;
-      }
-
-      const dice = `1d6`;
-      let roll = this.rollDice(dice);
-      if (this.worldTrait.easyRecruit) {
-        roll++;
-      }
-
-      recruit.roll = roll;
-      recruit.hasRolled = true;
-    },
+    },    
     findExploration() {
       let explore = this.crewTasks.find(t => t.task === 'explore');
       let numRolls = explore.rolls;
