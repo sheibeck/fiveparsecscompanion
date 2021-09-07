@@ -2,8 +2,7 @@ import { Step, SubStep } from "../js/fiveParsecsEnums";
 import { FPFHTables } from "./tables";
 
 
-export class FiveParsecsStepResult {
-    title: string = "";
+export class FiveParsecsStepResult {    
     step: Step;
     subStep: SubStep;
 
@@ -19,13 +18,15 @@ export class FiveParsecsStepResult {
     constructor(step: Step, subStep: SubStep, vueIntance: any) {
         this.step = step;
         this.subStep = subStep;
-        this.vueInstance = vueIntance;
+        this.vueInstance = vueIntance;            
     }
 
-    public get inputs() {        
-        const stepDetails = FiveParsecsResultsTables.find( r => r.step === this.step && r.subStep === this.subStep);
-        this.title = stepDetails?.title ?? "Unknown Step";
-        const inputs = stepDetails?.stepInput;
+    public get stepDetails() {
+        return FiveParsecsSteps.find( r => r.step === this.step && r.subStep === this.subStep);
+    }
+
+    public get inputs() {            
+        const inputs = this.stepDetails?.stepInput;
         return inputs;
     }
 
@@ -70,46 +71,56 @@ export class FiveParsecsStepResult {
                 elem.classList.add("roll");
             }
         }
+
+        this.processStep();
     }
 
     public processStep(): void {      
-        const stepDetails = FiveParsecsResultsTables.find( r => r.step === this.step && r.subStep === this.subStep);        
-        let results = stepDetails?.pageNumber ? `(Pg.${stepDetails.pageNumber}) ` : "";
+        const stepDetails = FiveParsecsSteps.find( r => r.step === this.step && r.subStep === this.subStep);        
+        let results = "";
         const inputs = stepDetails?.stepInput;
-        inputs?.forEach( (input) => {            
-            if (input.value) {
-                results += `<strong>${input.text}:</strong>`;
-                if (input.inputType == StepInputType.Roll) {                
-                    if (input.notation instanceof DiceRollTableResult) {                    
-                        results += " " + this.findResult(parseInt(input.value), (input.notation as DiceRollTableResult)?.possibleResults);
-                        results += `<br />`
+        inputs?.forEach( (input) => {
+            switch(input.inputType) {
+                case StepInputType.Roll: {
+                    if (input.value) {
+                        results += `<strong>${input.text}:</strong>`;
+                        if (input.inputType == StepInputType.Roll) {                
+                            if (input.notation instanceof DiceRollTableResult) {                    
+                                results += " " + this.findResult(parseInt(input.value), (input.notation as DiceRollTableResult)?.possibleResults);
+                                results += `<br />`
+                            }
+                            else if (input.notation instanceof MultipleDiceRolls) {
+                                const multi = (input.notation as MultipleDiceRolls)
+                                let itemCount = 0;
+                                results += "<ul>";
+                                input.notation.rollResults.forEach( (roll) => {
+                                    itemCount++;
+                                    const rollResult = this.findResult(roll, multi?.possibleResults);
+                                    results += `<li>${rollResult.replace("#item#", itemCount.toString())} (Rolled ${roll})</li>`;
+                                });
+                                results += "</ul>";
+                            }                    
+                        }                             
                     }
-                    else if (input.notation instanceof MultipleDiceRolls) {
-                        const multi = (input.notation as MultipleDiceRolls)
-                        let itemCount = 0;
-                        results += "<ul>";
-                        input.notation.rollResults.forEach( (roll) => {
-                            itemCount++;
-                            const rollResult = this.findResult(roll, multi?.possibleResults);
-                            results += `<li>${rollResult.replace("#item#", itemCount.toString())} (Rolled ${roll})</li>`;
-                        });
-                        results += "</ul>";
-                    }                    
-                } 
-                else {
-                    results += ` ${input.value}.`;
-                    results += `<br />`
-                }                
-            }
+                    break;
+                }
+                case StepInputType.Info:
+                    results += `<strong>${input.text}.</strong>`;
+                    break;                
+                default:
+                    if (input.value) {
+                        results += `<strong>${input.text}:</strong> ${input.value}.<br />`;
+                    }
+            }                            
         });
         
         this.vueInstance.$set(this, 'results', results);        
-        this.getStepInputBreakdown();
+        //this.getStepInputBreakdown();
     }
 
     private getStepInputBreakdown(): void {
         let results = "";
-        const inputs = FiveParsecsResultsTables.find( r => r.step === this.step && r.subStep === this.subStep)?.stepInput;
+        const inputs = FiveParsecsSteps.find( r => r.step === this.step && r.subStep === this.subStep)?.stepInput;
         inputs?.forEach( (input) => {
             if (input.inputType == StepInputType.Roll) {
                 results += `Rolled: ${this.rollResult}. Total Bonuses: ${this.totalRollBonus}. Final Result ${this.finalRollResult}.`;
@@ -139,7 +150,8 @@ export enum StepInputType {
     YesNo = 1,
     Roll = 2,
     Input = 3,
-    TableResult = 4
+    TableResult = 4,
+    Info = 5,
 }
 
 class StepInputItem {
@@ -211,7 +223,7 @@ class MultipleDiceRolls {
     }
 }
 
-export const FiveParsecsResultsTables: Array<FiveParsecsStep> = [
+export const FiveParsecsSteps: Array<FiveParsecsStep> = [
     new FiveParsecsStep(
         "Flee Invasion",
         Step.Travel,
@@ -259,7 +271,17 @@ export const FiveParsecsResultsTables: Array<FiveParsecsStep> = [
                 new ResultItem(5, "License costs 5 credits."),
                 new ResultItem(6, "License costs 6 credits."),
             ])),
+            new StepInputItem(StepInputType.Info, "Dismiss all patrons that are not persistent")
         ],       
         "70"
-    )
+    ),
+    new FiveParsecsStep(
+        "Flee Invasion",
+        Step.World,
+        SubStep.AssignCrewTasks,        
+        [
+            new StepInputItem(StepInputType.Info, "Upkeep/Ship Repairs (1-6 Crew: 1 credit, 7+: +1 credit per member past 6)")
+        ],      
+        "76"      
+    ),
 ]
