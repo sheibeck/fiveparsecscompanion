@@ -319,7 +319,7 @@ export const FiveParsecsSteps: Array<FiveParsecsStep> = [
     new FiveParsecsStep(
         "2. Crew Task - Find Patron",
         Step.World,
-        SubStep.AssignCrewTasks,        
+        SubStep.AssignCrewTasksFindPatron,        
         [
             new StepInputItem(StepInputType.Input, "Patrons"),
             new StepInputItem(StepInputType.Input, "Credits"),
@@ -332,6 +332,15 @@ export const FiveParsecsSteps: Array<FiveParsecsStep> = [
                 new ResultItem(5, "Found 1 patron."),
                 new ResultItem(6, "Found 2 patrons!")
             ]), null, [new DependentInput(0),new DependentInput(1),new DependentInput(2),new DependentInput(3),new DependentInput(4,2)])
+        ],      
+        "77"      
+    ),
+    new FiveParsecsStep(
+        "2. Crew Task - Train",
+        Step.World,
+        SubStep.AssignCrewTasksTrain,
+        [
+            new StepInputItem(StepInputType.Info, "Earn 1xp"),            
         ],      
         "77"      
     ),
