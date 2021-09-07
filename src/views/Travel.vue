@@ -16,6 +16,13 @@
             </div>         
           </div>
         </div>
+        <div class="col">
+          <div class="card">
+            <div class="card-header bg-light border-success">
+              <h5><button type="button" class="btn btn-link" @click="setActiveStep(newWorldArrival)">New World Arrival (Pg.72) </button></h5>
+            </div>         
+          </div>
+        </div>
       </div>
 
       <div class="col">
@@ -23,21 +30,21 @@
           <h6>{{activeStep.title}} Results</h6>
           <div class="card-body" v-for="(input, index) in activeStep.inputs" :key="index">
             <div v-if="input.inputType == 2">
-              <i class="fas fa-dice pe-auto d-print-none fa-2x" @click="activeStep.processInput(input, $event)"></i> Roll {{input.text}}
+              <i class="fas fa-dice pe-auto d-print-none fa-2x" @click="activeStep.processInput(input, $event)"></i> {{input.text}}
             </div>
             <div v-if="input.inputType == 4">
-              <i class="fas fa-dice pe-auto d-print-none fa-2x" @click="activeStep.processInput(input, $event)"></i> Roll {{input.text}} 
+              <i class="fas fa-dice pe-auto d-print-none fa-2x" @click="activeStep.processInput(input, $event)"></i> {{input.text}}
             </div>   
 
             <div v-if="input.inputType == 3" class="input-group mb-3 input-group-sm">
               <span class="input-group-text" id="rivals-addon">{{input.text}}</span>
               <input type="number" class="form-control" placeholder="0" :aria-label="input.text" 
-                min="0" v-model.number="input.input" />
+                min="0" v-model.number="input.value" />
             </div>
             <div v-if="input.inputType == 1" class="input-group mb-3 input-group-sm">
               <div class="input-group-text">
                 <input class="form-check-input mt-0" type="checkbox" value="" :aria-label="input.text" 
-                  v-model="input.input" />
+                  v-model="input.value" />
               </div>
               <span class="input-group-text" id="savvy-addon">WildGalaxy</span>
             </div>
@@ -45,11 +52,10 @@
           <div class="card-header">
             <i class="fas fa-sync-alt pe-auto d-print-none fa-2x" @click="resolveActiveStep"></i> Get Final Result
           </div>
-          <div class="card-body">            
-            {{activeStep.results}}                      
+          <div class="card-body" v-html="activeStep.results">
           </div>
-          <div class="card-footer">
-            {{activeStep.breakdown}}
+          <div class="card-footer" v-html="activeStep.breakdown">
+            
           </div>
         </div>
       </div>
@@ -98,8 +104,9 @@ export default {
   data() {
     return {
       activeStep: null,
-      fleeInvasion : new FiveParsecsStepResult(Step.Travel, SubStep.FleeInvasion),
-      travelEvent : new FiveParsecsStepResult(Step.Travel, SubStep.DecideToTravel),
+      fleeInvasion : new FiveParsecsStepResult(Step.Travel, SubStep.FleeInvasion, this),
+      travelEvent : new FiveParsecsStepResult(Step.Travel, SubStep.DecideToTravel, this),
+      newWorldArrival : new FiveParsecsStepResult(Step.Travel, SubStep.NewWorldArrival, this),
       newWorld : {
         hasRolled: false,
         result: "",
@@ -167,7 +174,7 @@ export default {
     resolveActiveStep() {
       this.activeStep.processStep(this);
     },
-    resolveFleeInvasion() {    
+    resolveFleeInvasion() {
       this.fleeInvasion.getStepInput();   
       this.fleeInvasion.processStep(this);
     },
