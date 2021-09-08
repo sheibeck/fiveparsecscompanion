@@ -11,7 +11,7 @@
         </div>      
       </div>
 
-     <div v-if="activeStep" class="col">
+     <div v-if="activeStep" class="col" id="activeStep">
         <div class="card">
           <h6>{{activeStep.stepDetails.title}}</h6>
           <div class="card-body" v-for="(input, index) in activeStep.inputs" :key="index">
@@ -43,7 +43,7 @@
           </div>
         </div>
       </div> 
-      <div v-else>
+      <div v-else id="activeStep">
         <div class="card">
           <h6>Select a step.</h6>
         </div>
@@ -217,7 +217,9 @@ export default {
   },
   methods: {
     setActiveStep(step) {
-      this.activeStep = step;     
+      this.activeStep = step;
+      var activeStepElem = document.getElementById("activeStep");
+      activeStepElem.scrollIntoView();     
     },
     resolveActiveStep() {
       this.activeStep.processStep(this);
