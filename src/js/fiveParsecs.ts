@@ -2,7 +2,7 @@ import { Step, SubStep } from "../js/fiveParsecsEnums";
 import { FPFHTables } from "./tables";
 
 
-export class FiveParsecsStepResult {    
+export class CampaignStepResult {    
     step: Step;
     subStep: SubStep;
 
@@ -102,8 +102,12 @@ export class FiveParsecsStepResult {
                     if (input.value) {
                         results += `<strong>${input.text}:</strong>`;
                         if (input.inputType == StepInputType.Roll) {                
-                            if (input.notation instanceof DiceRollTableResult) {                    
-                                results += " " + this.findResult(parseInt(input.value), (input.notation as DiceRollTableResult)?.possibleResults);
+                            if (input.notation instanceof DiceRollTableResult) {
+                                let rollResult = parseInt(input.value);
+                                if (input.autoFailOnOne && input.roll == "1") {
+                                    rollResult = 1;
+                                }
+                                results += " " + this.findResult(rollResult, (input.notation as DiceRollTableResult)?.possibleResults);
 
                                 //roll of "" means we just want information and we aren't "really" rolling
                                 if (input.roll) {
@@ -188,14 +192,16 @@ class StepInputItem {
     dependentInputs: Array<DependentInput>|null;
     value: string = "";
     roll: string = ""; //an original dice roll   
+    autoFailOnOne: boolean = false;
 
     constructor(inputType: StepInputType, text: string, notation?: string|DiceRollTableResult|MultipleDiceRolls|null, 
-        target?: number|null, dependentInputs?: Array<DependentInput>|null) {
+        target?: number|null, dependentInputs?: Array<DependentInput>|null, autoFailOnOne?: boolean) {
         this.inputType = inputType;
         this.notation = notation ?? null;
         this.target = target ?? null;
         this.text = text;
         this.dependentInputs = dependentInputs ?? null;
+        this.autoFailOnOne = autoFailOnOne ?? false;
     }
 }
 
@@ -209,7 +215,7 @@ class ResultItem {
     }    
 }
 
-export class FiveParsecsStep {
+export class CampaignStep {
     title: string;
     step: Step;
     subStep: SubStep;
@@ -251,7 +257,7 @@ class MultipleDiceRolls {
 }
 
 class DependentInput {
-    index: number;
+    index: number; //index number of the StepInputItem for this Step
     value: number|null;
 
     constructor( index: number, value?: number|null) {
@@ -260,8 +266,8 @@ class DependentInput {
     }
 }
 
-export const FiveParsecsSteps: Array<FiveParsecsStep> = [
-    new FiveParsecsStep(
+export const FiveParsecsSteps: Array<CampaignStep> = [
+    new CampaignStep(
         "1. Flee Invasion",
         Step.Travel,
         SubStep.FleeInvasion,        
@@ -273,7 +279,7 @@ export const FiveParsecsSteps: Array<FiveParsecsStep> = [
         ],      
         "69"      
     ),
-    new FiveParsecsStep(
+    new CampaignStep(
         "2. Decide to Travel",
         Step.Travel,
         SubStep.DecideToTravel,
@@ -282,7 +288,7 @@ export const FiveParsecsSteps: Array<FiveParsecsStep> = [
         ],        
         "70"
     ),
-    new FiveParsecsStep(
+    new CampaignStep(
         "3. New World Arrival",
         Step.Travel,
         SubStep.NewWorldArrival,
@@ -312,7 +318,7 @@ export const FiveParsecsSteps: Array<FiveParsecsStep> = [
         ],       
         "70"
     ),
-    new FiveParsecsStep(
+    new CampaignStep(
         "1. Upkeep/Ship Repairs",
         Step.World,
         SubStep.UpkeepRepairs,        
@@ -324,15 +330,15 @@ export const FiveParsecsSteps: Array<FiveParsecsStep> = [
         ],      
         "76"
     ),
-    new FiveParsecsStep(
+    new CampaignStep(
         "2. Crew Task - Find Patron",
         Step.World,
         SubStep.AssignCrewTasksFindPatron,        
         [
+            new StepInputItem(StepInputType.Input, "Crew Looking"),
             new StepInputItem(StepInputType.Input, "Patrons"),
             new StepInputItem(StepInputType.Input, "Credits"),
-            new StepInputItem(StepInputType.Input, "Contacts"),
-            new StepInputItem(StepInputType.Input, "Crew Looking"),
+            new StepInputItem(StepInputType.Input, "Contacts"),            
             new StepInputItem(StepInputType.YesNo, "Corporate State?"),
             new StepInputItem(StepInputType.Roll, "Find Patron", new DiceRollTableResult("1d6", 
             [
@@ -343,7 +349,7 @@ export const FiveParsecsSteps: Array<FiveParsecsStep> = [
         ],      
         "77"      
     ),
-    new FiveParsecsStep(
+    new CampaignStep(
         "2. Crew Task - Train",
         Step.World,
         SubStep.AssignCrewTasksTrain,
@@ -355,7 +361,7 @@ export const FiveParsecsSteps: Array<FiveParsecsStep> = [
         ],      
         "77"      
     ),
-    new FiveParsecsStep(
+    new CampaignStep(
         "2. Crew Task - Trade",
         Step.World,
         SubStep.AssignCrewTasksTrade,
@@ -364,7 +370,7 @@ export const FiveParsecsSteps: Array<FiveParsecsStep> = [
         ],
         "78,79"      
     ),
-    new FiveParsecsStep(
+    new CampaignStep(
         "2. Crew Task - Recruit",
         Step.World,
         SubStep.AssignCrewTasksRecruit,
@@ -377,6 +383,63 @@ export const FiveParsecsSteps: Array<FiveParsecsStep> = [
                 new ResultItem(6, "Found a recruit!")
             ]), null, [new DependentInput(0),new DependentInput(1,1)])
         ],      
+        "78"
+    ),
+    new CampaignStep(
+        "2. Crew Task - Explore",
+        Step.World,
+        SubStep.AssignCrewTasksExplore,
+        [
+            new StepInputItem(StepInputType.TableResult, "Explore", "exploration")         
+        ],
+        "78,80"      
+    ),
+    new CampaignStep(
+        "2. Crew Task - Track",
+        Step.World,
+        SubStep.AssignCrewTasksTrack,        
+        [            
+            new StepInputItem(StepInputType.Input, "Crew Looking"),
+            new StepInputItem(StepInputType.Input, "Credits"),            
+            new StepInputItem(StepInputType.Roll, "Track Rival", new DiceRollTableResult("1d6", 
+            [
+                new ResultItem(1, "No rivals found."),                
+                new ResultItem(6, "Found a rival!")
+            ]), null, [new DependentInput(0),new DependentInput(1)])
+        ],      
+        "77"      
+    ),
+    new CampaignStep(
+        "2. Crew Task - Repair",
+        Step.World,
+        SubStep.AssignCrewTasksRepair,
+        [
+            new StepInputItem(StepInputType.Input, "Savvy skill"),
+            new StepInputItem(StepInputType.YesNo, "Is Engineer?"),
+            new StepInputItem(StepInputType.YesNo, "Repair bot?"),
+            new StepInputItem(StepInputType.YesNo, "Technical knowledge?"),
+            new StepInputItem(StepInputType.YesNo, "Spare parts?"),
+            new StepInputItem(StepInputType.Input, "Credits"),            
+            new StepInputItem(StepInputType.Roll, "Repair", new DiceRollTableResult("1d6", 
+            [
+                new ResultItem(1, "Item destroyed!"),
+                new ResultItem(2, "Repair failed."),
+                new ResultItem(6, "Item successfully repaired!")
+            ]), null, [new DependentInput(0),new DependentInput(1,1),new DependentInput(2,1),new DependentInput(3,1),new DependentInput(4,1),new DependentInput(5)],
+            true)
+        ],      
         "78"      
+    ),
+    new CampaignStep(
+        "2. Crew Task - Decoy",
+        Step.World,
+        SubStep.AssignCrewTasksDecoy,
+        [
+            new StepInputItem(StepInputType.Roll, "Decoy", new DiceRollTableResult("", 
+            [
+                new ResultItem(1, "See choose battle step."),
+            ]))    
+        ],      
+        "78"
     ),
 ]

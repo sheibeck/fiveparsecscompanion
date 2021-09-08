@@ -55,7 +55,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { FiveParsecsStepResult, StepInputType }  from '../js/fiveParsecs';
+import { CampaignStepResult, StepInputType }  from '../js/fiveParsecs';
 import { Step, SubStep } from "../js/fiveParsecsEnums";
 
 export default Vue.extend({
@@ -66,22 +66,22 @@ export default Vue.extend({
   }, 
   data() {
     return {
-      activeStep: null as FiveParsecsStepResult|null,
+      activeStep: null as CampaignStepResult|null,
       steps: [
-        new FiveParsecsStepResult(Step.Travel, SubStep.FleeInvasion, this),
-        new FiveParsecsStepResult(Step.Travel, SubStep.DecideToTravel, this),
-        new FiveParsecsStepResult(Step.Travel, SubStep.NewWorldArrival, this),    
-      ] as Array<FiveParsecsStepResult>,
+        new CampaignStepResult(Step.Travel, SubStep.FleeInvasion, this),
+        new CampaignStepResult(Step.Travel, SubStep.DecideToTravel, this),
+        new CampaignStepResult(Step.Travel, SubStep.NewWorldArrival, this),    
+      ] as Array<CampaignStepResult>,
       stepInputType: StepInputType
     }
   },    
-  computed : {    
+  computed : {
     username: function() {
       return this.$store.state.user.username;
     },
   },
   methods: {       
-    setActiveStep(step: FiveParsecsStepResult|null) {
+    setActiveStep(step: CampaignStepResult|null) {
       this.activeStep = step;
     },
     resolveActiveStep() {
