@@ -48,31 +48,7 @@
           <h6>Select a step.</h6>
         </div>
       </div>  
-           
-      <div class="col">
-        <div class="card">
-          <div class="card-header bg-light border-success">
-            <h5>3. Job Offers <i class="fas fa-dice pe-auto d-print-none" @click="findJob()"></i></h5>
-          </div>
-          <div class="card-body">            
-            <p class="card-text">
-              <label v-if="jobOffer.length == 0">Waiting on roll ...</label>
-              <ul v-else class="list-group">
-                <li v-for="(step, idx) in jobOffer" :key="idx" class="d-flex list-group-item" :class="{'bg-light': idx%2 == 0}">
-                  <div class="col-4 d-flex">
-                    <i class="fas fa-dice me-1 mt-1 d-print-none" @click="rerollTable(step.id)"></i>
-                    <label class="">{{step.label}}:</label>
-                  </div>
-                  <div class="col">            
-                    <span class="">{{step.result.result}}</span>                  
-                    <span v-if="step.result.desc" class="mb-1 fst-italic"> ({{step.result.desc}})</span>
-                  </div>
-                </li>
-              </ul>
-            </p>
-          </div>
-        </div>
-      </div>
+            
 
       <div class="col">
         <div class="card">
@@ -177,6 +153,7 @@ export default {
         new CampaignStepResult(Step.World, SubStep.AssignCrewTasksTrack, this),
         new CampaignStepResult(Step.World, SubStep.AssignCrewTasksRepair, this),
         new CampaignStepResult(Step.World, SubStep.AssignCrewTasksDecoy, this),
+        new CampaignStepResult(Step.World, SubStep.JobOffers, this),
       ],
       stepInputType: StepInputType,
 
@@ -307,61 +284,7 @@ export default {
       }             
       return result.label;   
     },
-    findJob() {   
-      const dice = `1d10`;
-      this.jobOffer = [];
-
-      let result = this.$options.tables.GetFullTableResult("patron");
-      const patron = result[0].label;
-            
-      let data = JSON.parse(result[0].desc);
-      result[0].desc = data.desc;
-
-      let rolls = data.rolls;
-      this.jobOffer.push({ id: "patron", label: "Patron", result: result[0] });
-
-      result = this.$options.tables.GetFullTableResult("dangerpay");
-      const dangerPayRollBonus = patron === "Corporation";
-      let dangerPayResult = this.rollOnDangerPay(dangerPayRollBonus ? 1 : 0);
-      result[0].result = dangerPayResult;      
-      this.jobOffer.push({ id: "dangerpay", label: "Danger Pay", result: result[0] });
-      
-      result = this.$options.tables.GetFullTableResult("timeframe");
-      const timeFrameRollBonus = patron === "Secretive Group";
-      let timeFrameResult = this.rollOnTimeFrame(timeFrameRollBonus ? 1 : 0);
-      result[0].result = timeFrameResult;      
-      this.jobOffer.push({ id: "timeframe", label: "Time Frame", result: result[0] });
-
-      //check for benefits
-      result = this.$options.tables.GetFullTableResult("benefit");      
-      let roll = this.rollDice(dice);
-      if (roll < rolls[0]) { 
-        result[0].result = `None. (Rolled less than ${rolls[0]}.)`;
-        result[0].desc = "";
-      }
-      this.jobOffer.push({ id: "benefit", label: "Benefit", result: result[0] });
-      
-      //check for hazards
-      result = this.$options.tables.GetFullTableResult("hazard");       
-      roll = this.rollDice(dice);
-      if (roll < rolls[1]) { 
-        result[0].result = `None. (Rolled less than ${rolls[1]}.)`;
-        result[0].desc = "";
-      }
-      this.jobOffer.push({ id: "hazard", label: "Hazard", result: result[0] });
-      
-      //check for conditions
-      result = this.$options.tables.GetFullTableResult("condition");
-       result = this.$options.tables.GetFullTableResult("hazard");       
-      roll = this.rollDice(dice);
-      if (roll < rolls[2]) { 
-        result[0].result = `None. (Rolled less than ${rolls[2]}.)`;
-        result[0].desc = "";
-      }
-      this.jobOffer.push({ id: "condition", label: "Condition", result: result[0] });
-
-      this.$root.showUserMsg(`Created job offer`);
-    },    
+    
     
     resolveAnyRumors() {      
       const dice = `1d6`;

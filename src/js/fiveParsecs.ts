@@ -1,7 +1,6 @@
 import { Step, SubStep } from "../js/fiveParsecsEnums";
 import { FPFHTables } from "./tables";
 
-
 export class CampaignStepResult {    
     step: Step;
     subStep: SubStep;
@@ -35,6 +34,7 @@ export class CampaignStepResult {
         switch(input.inputType) {
             case StepInputType.Roll: {
                     let dice: string = "";
+                    let rollOverride: number|null = null;
                     if (input.notation instanceof DiceRollTableResult) {
                         dice = (input.notation as DiceRollTableResult).dice;
                         const roll = this.rpgTable.Roll(dice);
@@ -43,16 +43,46 @@ export class CampaignStepResult {
                         if (input.dependentInputs) {
                             const stepInputs = this.inputs ?? [];
                             input.dependentInputs.forEach(item => {
-                                const depInputValue = stepInputs[item.index]?.value;
-                                if (item.value && depInputValue) {
-                                    bonus += item.value;
-                                } else {
-                                    bonus +=  depInputValue ? parseInt(depInputValue) : 0;
+                                const depInput: any = stepInputs[item.index];
+                                let depInputValue: any = depInput?.value;
+                                //Dependent object can be a RandomTableEntry from rpg-table-randomizer library
+                                if (typeof(depInputValue) === "object") {
+                                    if (item.metadata) {
+                                        const meta = item.metadata.split("|");
+                                        const data = JSON.parse(depInputValue[0].desc);
+                                        switch(meta[0]) {
+                                            case "minroll": {
+                                                    const minRoll = parseInt(data.rolls[meta[1]]);
+                                                    if (roll < minRoll) {                                                        
+                                                        rollOverride = 0;
+                                                    }
+                                                }
+                                                break;
+                                        }
+                                    }
+                                    else {
+                                        depInputValue = depInputValue[0].result;
+                                    }
+                                }
+                                
+                                //see if the dependent item needs to match something before applying the value
+                                if (item.match) {                                   
+                                    if (depInputValue === item.match) {
+                                        bonus += item?.value ? item.value : 0;
+                                    }
+                                }
+                                else {
+                                    //see if the dependent item has a value override                                
+                                    if (typeof(item.value) === "number" && depInputValue) {
+                                        bonus += item.value;
+                                    } else {
+                                        bonus += depInputValue ? parseInt(depInputValue) : 0;
+                                    }
                                 }
                             });
                         }
 
-                        const total = roll + bonus;
+                        const total = (typeof(rollOverride) === "number" ? rollOverride : roll) + bonus;
                         this.vueInstance.$set(input, "roll", roll);
                         this.vueInstance.$set(input, "value", total);
                     }
@@ -99,7 +129,7 @@ export class CampaignStepResult {
         inputs?.forEach( (input) => {
             switch(input.inputType) {
                 case StepInputType.Roll: {
-                    if (input.value) {
+                    if (input.value !== "undefined" && input.value !== null && input.value !== "") {
                         results += `<strong>${input.text}:</strong>`;
                         if (input.inputType == StepInputType.Roll) {                
                             if (input.notation instanceof DiceRollTableResult) {
@@ -107,12 +137,13 @@ export class CampaignStepResult {
                                 if (input.autoFailOnOne && input.roll == "1") {
                                     rollResult = 1;
                                 }
+                                
                                 results += " " + this.findResult(rollResult, (input.notation as DiceRollTableResult)?.possibleResults);
 
                                 //roll of "" means we just want information and we aren't "really" rolling
                                 if (input.roll) {
                                     results += ` (Rolled ${input.roll}`;
-                                    if (input.dependentInputs) {                                    
+                                    if (input.dependentInputs && input.value) {
                                         results += `. Total ${input.value}`;
                                     }                                
                                     results += `.)`;
@@ -258,11 +289,15 @@ class MultipleDiceRolls {
 
 class DependentInput {
     index: number; //index number of the StepInputItem for this Step
-    value: number|null;
+    value: number|null; //how much of a bonus is this dependent input worth
+    match: string|null; //only apply the value if the the dependent value matches this
+    metadata: string|null; //expects json string in RandomTableEntry to contain
 
-    constructor( index: number, value?: number|null) {
+    constructor( index: number, value?: number|null, match?: string|null, metadata?: string|null) {
         this.index = index;
         this.value = value ?? null;
+        this.match = match ?? null;
+        this.metadata = metadata ?? null;
     }
 }
 
@@ -428,7 +463,7 @@ export const FiveParsecsSteps: Array<CampaignStep> = [
             ]), null, [new DependentInput(0),new DependentInput(1,1),new DependentInput(2,1),new DependentInput(3,1),new DependentInput(4,1),new DependentInput(5)],
             true)
         ],      
-        "78"      
+        "78"
     ),
     new CampaignStep(
         "2. Crew Task - Decoy",
@@ -439,6 +474,62 @@ export const FiveParsecsSteps: Array<CampaignStep> = [
             [
                 new ResultItem(1, "See choose battle step."),
             ]))    
+        ],      
+        "78"
+    ),
+    new CampaignStep(
+        "3. Job Offers",
+        Step.World,
+        SubStep.JobOffers,
+        [
+            new StepInputItem(StepInputType.TableResult, "Patron", "patron"),            
+            new StepInputItem(StepInputType.Roll, "Danger Pay", new DiceRollTableResult("1d10", 
+            [
+                new ResultItem(4, "+1 credit."),
+                new ResultItem(8, "+2 credits."),
+                new ResultItem(9, "+3 credits."),
+                new ResultItem(10, "+3 credits, roll x2 & pick higher for mission pay.")
+            ]), null, [new DependentInput(0,1,"Corporation")]),
+            new StepInputItem(StepInputType.Roll, "Time Frame", new DiceRollTableResult("1d10", 
+            [
+                new ResultItem(5, "This campaign turn."),
+                new ResultItem(7, "This or next campaign turn."),
+                new ResultItem(9, "This or following 2 campaign turns."),
+                new ResultItem(10, "Any time.")
+            ]), null, [new DependentInput(0,1,"Secretive Group")]),
+            new StepInputItem(StepInputType.Roll, "Benefit", new DiceRollTableResult("1d10", 
+            [
+                new ResultItem(0, "None."),
+                new ResultItem(2, "Fringe Benefit"),
+                new ResultItem(4, "Connections"),
+                new ResultItem(5, "Company Store"),
+                new ResultItem(6, "Health Insurance"),
+                new ResultItem(7, "Security Team"),
+                new ResultItem(9, "Persistent"),
+                new ResultItem(10, "Negotiable"),                
+            ]), null, [new DependentInput(0,0,null,"minroll|0")]),
+            new StepInputItem(StepInputType.Roll, "Hazard", new DiceRollTableResult("1d10", 
+            [
+                new ResultItem(0, "None."),
+                new ResultItem(2, "Dangerous Job"),
+                new ResultItem(4, "Hot Job"),
+                new ResultItem(5, "VIP"),
+                new ResultItem(6, "Veteran Opposition"),
+                new ResultItem(7, "Low Priority"),
+                new ResultItem(10, "Private Transport"),                             
+            ]), null, [new DependentInput(0,0,null,"minroll|1")]),
+            new StepInputItem(StepInputType.Roll, "Condition", new DiceRollTableResult("1d10", 
+            [
+                new ResultItem(0, "None."),
+                new ResultItem(1, "Vengeful"),
+                new ResultItem(3, "Demanding"),
+                new ResultItem(4, "Small Squad"),
+                new ResultItem(5, "Full Squad"),
+                new ResultItem(6, "Clean"),
+                new ResultItem(8, "Busy"),
+                new ResultItem(9, "Onetime Contract"),
+                new ResultItem(10, "Reputation Required"),                
+            ]), null, [new DependentInput(0,0,null,"minroll|2")]),
         ],      
         "78"
     ),
