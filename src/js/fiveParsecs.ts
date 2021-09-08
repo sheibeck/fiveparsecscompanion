@@ -46,7 +46,7 @@ export class CampaignStepResult {
                                 const depInput: any = stepInputs[item.index];
                                 let depInputValue: any = depInput?.value;
                                 //Dependent object can be a RandomTableEntry from rpg-table-randomizer library
-                                if (typeof(depInputValue) === "object") {
+                                if (item instanceof DependentInputBonus) {
                                     if (item.metadata) {
                                         const meta = item.metadata.split("|");
                                         const data = JSON.parse(depInputValue[0].desc);
@@ -61,22 +61,25 @@ export class CampaignStepResult {
                                         }
                                     }
                                     else {
-                                        depInputValue = depInputValue[0].result;
+                                        depInputValue = typeof(depInputValue) === "object" ? depInputValue[0].result : depInputValue;
                                     }
                                 }
                                 
-                                //see if the dependent item needs to match something before applying the value
-                                if (item.match) {                                   
-                                    if (depInputValue === item.match) {
-                                        bonus += item?.value ? item.value : 0;
+                                // DependentInputComparison don't give bonuses
+                                if (!(item instanceof DependentInputComparison)) {
+                                    //see if the dependent item needs to match something before applying the value
+                                    if (item.match) {                                   
+                                        if (depInputValue === item.match) {
+                                            bonus += item?.value ? item.value : 0;
+                                        }
                                     }
-                                }
-                                else {
-                                    //see if the dependent item has a value override                                
-                                    if (typeof(item.value) === "number" && depInputValue) {
-                                        bonus += item.value;
-                                    } else {
-                                        bonus += depInputValue ? parseInt(depInputValue) : 0;
+                                    else {
+                                        //see if the dependent item has a value override                                
+                                        if (typeof(item.value) === "number" && depInputValue) {
+                                            bonus += item.value;
+                                        } else {
+                                            bonus += depInputValue ? parseInt(depInputValue) : 0;
+                                        }
                                     }
                                 }
                             });
@@ -133,23 +136,59 @@ export class CampaignStepResult {
                         results += `<strong>${input.text}:</strong>`;
                         if (input.inputType == StepInputType.Roll) {                
                             if (input.notation instanceof DiceRollTableResult) {
-                                let rollResult = parseInt(input.value);
-                                if (input.autoFailOnOne && input.roll == "1") {
-                                    rollResult = 1;
+                                let rollResult: number = 0;
+                                //if we have a DependentInputComparison then we want to see if the roll >= the input
+                                //if it is not then return roll that will retrieve the fail item in the DiceRollTableResult
+                                // otherwise return roll that will retrieve the success item in the DiceRollTableResult
+                                // There is only success and failure accounted for here as of now.
+                                if (input.dependentInputs && input.dependentInputs.length == 1 && input.dependentInputs[0] instanceof DependentInputComparison) {
+                                    const compareInput = input.dependentInputs[0];
+                                    const stepInputs = this.inputs ?? [];
+                                    const depInput: any = stepInputs[input.dependentInputs[0].index];
+                                    const depInputValue: number = depInput?.value === "" ? 0 : parseInt(depInput?.value);
+
+                                    switch(compareInput.comparison) {
+                                        case ComparisonType.LessThanOrEqual: {
+                                                if (input.roll <= depInputValue) {
+                                                    rollResult = 2
+                                                }
+                                                else {
+                                                    rollResult = 1;
+                                                }
+                                            }
+                                            break;
+                                            case ComparisonType.GreaterThanOrEqual: {
+                                                if (input.roll >= depInputValue) {
+                                                    rollResult = 2
+                                                }
+                                                else {
+                                                    rollResult = 1;
+                                                }
+                                            }
+                                            break;
+                                    }
+                                    
                                 }
-                                
+                                else {
+                                    rollResult = parseInt(input.value);
+                                    if (input.autoFailOnOne && input.roll == 1) {
+                                        rollResult = 1;
+                                    }
+                                }
+
                                 results += " " + this.findResult(rollResult, (input.notation as DiceRollTableResult)?.possibleResults);
 
                                 //roll of "" means we just want information and we aren't "really" rolling
                                 if (input.roll) {
                                     results += ` (Rolled ${input.roll}`;
-                                    if (input.dependentInputs && input.value) {
-                                        results += `. Total ${input.value}`;
+                                    const bonus = parseInt(input.value) - input.roll;                          
+                                    if (bonus > 0) {
+                                        results += `. Bonus ${parseInt(input.value) - input.roll}`;
                                     }                                
                                     results += `.)`;
                                 }
                                 results += `<br />`;
-                            }
+                            }                            
                             else if (input.notation instanceof MultipleDiceRolls) {
                                 const multi = (input.notation as MultipleDiceRolls)
                                 let itemCount = 0;
@@ -220,13 +259,13 @@ class StepInputItem {
     text: string; 
     notation: string|DiceRollTableResult|MultipleDiceRolls|null;
     target: number|null;
-    dependentInputs: Array<DependentInput>|null;
+    dependentInputs: Array<IDependentInput>|null;
     value: string = "";
-    roll: string = ""; //an original dice roll   
+    roll: number = 0; //an original dice roll   
     autoFailOnOne: boolean = false;
 
     constructor(inputType: StepInputType, text: string, notation?: string|DiceRollTableResult|MultipleDiceRolls|null, 
-        target?: number|null, dependentInputs?: Array<DependentInput>|null, autoFailOnOne?: boolean) {
+        target?: number|null, dependentInputs?: Array<IDependentInput>|null, autoFailOnOne?: boolean) {
         this.inputType = inputType;
         this.notation = notation ?? null;
         this.target = target ?? null;
@@ -287,11 +326,27 @@ class MultipleDiceRolls {
     }
 }
 
-class DependentInput {
+
+enum ComparisonType {
+    GreaterThanOrEqual,
+    LessThanOrEqual,    
+}
+
+interface IDependentInput {
     index: number; //index number of the StepInputItem for this Step
     value: number|null; //how much of a bonus is this dependent input worth
     match: string|null; //only apply the value if the the dependent value matches this
     metadata: string|null; //expects json string in RandomTableEntry to contain
+    comparison: ComparisonType|null; //
+}
+
+//use this when you want another input to add a bonus to the roll
+class DependentInputBonus implements IDependentInput {
+    index: number; //index number of the StepInputItem for this Step
+    value: number|null; //how much of a bonus is this dependent input worth
+    match: string|null; //only apply the value if the the dependent value matches this
+    metadata: string|null; //expects json string in RandomTableEntry to contain
+    comparison: ComparisonType|null = null;
 
     constructor( index: number, value?: number|null, match?: string|null, metadata?: string|null) {
         this.index = index;
@@ -299,6 +354,21 @@ class DependentInput {
         this.match = match ?? null;
         this.metadata = metadata ?? null;
     }
+}
+
+//use this when you want a roll to match the value of another input
+class DependentInputComparison implements IDependentInput {    
+    index: number; //index number of the StepInputItem for this Step
+    value: number|null = null; //unused
+    match: string|null = null; //unused
+    metadata: string|null = null; //unused
+    comparison: ComparisonType;
+
+    constructor( index: number, comparison: ComparisonType)
+    {
+        this.index = index;
+        this.comparison = comparison;
+    }  
 }
 
 export const FiveParsecsSteps: Array<CampaignStep> = [
@@ -380,7 +450,7 @@ export const FiveParsecsSteps: Array<CampaignStep> = [
                 new ResultItem(1, "No patrons found."),
                 new ResultItem(5, "Found 1 patron."),
                 new ResultItem(6, "Found 2 patrons!")
-            ]), null, [new DependentInput(0),new DependentInput(1),new DependentInput(2),new DependentInput(3),new DependentInput(4,2)])
+            ]), null, [new DependentInputBonus(0),new DependentInputBonus(1),new DependentInputBonus(2),new DependentInputBonus(3),new DependentInputBonus(4,2)])
         ],      
         "77"      
     ),
@@ -416,7 +486,7 @@ export const FiveParsecsSteps: Array<CampaignStep> = [
             [
                 new ResultItem(1, "No recruits found."),                
                 new ResultItem(6, "Found a recruit!")
-            ]), null, [new DependentInput(0),new DependentInput(1,1)])
+            ]), null, [new DependentInputBonus(0),new DependentInputBonus(1,1)])
         ],      
         "78"
     ),
@@ -440,7 +510,7 @@ export const FiveParsecsSteps: Array<CampaignStep> = [
             [
                 new ResultItem(1, "No rivals found."),                
                 new ResultItem(6, "Found a rival!")
-            ]), null, [new DependentInput(0),new DependentInput(1)])
+            ]), null, [new DependentInputBonus(0),new DependentInputBonus(1)])
         ],      
         "77"      
     ),
@@ -460,7 +530,7 @@ export const FiveParsecsSteps: Array<CampaignStep> = [
                 new ResultItem(1, "Item destroyed!"),
                 new ResultItem(2, "Repair failed."),
                 new ResultItem(6, "Item successfully repaired!")
-            ]), null, [new DependentInput(0),new DependentInput(1,1),new DependentInput(2,1),new DependentInput(3,1),new DependentInput(4,1),new DependentInput(5)],
+            ]), null, [new DependentInputBonus(0),new DependentInputBonus(1,1),new DependentInputBonus(2,1),new DependentInputBonus(3,1),new DependentInputBonus(4,1),new DependentInputBonus(5)],
             true)
         ],      
         "78"
@@ -489,14 +559,14 @@ export const FiveParsecsSteps: Array<CampaignStep> = [
                 new ResultItem(8, "+2 credits."),
                 new ResultItem(9, "+3 credits."),
                 new ResultItem(10, "+3 credits, roll x2 & pick higher for mission pay.")
-            ]), null, [new DependentInput(0,1,"Corporation")]),
+            ]), null, [new DependentInputBonus(0,1,"Corporation")]),
             new StepInputItem(StepInputType.Roll, "Time Frame", new DiceRollTableResult("1d10", 
             [
                 new ResultItem(5, "This campaign turn."),
                 new ResultItem(7, "This or next campaign turn."),
                 new ResultItem(9, "This or following 2 campaign turns."),
                 new ResultItem(10, "Any time.")
-            ]), null, [new DependentInput(0,1,"Secretive Group")]),
+            ]), null, [new DependentInputBonus(0,1,"Secretive Group")]),
             new StepInputItem(StepInputType.Roll, "Benefit", new DiceRollTableResult("1d10", 
             [
                 new ResultItem(0, "None."),
@@ -507,7 +577,7 @@ export const FiveParsecsSteps: Array<CampaignStep> = [
                 new ResultItem(7, "Security Team"),
                 new ResultItem(9, "Persistent"),
                 new ResultItem(10, "Negotiable"),                
-            ]), null, [new DependentInput(0,0,null,"minroll|0")]),
+            ]), null, [new DependentInputBonus(0,0,null,"minroll|0")]),
             new StepInputItem(StepInputType.Roll, "Hazard", new DiceRollTableResult("1d10", 
             [
                 new ResultItem(0, "None."),
@@ -517,7 +587,7 @@ export const FiveParsecsSteps: Array<CampaignStep> = [
                 new ResultItem(6, "Veteran Opposition"),
                 new ResultItem(7, "Low Priority"),
                 new ResultItem(10, "Private Transport"),                             
-            ]), null, [new DependentInput(0,0,null,"minroll|1")]),
+            ]), null, [new DependentInputBonus(0,0,null,"minroll|1")]),
             new StepInputItem(StepInputType.Roll, "Condition", new DiceRollTableResult("1d10", 
             [
                 new ResultItem(0, "None."),
@@ -529,8 +599,22 @@ export const FiveParsecsSteps: Array<CampaignStep> = [
                 new ResultItem(8, "Busy"),
                 new ResultItem(9, "Onetime Contract"),
                 new ResultItem(10, "Reputation Required"),                
-            ]), null, [new DependentInput(0,0,null,"minroll|2")]),
+            ]), null, [new DependentInputBonus(0,0,null,"minroll|2")]),
         ],      
         "78"
+    ),
+    new CampaignStep(
+        "5. Resolve Rumors",
+        Step.World,
+        SubStep.ResolveRumors,
+        [
+            new StepInputItem(StepInputType.Input, "Total Rumors"),            
+            new StepInputItem(StepInputType.Roll, "Resolve Rumors", new DiceRollTableResult("1d6", 
+            [
+                new ResultItem(1, "No quest found"),
+                new ResultItem(2, "Quest found!"),                
+            ]), null, [new DependentInputComparison(0, ComparisonType.LessThanOrEqual)])
+        ],      
+        "85"
     ),
 ]

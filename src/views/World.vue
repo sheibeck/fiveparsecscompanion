@@ -64,27 +64,6 @@
       <div class="col">
         <div class="card">
           <div class="card-header bg-light border-success">
-            <h5>
-              5. Resolve Rumors
-              <i class="fas fa-dice pe-auto d-print-none" @click="resolveAnyRumors()"></i>
-            </h5>
-          </div>
-          <div class="card-body">
-
-            <div class="input-group mb-3 input-group-sm">
-              <span class="input-group-text" id="savvy-addon">Total Rumors (Pg.85)</span>
-              <input type="number" class="form-control" placeholder="0" aria-label="savvy" aria-describedby="savvy-addon" 
-                min="0" v-model.number="resolveRumors.totalRumors" />
-            </div>           
-            <label>{{getResolveRumorsResults}}</label>
-
-          </div>
-        </div>
-      </div>
-
-      <div class="col">
-        <div class="card">
-          <div class="card-header bg-light border-success">
             <h5>6. Choose Battle</h5>
           </div>
          
@@ -154,6 +133,7 @@ export default {
         new CampaignStepResult(Step.World, SubStep.AssignCrewTasksRepair, this),
         new CampaignStepResult(Step.World, SubStep.AssignCrewTasksDecoy, this),
         new CampaignStepResult(Step.World, SubStep.JobOffers, this),
+        new CampaignStepResult(Step.World, SubStep.ResolveRumors, this),
       ],
       stepInputType: StepInputType,
 
@@ -224,69 +204,13 @@ export default {
     resolveActiveStep() {
       this.activeStep.processStep(this);
     },
-    rerollTable(table) {
-      const roll = this.$options.tables.GetFullTableResult(table);
-      let jobLine = this.jobOffer.find( o => o.id === table);     
-      jobLine.result = roll[0];
-
-      this.$root.showUserMsg(`Re-rolled ${table}`);
-    },
+    
     rollDice(dice) {
       const roll = this.$options.tables.Roll(dice);      
       this.$root.showUserMsg(`Rolled ${dice}`);
       return roll;   
     },
-    rollOnDangerPay(rollBonus) {
-      let dangerPayTable = this.$options.tables.tables.dangerpay.tables.default;
-      const dangerRoll = this.rollDice("1d10")+(rollBonus ? rollBonus : 0);
-      let result = null;
-      switch(dangerRoll) {
-        case 1:
-        case 2:
-        case 3:
-        case 4:
-          result = dangerPayTable[0];
-          break;
-        case 5:
-        case 6:
-        case 7:
-        case 8:
-          result = dangerPayTable[1];
-          break;
-        case 9:
-          result = dangerPayTable[2];
-          break;
-        default:
-          result = dangerPayTable[3];
-      }             
-      return result.label;   
-    },
-    rollOnTimeFrame(rollBonus) {
-      let timeFrameTable = this.$options.tables.tables.timeframe.tables.default;
-      const timeFrameRoll = this.rollDice("1d10")+(rollBonus ? rollBonus : 0);
-      let result = null;
-      switch(timeFrameRoll) {
-        case 1:
-        case 2:
-        case 3:
-        case 4:
-        case 5:
-          result = timeFrameTable[0];
-          break;        
-        case 6:
-        case 7:
-          result = timeFrameTable[1];
-          break;
-        case 8:
-        case 9:
-          result = timeFrameTable[2];
-          break;                      
-        default:
-          result = timeFrameTable[3];
-      }             
-      return result.label;   
-    },
-    
+  
     
     resolveAnyRumors() {      
       const dice = `1d6`;
