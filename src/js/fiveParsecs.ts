@@ -141,7 +141,8 @@ export class CampaignStepResult {
                                 //if it is not then return roll that will retrieve the fail item in the DiceRollTableResult
                                 // otherwise return roll that will retrieve the success item in the DiceRollTableResult
                                 // There is only success and failure accounted for here as of now.
-                                if (input.dependentInputs && input.dependentInputs.length == 1 && input.dependentInputs[0] instanceof DependentInputComparison) {
+                                // Comparison input currently nees to be in the first slot and there can be only 1
+                                if (input.dependentInputs && input.dependentInputs.length > 0 && input.dependentInputs[0] instanceof DependentInputComparison) {
                                     const compareInput = input.dependentInputs[0];
                                     const stepInputs = this.inputs ?? [];
                                     const depInput: any = stepInputs[input.dependentInputs[0].index];
@@ -149,7 +150,7 @@ export class CampaignStepResult {
 
                                     switch(compareInput.comparison) {
                                         case ComparisonType.LessThanOrEqual: {
-                                                if (input.roll <= depInputValue) {
+                                                if (parseInt(input.value) <= depInputValue) {
                                                     rollResult = 2
                                                 }
                                                 else {
@@ -158,7 +159,7 @@ export class CampaignStepResult {
                                             }
                                             break;
                                             case ComparisonType.GreaterThanOrEqual: {
-                                                if (input.roll >= depInputValue) {
+                                                if (parseInt(input.value) >= depInputValue) {
                                                     rollResult = 2
                                                 }
                                                 else {
@@ -604,6 +605,18 @@ export const FiveParsecsSteps: Array<CampaignStep> = [
         "78"
     ),
     new CampaignStep(
+        "4. Assign Equipment",
+        Step.World,
+        SubStep.AssignEquipment,        
+        [
+            new StepInputItem(StepInputType.Roll, "Assign Equipment", new DiceRollTableResult("", 
+            [
+                new ResultItem(1, "Assign equipment to your crew (Pg.85)"),
+            ]))
+        ],      
+        "85"
+    ),
+    new CampaignStep(
         "5. Resolve Rumors",
         Step.World,
         SubStep.ResolveRumors,
@@ -614,6 +627,21 @@ export const FiveParsecsSteps: Array<CampaignStep> = [
                 new ResultItem(1, "No quest found"),
                 new ResultItem(2, "Quest found!"),                
             ]), null, [new DependentInputComparison(0, ComparisonType.LessThanOrEqual)])
+        ],      
+        "85"
+    ),
+    new CampaignStep(
+        "6. Choose Battle - Check For Rivals",
+        Step.World,
+        SubStep.ChooseBattle,
+        [
+            new StepInputItem(StepInputType.Input, "Total Rivals"),
+            new StepInputItem(StepInputType.Input, "Total Decoys"),            
+            new StepInputItem(StepInputType.Roll, "Check for rivals", new DiceRollTableResult("1d6", 
+            [
+                new ResultItem(1, "No rivals have found you."),
+                new ResultItem(2, "A rival has tracked you down!"),                
+            ]), null, [new DependentInputComparison(0, ComparisonType.LessThanOrEqual), new DependentInputBonus(1)])
         ],      
         "85"
     ),
