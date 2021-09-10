@@ -101,7 +101,7 @@ new Vue({
   router,
   store,
   methods : {
-    showUserMsg: function(msg, type) {
+    showUserMsg: function(msg: String, type: String) {
       this.$store.state.feedbackMsg = msg;
       this.$store.state.feedbackMsgType = type;
       this.$store.state.feedbackToast.show();
