@@ -183,7 +183,7 @@ export class CampaignStepResult {
                                 if (input.roll) {
                                     results += ` (Rolled ${input.roll}`;
                                     const bonus = parseInt(input.value) - input.roll;                          
-                                    if (bonus > 0) {
+                                    if (bonus !== 0) {
                                         results += `. Bonus ${parseInt(input.value) - input.roll}`;
                                     }                                
                                     results += `.)`;
@@ -673,5 +673,28 @@ export const FiveParsecsSteps: Array<CampaignStep> = [
             new StepInputItem(StepInputType.Label, "If you succeeded in Patron mission you may add the Patron to your list of contacts unless the job was a One-time contract."),            
         ],      
         "119"
+    ),
+    new CampaignStep(
+        "3. Determine Quest Progress",
+        Step.PostBattle,
+        SubStep.DetermineQuestProgress,
+        [
+            new StepInputItem(StepInputType.Label, "Did you fight a battle that was part of quest?"),
+            new StepInputItem(StepInputType.Input, "Total Rumors"),
+            new StepInputItem(StepInputType.YesNo, "Did you lose the battle?"),
+            new StepInputItem(StepInputType.Roll, "Determine quest progress", new DiceRollTableResult("1d6", 
+            [
+                new ResultItem(1, "A dead end. The quest continues."),
+                new ResultItem(4, "A step closer. Gain a quest rumor."),
+                new ResultItem(7, "At the conclusion of a quest!"),
+            ]), null, [new DependentInputBonus(1), new DependentInputBonus(2,-2)]),
+            new StepInputItem(StepInputType.Label, "Was the total modified quest progress roll >= 4+ ?"),
+            new StepInputItem(StepInputType.Roll, "Determine travel requirements", new DiceRollTableResult("1d6",
+            [
+                new ResultItem(1, "You do not need to travel to progress."),
+                new ResultItem(5, "You must travel to a new world to progress on this quest."),
+            ]))
+        ],      
+        "120"
     ),
 ]
