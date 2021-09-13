@@ -200,8 +200,8 @@ export class CampaignStepResult {
                                     results += `<li>${rollResult.replace("#item#", itemCount.toString())} (Rolled ${roll})</li>`;
                                 });
                                 results += "</ul>";
-                            }                    
-                        }                             
+                            }
+                        }
                     }
                     break;
                 }
@@ -253,6 +253,7 @@ export enum StepInputType {
     Input = 3,
     TableResult = 4,
     Info = 5,
+    Label = 6,
 }
 
 class StepInputItem {
@@ -429,10 +430,7 @@ export const FiveParsecsSteps: Array<CampaignStep> = [
         Step.World,
         SubStep.UpkeepRepairs,        
         [
-            new StepInputItem(StepInputType.Roll, "Upkeep/Repair", new DiceRollTableResult("", 
-            [
-                new ResultItem(1, "Pay upkeep, ship debt, ship repairs and medical costs."),
-            ]))            
+            new StepInputItem(StepInputType.Label, "Pay upkeep, ship debt, ship repairs and medical costs.")
         ],      
         "76"
     ),
@@ -644,5 +642,36 @@ export const FiveParsecsSteps: Array<CampaignStep> = [
             ]), null, [new DependentInputComparison(0, ComparisonType.LessThanOrEqual), new DependentInputBonus(1)])
         ],      
         "85"
+    ),
+    new CampaignStep(
+        "1. Resolve Rival Status",
+        Step.PostBattle,
+        SubStep.ResolveRivalStatus,
+        [
+            new StepInputItem(StepInputType.Label, "Did you fight a non-rival?"),
+            new StepInputItem(StepInputType.Roll, "Determine if you gain a new rival", new DiceRollTableResult("1d6", 
+            [
+                new ResultItem(1, "This enemy is now your rival!"),
+                new ResultItem(2, "Business is business. You do not gain a rival."),
+            ])),
+            new StepInputItem(StepInputType.Label, "Did you fight an existing rival?"),
+            new StepInputItem(StepInputType.YesNo, "Tracked rival down?"),
+            new StepInputItem(StepInputType.YesNo, "Killed a unique individual?"),            
+            new StepInputItem(StepInputType.Roll, "Determine rival status", new DiceRollTableResult("1d6", 
+            [
+                new ResultItem(1, "They still hate you."),
+                new ResultItem(4, "Rival has had enough. Remove them from your rival list!"),
+            ]), null, [new DependentInputBonus(3,1), new DependentInputBonus(4,1)])
+        ],      
+        "119"
+    ),
+    new CampaignStep(
+        "2. Resolve Patron Status",
+        Step.PostBattle,
+        SubStep.ResolvePatronStatus,
+        [
+            new StepInputItem(StepInputType.Label, "If you succeeded in Patron mission you may add the Patron to your list of contacts unless the job was a One-time contract."),            
+        ],      
+        "119"
     ),
 ]

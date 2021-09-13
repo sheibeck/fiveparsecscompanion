@@ -5,23 +5,26 @@
                 <h6>{{activeStep.stepDetails.title}}</h6>
                 <div class="card-body" v-for="(input, index) in activeStep.inputs" :key="index">
                     <div v-if="input.inputType == inputTypes.Roll">
-                    <i class="fas fa-dice pe-auto d-print-none fa-2x" @click="activeStep.processInput(input, $event)"></i> {{input.text}}
+                      <i class="fas fa-dice pe-auto d-print-none fa-2x" @click="activeStep.processInput(input, $event)"></i> {{input.text}}
                     </div>
                     <div v-if="input.inputType == inputTypes.TableResult">
-                    <i class="fas fa-dice pe-auto d-print-none fa-2x" @click="activeStep.processInput(input, $event)"></i> {{input.text}}
+                      <i class="fas fa-dice pe-auto d-print-none fa-2x" @click="activeStep.processInput(input, $event)"></i> {{input.text}}
                     </div>   
 
                     <div v-if="input.inputType == inputTypes.Input" class="input-group input-group-sm">
-                    <span class="input-group-text" id="rivals-addon">{{input.text}}</span>
-                    <input type="number" class="form-control" placeholder="0" :aria-label="input.text" 
-                        min="0" v-model.number="input.value" />
+                      <span class="input-group-text" id="rivals-addon">{{input.text}}</span>
+                      <input type="number" class="form-control" placeholder="0" :aria-label="input.text" 
+                          min="0" v-model.number="input.value" />
                     </div>
                     <div v-if="input.inputType == inputTypes.YesNo" class="input-group input-group-sm">
-                    <div class="input-group-text">
-                        <input class="form-check-input mt-0" type="checkbox" value="" :aria-label="input.text" 
-                        v-model="input.value" />
+                      <div class="input-group-text">
+                          <input class="form-check-input mt-0" type="checkbox" value="" :aria-label="input.text" 
+                          v-model="input.value" />
+                      </div>
+                      <span class="input-group-text" id="savvy-addon">{{input.text}}</span>
                     </div>
-                    <span class="input-group-text" id="savvy-addon">{{input.text}}</span>
+                    <div v-if="input.inputType == inputTypes.Label" class="input-group input-group-sm">
+                      <label>{{input.text}}</label>
                     </div>
                 </div>
                 <hr />

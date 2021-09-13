@@ -2,7 +2,7 @@ export enum Step {
     Travel = 1,
     World = 2,
     Battle = 3,
-    PostBattle = 4
+    PostBattle = 4    
 }
 
 export enum SubStep {
@@ -22,4 +22,19 @@ export enum SubStep {
     AssignEquipment,
     ResolveRumors,
     ChooseBattle,
+    //Post-Battle
+    ResolveRivalStatus,
+    ResolvePatronStatus,
+    DetermineQuestProgress,
+    GetPaid,
+    BattlefieldFinds,
+    CheckForInvasion,
+    GatherTheLoot,
+    DetermineInjuriesAndRecovery,
+    ExperienceAndUpgrades,
+    AdvancedTraining,
+    PurchaseItems,
+    CampaignEvent,
+    CharacterEvent,
+    GalacticWarProgress
 }
