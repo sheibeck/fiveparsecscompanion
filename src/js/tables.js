@@ -6,6 +6,7 @@ import names from 'rpg-table-randomizer/sample/names.js';
 import { travelTables } from './tablesTravel';
 import { worldTables } from './tablesWorld';
 import { battleTables } from './tablesBattle';
+import { postBattleTables } from './tablesPostBattle';
 
 
 export class FPFHTables {
@@ -34,7 +35,11 @@ export class FPFHTables {
 
         battleTables.forEach((table) =>  {
             this.tables[table.key] = table;
-        });            
+        });           
+         
+        postBattleTables.forEach((table) =>  {
+            this.tables[table.key] = table;
+        });           
     }
      
     GetTableResult(key) {        

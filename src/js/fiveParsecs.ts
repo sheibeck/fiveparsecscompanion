@@ -182,10 +182,8 @@ export class CampaignStepResult {
                                 //roll of "" means we just want information and we aren't "really" rolling
                                 if (input.roll) {
                                     results += ` (Rolled ${input.roll}`;
-                                    const bonus = parseInt(input.value) - input.roll;                          
-                                    if (bonus !== 0) {
-                                        results += `. Bonus ${parseInt(input.value) - input.roll}`;
-                                    }                                
+                                    const bonus = parseInt(input.value) - input.roll;                                    
+                                    results += `. Bonus ${bonus}`;                                    
                                     results += `.)`;
                                 }
                                 results += `<br />`;
@@ -711,5 +709,33 @@ export const FiveParsecsSteps: Array<CampaignStep> = [
             new StepInputItem(StepInputType.Info, "<p>If this <u>was patron job</u>, add the pay bonus to the danger pay.</p>"),
         ],      
         "120"
+    ),
+    new CampaignStep(
+        "5. Battlefield Finds",
+        Step.PostBattle,
+        SubStep.BattlefieldFinds,
+        [
+            new StepInputItem(StepInputType.Label, "Did you Hold the field in a non-Invasion battle?"),
+            new StepInputItem(StepInputType.TableResult, "Battlefield Finds", "battlefieldfinds"),
+        ],      
+        "120"
+    ),
+    new CampaignStep(
+        "6. Check for Invasion",
+        Step.PostBattle,
+        SubStep.CheckForInvasion,
+        [
+            new StepInputItem(StepInputType.Label, "Was the enemy you faught an invasion theat?"),
+            new StepInputItem(StepInputType.YesNo, "Acquired invasion evidence in previous step?"),
+            new StepInputItem(StepInputType.YesNo, "Held the field?"),
+            new StepInputItem(StepInputType.YesNo, "Difficulty is Harcore?"),
+            new StepInputItem(StepInputType.YesNo, "Difficulty is Insanity?"),
+            new StepInputItem(StepInputType.Roll, "Check for invasion", new DiceRollTableResult("2d6", 
+            [
+                new ResultItem(1, "No invasion."),
+                new ResultItem(9, "World is about to be invaded!"),                
+            ]), null, [new DependentInputBonus(1,1), new DependentInputBonus(2,-1), new DependentInputBonus(3,2), new DependentInputBonus(3,3)]),
+        ],      
+        "121"
     ),
 ]

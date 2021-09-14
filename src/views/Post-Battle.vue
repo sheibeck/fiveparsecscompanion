@@ -39,6 +39,8 @@ export default {
         new CampaignStepResult(Step.PostBattle, SubStep.ResolvePatronStatus, this),
         new CampaignStepResult(Step.PostBattle, SubStep.DetermineQuestProgress, this),
         new CampaignStepResult(Step.PostBattle, SubStep.GetPaid, this),
+        new CampaignStepResult(Step.PostBattle, SubStep.BattlefieldFinds, this),
+        new CampaignStepResult(Step.PostBattle, SubStep.CheckForInvasion, this),
       ],
       stepInputType: StepInputType,    
     }
