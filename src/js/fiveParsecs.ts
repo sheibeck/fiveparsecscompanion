@@ -206,7 +206,7 @@ export class CampaignStepResult {
                     break;
                 }
                 case StepInputType.Info:
-                    results += `<strong>${input.text}.</strong>`;
+                    results += `${input.text}`;
                     break;                
                 default:
                     if (input.value) {
@@ -694,6 +694,21 @@ export const FiveParsecsSteps: Array<CampaignStep> = [
                 new ResultItem(1, "You do not need to travel to progress."),
                 new ResultItem(5, "You must travel to a new world to progress on this quest."),
             ]))
+        ],      
+        "120"
+    ),
+    new CampaignStep(
+        "4. Get Paid",
+        Step.PostBattle,
+        SubStep.GetPaid,
+        [
+            new StepInputItem(StepInputType.YesNo, "Is difficulty set to easy?"),
+            new StepInputItem(StepInputType.Roll, "Determine pay", new DiceRollTableResult("1d6", 
+            [
+                new ResultItem(1, "Gain credits equal to dice roll."),                
+            ]), null, [new DependentInputBonus(0,1)]),
+            new StepInputItem(StepInputType.Info, "<p class='mt-2'>If this was <u>not a rival mission</u> and you <u>won your objective</u>, treat dice rolls of 1 - 2 as a 3.</p>"),
+            new StepInputItem(StepInputType.Info, "<p>If this <u>was patron job</u>, add the pay bonus to the danger pay.</p>"),
         ],      
         "120"
     ),

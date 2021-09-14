@@ -37,7 +37,8 @@ export default {
       steps: [
         new CampaignStepResult(Step.PostBattle, SubStep.ResolveRivalStatus, this),
         new CampaignStepResult(Step.PostBattle, SubStep.ResolvePatronStatus, this),
-        new CampaignStepResult(Step.PostBattle, SubStep.DetermineQuestProgress, this),        
+        new CampaignStepResult(Step.PostBattle, SubStep.DetermineQuestProgress, this),
+        new CampaignStepResult(Step.PostBattle, SubStep.GetPaid, this),
       ],
       stepInputType: StepInputType,    
     }
