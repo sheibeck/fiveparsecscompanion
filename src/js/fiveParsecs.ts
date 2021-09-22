@@ -107,7 +107,14 @@ export class CampaignStepResult {
                 break;
 
             case StepInputType.TableResult: {
-                    this.vueInstance.$set(input, "value", this.rpgTable.GetFullTableResult(input.notation));
+                    if (input.notation && typeof(input.notation) == "string") {
+                        const tableSelector = input.notation?.split("|");
+                        const tableResult = this.rpgTable.GetFullTableResult(tableSelector[0], tableSelector.length > 1 ? tableSelector[1] : null);
+                        this.vueInstance.$set(input, "value", tableResult);
+                    }
+                    else {
+                        console.error(`TableResult notation must be a string!`);
+                    }
                 }
                 break;
         }
@@ -715,9 +722,9 @@ export const FiveParsecsSteps: Array<CampaignStep> = [
         Step.PostBattle,
         SubStep.BattlefieldFinds,
         [
-            new StepInputItem(StepInputType.Label, "Did you Hold the field in a non-Invasion battle?"),
+            new StepInputItem(StepInputType.Label, "Held the field in a non-Invasion battle?"),
             new StepInputItem(StepInputType.TableResult, "Battlefield Finds", "battlefieldfinds"),
-        ],      
+        ],
         "120"
     ),
     new CampaignStep(
@@ -725,7 +732,7 @@ export const FiveParsecsSteps: Array<CampaignStep> = [
         Step.PostBattle,
         SubStep.CheckForInvasion,
         [
-            new StepInputItem(StepInputType.Label, "Was the enemy you faught an invasion theat?"),
+            new StepInputItem(StepInputType.Label, "Enemy you faught was an invasion threat?"),
             new StepInputItem(StepInputType.YesNo, "Acquired invasion evidence in previous step?"),
             new StepInputItem(StepInputType.YesNo, "Held the field?"),
             new StepInputItem(StepInputType.YesNo, "Difficulty is Harcore?"),
@@ -735,6 +742,26 @@ export const FiveParsecsSteps: Array<CampaignStep> = [
                 new ResultItem(1, "No invasion."),
                 new ResultItem(9, "World is about to be invaded!"),                
             ]), null, [new DependentInputBonus(1,1), new DependentInputBonus(2,-1), new DependentInputBonus(3,2), new DependentInputBonus(3,3)]),
+        ],      
+        "121"
+    ),
+    new CampaignStep(
+        "7. Gather the Loot",
+        Step.PostBattle,
+        SubStep.GatherTheLoot,
+        [
+            new StepInputItem(StepInputType.Label, "If this was a non-invastion battle, roll 1x (3x if final quest stage) pg 131"),
+            new StepInputItem(StepInputType.TableResult, "Gather Loot", "loottable"),
+        ],      
+        "121"
+    ),
+    new CampaignStep(
+        "8. Determine Injuries & Recovery",
+        Step.PostBattle,
+        SubStep.DetermineInjuriesAndRecovery,
+        [            
+            new StepInputItem(StepInputType.TableResult, "Determine Injury", "injurytable"),
+            new StepInputItem(StepInputType.TableResult, "Determine Bot Injury", "injurytable|botinjury"),
         ],      
         "121"
     ),

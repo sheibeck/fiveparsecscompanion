@@ -6,10 +6,12 @@ export enum Step {
 }
 
 export enum SubStep {
+    //Pre-Battle
     FleeInvasion,
     DecideToTravel,
     NewWorldArrival, 
     UpkeepRepairs,
+    //Pre-Battle:CrewTasks
     AssignCrewTasksFindPatron,
     AssignCrewTasksTrain,
     AssignCrewTasksTrade,

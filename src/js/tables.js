@@ -42,9 +42,9 @@ export class FPFHTables {
         });           
     }
      
-    GetTableResult(key) {        
+    GetTableResult(key, subtable) {
         const table = new RandomTable(this.tables[key]);
-        const result = this.randomizer.getTableResult(table);        
+        const result = subtable ? this.randomizer.getTableResult(table, subtable) : this.randomizer.getTableResult(table);        
         return result[result.length-1].result;
     }
 
@@ -52,9 +52,9 @@ export class FPFHTables {
         return this.randomizer.roll(dice);
     }
 
-    GetFullTableResult(key) {        
+    GetFullTableResult(key, subtable) {        
         const table = new RandomTable(this.tables[key]);
-        const result = this.randomizer.getTableResult(table);        
+        const result = subtable ? this.randomizer.getTableResult(table, subtable) : this.randomizer.getTableResult(table);
         return result;
     }
 

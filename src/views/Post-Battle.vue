@@ -41,6 +41,8 @@ export default {
         new CampaignStepResult(Step.PostBattle, SubStep.GetPaid, this),
         new CampaignStepResult(Step.PostBattle, SubStep.BattlefieldFinds, this),
         new CampaignStepResult(Step.PostBattle, SubStep.CheckForInvasion, this),
+        new CampaignStepResult(Step.PostBattle, SubStep.GatherTheLoot, this),
+        new CampaignStepResult(Step.PostBattle, SubStep.DetermineInjuriesAndRecovery, this),
       ],
       stepInputType: StepInputType,    
     }
