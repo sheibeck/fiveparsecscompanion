@@ -1,7 +1,8 @@
 import Randomizer from 'rpg-table-randomizer/src/randomizer.js';
 import RandomTable from 'rpg-table-randomizer/src/random_table.js';
 import random_name from 'rpg-table-randomizer/src/random_name.js';
-import names from 'rpg-table-randomizer/sample/names.js';
+import names from './names.js';
+import shipnames from './shipnames.js';
 
 import { travelTables } from './tablesTravel';
 import { worldTables } from './tablesWorld';
@@ -22,9 +23,8 @@ export class FPFHTables {
             return this.tables[key] || null;
         });
 
-        random_name.setNameData(names);
         random_name.setRandomizer(this.randomizer);
-
+        
         travelTables.forEach((table) =>  {
             this.tables[table.key] = table;
         });
@@ -59,7 +59,13 @@ export class FPFHTables {
     }
 
     RandomName() {
+        random_name.setNameData(names);        
         return random_name.selectName();
+    }
+
+    RandomShipName() {
+        random_name.setNameData(shipnames);
+        return random_name.selectName("ship", "male", "fullname");
     }
 }
 

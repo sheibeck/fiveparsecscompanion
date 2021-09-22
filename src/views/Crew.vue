@@ -79,7 +79,10 @@
         <h4 class="p-1 rounded d-print-none">Ship Details</h4>
         <div class="d-flex">
           <div class="d-flex flex-fill me-auto">
-            <label for="shipName" class="form-text small">Ship Name</label>
+            <label for="shipName" class="form-text small">
+              <i :class="{ 'd-none': !editing }" class="fas fa-dice pe-auto" @click="crew.ship_name = randomName('shipname')"></i>
+              Ship Name
+            </label>
             <input v-model="crew.ship_name" type="text" class="form-control" :class="{ 'd-none': !editing }"  id="shipName" placeholder="" />
             <span :class="{ 'd-none': editing }">: {{crew.ship_name}}</span>
           </div> 
@@ -206,14 +209,18 @@ export default {
       this.editing = !this.editing;
     },
   
-    rollOnTable: function(table) {
-      if (table !== "name") {
-        this.$root.showUserMsg(`Rolled on table ${table}`);
-        return this.$options.tables.GetTableResult(table);
-      } else {
-        return this.$options.tables.RandomName(table);
-      }
+    rollOnTable: function(table) {      
+      this.$root.showUserMsg(`Rolled on table ${table}`);
+      return this.$options.tables.GetTableResult(table);      
     },    
+    randomName: function(table) {      
+      switch(table) {
+        case "shipname":
+          return this.$options.tables.RandomShipName(table);      
+        default: 
+          return this.$options.tables.RandomName(table);      
+      }
+    }, 
     async fetchCrew() {
       const crew = await DataStore.query(Crew, this.crewId);      
       this.crew = JSON.parse(JSON.stringify(crew));      

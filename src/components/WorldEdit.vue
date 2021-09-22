@@ -88,7 +88,7 @@
               <div class="d-flex flex-column flex-fill border border-1" v-for="patron in world.patrons_known.patrons" :key="patron.id">                    
                 <div class="d-flex">
                   <div class="d-flex">                        
-                    <i :class="{ 'd-none': !isEditingWorld(world.id) }" class="fas fa-dice pe-auto" @click="patron.name = rollOnTable('name')"></i>
+                    <i :class="{ 'd-none': !isEditingWorld(world.id) }" class="fas fa-dice pe-auto" @click="patron.name = randomName('name')"></i>
                     <div class="form-text">Name</div>
                     <span :class="{ 'd-none': isEditingWorld(world.id) }">: {{patron.name}}</span>
                   </div>                        
@@ -119,7 +119,7 @@
               <div class="d-flex flex-column flex-fill border border-1" v-for="rival in world.rivals_known.rivals" :key="rival.id">
                 <div class="d-flex">
                   <div class="d-flex">                        
-                    <i :class="{ 'd-none': !isEditingWorld(world.id) }" class="fas fa-dice pe-auto" @click="rival.name = rollOnTable('name')"></i>
+                    <i :class="{ 'd-none': !isEditingWorld(world.id) }" class="fas fa-dice pe-auto" @click="rival.name = randomName('name')"></i>
                     <div class="form-text">Name</div>
                     <span :class="{ 'd-none': isEditingWorld(world.id) }">: {{rival.name}} </span>
                   </div>                        
@@ -191,12 +191,16 @@ export default {
     isOwner: function(itemOwner) {
       return this.username === itemOwner;
     },       
-    rollOnTable: function(table) {
-      if (table !== "name") {
-        this.$root.showUserMsg(`Rolled on table ${table}`);
-        return this.$options.tables.GetTableResult(table);
-      } else {
-        return this.$options.tables.RandomName(table);
+    rollOnTable: function(table) {      
+      this.$root.showUserMsg(`Rolled on table ${table}`);
+      return this.$options.tables.GetTableResult(table);     
+    }, 
+    randomName: function(table) {      
+      switch(table) {
+        case "shipname":
+          return this.$options.tables.RandomShipName(table);      
+        default: 
+          return this.$options.tables.RandomName(table);      
       }
     },      
     toggleWorldEdit: function(worldId) {
