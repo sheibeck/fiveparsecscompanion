@@ -7,7 +7,7 @@
                     <div class="card-body" v-if="input.inputType == inputTypes.Roll" :key="index">
                       <i class="fas fa-dice pe-auto d-print-none fa-2x" @click="activeStep.processInput(input, $event)"></i> {{input.text}}
                     </div>
-                    <div class="card-body" v-if="input.inputType == inputTypes.TableResult"  :key="index+1">
+                    <div class="card-body" v-if="input.inputType == inputTypes.TableResult"  :key="index">
                       <i class="fas fa-dice pe-auto d-print-none fa-2x" @click="activeStep.processInput(input, $event)"></i> {{input.text}}
                     </div>   
                     <div class="card-body" v-if="input.inputType == inputTypes.Input" :key="index">

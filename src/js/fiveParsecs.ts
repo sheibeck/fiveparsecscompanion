@@ -143,7 +143,7 @@ export class CampaignStepResult {
                         results += `<strong>${input.text}:</strong>`;
                         if (input.inputType == StepInputType.Roll) {                
                             if (input.notation instanceof DiceRollTableResult) {
-                                let rollResult: number = 0;
+                                let rollResult: number = 0;                                                    
                                 //if we have a DependentInputComparison then we want to see if the roll >= the input
                                 //if it is not then return roll that will retrieve the fail item in the DiceRollTableResult
                                 // otherwise return roll that will retrieve the success item in the DiceRollTableResult
@@ -189,8 +189,8 @@ export class CampaignStepResult {
                                 //roll of "" means we just want information and we aren't "really" rolling
                                 if (input.roll) {
                                     results += ` (Rolled ${input.roll}`;
-                                    const bonus = parseInt(input.value) - input.roll;                                    
-                                    results += `. Bonus ${bonus}`;                                    
+                                    const bonus = parseInt(input.value) - input.roll;                                                             
+                                    results += `. Bonus ${bonus}`;                                   
                                     results += `.)`;
                                 }
                                 results += `<br />`;
@@ -412,13 +412,15 @@ export const FiveParsecsSteps: Array<CampaignStep> = [
                     new ResultItem(6, "Rival #item# followed you!")
                 ])
             ),
-            new StepInputItem(StepInputType.TableResult, "World trait", "newworldtraits"),
-            new StepInputItem(StepInputType.TableResult, "(Wild Galaxy?) Extra trait", "newworldtraits"),
+            new StepInputItem(StepInputType.Label, "Determine world trais. Roll an extra trait if this a Wild Galaxy."),
+            new StepInputItem(StepInputType.TableResult, "World trait", "newworldtraits"),            
+            new StepInputItem(StepInputType.TableResult, "Extra trait", "newworldtraits"),
+            new StepInputItem(StepInputType.Label, "Determine license requirements and cost (if any)."),
             new StepInputItem(StepInputType.Roll, "License?", new DiceRollTableResult("1d6", [
                 new ResultItem(1, "No license required."),
                 new ResultItem(5, "A license is required.")
             ])),
-            new StepInputItem(StepInputType.Roll, "License cost (if required)", new DiceRollTableResult("1d6", [
+            new StepInputItem(StepInputType.Roll, "License cost", new DiceRollTableResult("1d6", [
                 new ResultItem(1, "License costs 1 credit."),
                 new ResultItem(2, "License costs 2 credits."),
                 new ResultItem(3, "License costs 3 credits."),
@@ -426,7 +428,7 @@ export const FiveParsecsSteps: Array<CampaignStep> = [
                 new ResultItem(5, "License costs 5 credits."),
                 new ResultItem(6, "License costs 6 credits."),
             ])),
-            new StepInputItem(StepInputType.Info, "Dismiss all patrons that are not persistent")
+            new StepInputItem(StepInputType.Label, "Dismiss all patrons that are not persistent")
         ],       
         "70"
     ),
@@ -463,10 +465,7 @@ export const FiveParsecsSteps: Array<CampaignStep> = [
         Step.World,
         SubStep.AssignCrewTasksTrain,
         [
-            new StepInputItem(StepInputType.Roll, "Train", new DiceRollTableResult("", 
-            [
-                new ResultItem(1, "Gain 1 xp."),
-            ]))       
+            new StepInputItem(StepInputType.Label, "Crew member gains 1 xp.")   
         ],      
         "77"      
     ),
@@ -544,10 +543,7 @@ export const FiveParsecsSteps: Array<CampaignStep> = [
         Step.World,
         SubStep.AssignCrewTasksDecoy,
         [
-            new StepInputItem(StepInputType.Roll, "Decoy", new DiceRollTableResult("", 
-            [
-                new ResultItem(1, "See choose battle step."),
-            ]))    
+            new StepInputItem(StepInputType.Label, "Add 1 per crew member performing this task to the Total Decoys box in the Choose Battle step below.")
         ],      
         "78"
     ),
@@ -556,6 +552,7 @@ export const FiveParsecsSteps: Array<CampaignStep> = [
         Step.World,
         SubStep.JobOffers,
         [
+            new StepInputItem(StepInputType.Label, "Perform each of the following rolls in order. If you re-roll, be sure to roll again on each lower dice roll as some rolls are dependent on rolls above them."),
             new StepInputItem(StepInputType.TableResult, "Patron", "patron"),            
             new StepInputItem(StepInputType.Roll, "Danger Pay", new DiceRollTableResult("1d10", 
             [
@@ -563,14 +560,14 @@ export const FiveParsecsSteps: Array<CampaignStep> = [
                 new ResultItem(8, "+2 credits."),
                 new ResultItem(9, "+3 credits."),
                 new ResultItem(10, "+3 credits, roll x2 & pick higher for mission pay.")
-            ]), null, [new DependentInputBonus(0,1,"Corporation")]),
+            ]), null, [new DependentInputBonus(1,1,"Corporation")]),
             new StepInputItem(StepInputType.Roll, "Time Frame", new DiceRollTableResult("1d10", 
             [
                 new ResultItem(5, "This campaign turn."),
                 new ResultItem(7, "This or next campaign turn."),
                 new ResultItem(9, "This or following 2 campaign turns."),
                 new ResultItem(10, "Any time.")
-            ]), null, [new DependentInputBonus(0,1,"Secretive Group")]),
+            ]), null, [new DependentInputBonus(1,1,"Secretive Group")]),
             new StepInputItem(StepInputType.Roll, "Benefit", new DiceRollTableResult("1d10", 
             [
                 new ResultItem(0, "None."),
@@ -581,7 +578,7 @@ export const FiveParsecsSteps: Array<CampaignStep> = [
                 new ResultItem(7, "Security Team"),
                 new ResultItem(9, "Persistent"),
                 new ResultItem(10, "Negotiable"),                
-            ]), null, [new DependentInputBonus(0,0,null,"minroll|0")]),
+            ]), null, [new DependentInputBonus(1,0,null,"minroll|0")]),
             new StepInputItem(StepInputType.Roll, "Hazard", new DiceRollTableResult("1d10", 
             [
                 new ResultItem(0, "None."),
@@ -591,7 +588,7 @@ export const FiveParsecsSteps: Array<CampaignStep> = [
                 new ResultItem(6, "Veteran Opposition"),
                 new ResultItem(7, "Low Priority"),
                 new ResultItem(10, "Private Transport"),                             
-            ]), null, [new DependentInputBonus(0,0,null,"minroll|1")]),
+            ]), null, [new DependentInputBonus(1,0,null,"minroll|1")]),
             new StepInputItem(StepInputType.Roll, "Condition", new DiceRollTableResult("1d10", 
             [
                 new ResultItem(0, "None."),
@@ -603,7 +600,7 @@ export const FiveParsecsSteps: Array<CampaignStep> = [
                 new ResultItem(8, "Busy"),
                 new ResultItem(9, "Onetime Contract"),
                 new ResultItem(10, "Reputation Required"),                
-            ]), null, [new DependentInputBonus(0,0,null,"minroll|2")]),
+            ]), null, [new DependentInputBonus(1,0,null,"minroll|2")]),
         ],      
         "78"
     ),

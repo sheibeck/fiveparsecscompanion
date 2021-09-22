@@ -20,7 +20,7 @@
 
 <script>
 import { FPFHTables } from '../js/tables.js';
-import { CampaignStepResult, StepInputType }  from '../js/fiveParsecs';
+import { CampaignStepResult }  from '../js/fiveParsecs';
 import { Step, SubStep } from "../js/fiveParsecsEnums";
 import StepDetails from '@/components/StepDetails.vue';
 
@@ -49,8 +49,7 @@ export default {
         new CampaignStepResult(Step.PostBattle, SubStep.CampaignEvent, this),
         new CampaignStepResult(Step.PostBattle, SubStep.CharacterEvent, this),
         new CampaignStepResult(Step.PostBattle, SubStep.GalacticWarProgress, this),
-      ],
-      stepInputType: StepInputType,    
+      ],  
     }
   },  
   tables: new FPFHTables(),

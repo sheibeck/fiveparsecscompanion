@@ -18,7 +18,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { CampaignStepResult, StepInputType }  from '../js/fiveParsecs';
+import { CampaignStepResult }  from '../js/fiveParsecs';
 import { Step, SubStep } from "../js/fiveParsecsEnums";
 import StepDetails from '@/components/StepDetails.vue';
 
@@ -36,8 +36,7 @@ export default Vue.extend({
         new CampaignStepResult(Step.Travel, SubStep.FleeInvasion, this),
         new CampaignStepResult(Step.Travel, SubStep.DecideToTravel, this),
         new CampaignStepResult(Step.Travel, SubStep.NewWorldArrival, this),    
-      ] as Array<CampaignStepResult>,
-      stepInputType: StepInputType
+      ] as Array<CampaignStepResult>      
     }
   },    
   computed : {
