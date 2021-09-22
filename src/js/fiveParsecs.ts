@@ -765,4 +765,68 @@ export const FiveParsecsSteps: Array<CampaignStep> = [
         ],      
         "121"
     ),
+    new CampaignStep(
+        "9. Experience & Upgrades",
+        Step.PostBattle,
+        SubStep.ExperienceAndUpgrades,
+        [            
+            new StepInputItem(StepInputType.Label, "See Page 123"),
+        ],      
+        "123"
+    ),
+    new CampaignStep(
+        "10. Advanced Training",
+        Step.PostBattle,
+        SubStep.AdvancedTraining,
+        [            
+            new StepInputItem(StepInputType.Label, "See Pages 124-125"),
+        ],      
+        "124"
+    ),
+    new CampaignStep(
+        "11. Purchase & Sell Items",
+        Step.PostBattle,
+        SubStep.PurchaseItems,
+        [            
+            new StepInputItem(StepInputType.Label, "You may pay <u>3 credits</u> to roll on <u>one</u> of the follow tables (pg.28-29)."),
+            new StepInputItem(StepInputType.TableResult, "Military Weapon", "militaryweapon"),
+            new StepInputItem(StepInputType.TableResult, "Gear Table", "geartable"),
+            new StepInputItem(StepInputType.TableResult, "Gadget Table", "gadgettable"),
+        ],      
+        "125"
+    ),
+    new CampaignStep(
+        "12. Campaign Event",
+        Step.PostBattle,
+        SubStep.CampaignEvent,
+        [            
+            new StepInputItem(StepInputType.Label, "Roll d100 and consult the table on pages 126-128"),
+        ],      
+        "125"
+    ),
+    new CampaignStep(
+        "13. Character Event",
+        Step.PostBattle,
+        SubStep.CharacterEvent,
+        [            
+            new StepInputItem(StepInputType.Label, "Roll d100 and consult the table on pages 128-130"),
+        ],      
+        "126"
+    ),
+    new CampaignStep(
+        "14. Galactice War Progress",
+        Step.PostBattle,
+        SubStep.GalacticWarProgress,
+        [            
+            new StepInputItem(StepInputType.Label, "Roll once for each planet you are tracking that was previously invaded."),
+            new StepInputItem(StepInputType.Roll, "Galactic War Progress", new DiceRollTableResult("2d6", 
+            [
+                new ResultItem(4, "Lost to Unity."),
+                new ResultItem(7, "Contested."),
+                new ResultItem(9, "Making Ground."),
+                new ResultItem(12, "Unity Victorious."),
+            ])),
+        ],      
+        "126"
+    ),
 ]

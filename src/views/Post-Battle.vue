@@ -43,6 +43,12 @@ export default {
         new CampaignStepResult(Step.PostBattle, SubStep.CheckForInvasion, this),
         new CampaignStepResult(Step.PostBattle, SubStep.GatherTheLoot, this),
         new CampaignStepResult(Step.PostBattle, SubStep.DetermineInjuriesAndRecovery, this),
+        new CampaignStepResult(Step.PostBattle, SubStep.ExperienceAndUpgrades, this),
+        new CampaignStepResult(Step.PostBattle, SubStep.AdvancedTraining, this),
+        new CampaignStepResult(Step.PostBattle, SubStep.PurchaseItems, this),
+        new CampaignStepResult(Step.PostBattle, SubStep.CampaignEvent, this),
+        new CampaignStepResult(Step.PostBattle, SubStep.CharacterEvent, this),
+        new CampaignStepResult(Step.PostBattle, SubStep.GalacticWarProgress, this),
       ],
       stepInputType: StepInputType,    
     }
