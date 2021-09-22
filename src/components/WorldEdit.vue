@@ -91,8 +91,10 @@
               <div class="d-flex flex-column flex-fill border border-1" v-for="patron in world.patrons_known.patrons" :key="patron.id">                    
                 <div class="d-flex">
                   <div class="d-flex">                        
-                    <i :class="{ 'd-none': !isEditingWorld(world.id) }" class="fas fa-dice pe-auto" @click="patron.name = randomName('name')"></i>
-                    <div class="form-text">Name</div>
+                    <i class="fas fa-dice pe-auto" @click="patron.name = randomName('patronname')"></i>
+                    <div class="form-text">
+                      Name
+                    </div>
                     <span :class="{ 'd-none': isEditingWorld(world.id) }">: {{patron.name}}</span>
                   </div>                        
                   <input :class="{ 'd-none': !isEditingWorld(world.id) }" v-model="patron.name" type="text" class="form-control" placeholder="" />
@@ -122,7 +124,7 @@
               <div class="d-flex flex-column flex-fill border border-1" v-for="rival in world.rivals_known.rivals" :key="rival.id">
                 <div class="d-flex">
                   <div class="d-flex">                        
-                    <i :class="{ 'd-none': !isEditingWorld(world.id) }" class="fas fa-dice pe-auto" @click="rival.name = randomName('name')"></i>
+                    <i :class="{ 'd-none': !isEditingWorld(world.id) }" class="fas fa-dice pe-auto" @click="rival.name = randomName('rivalname')"></i>
                     <div class="form-text">Name</div>
                     <span :class="{ 'd-none': isEditingWorld(world.id) }">: {{rival.name}} </span>
                   </div>                        
@@ -201,7 +203,11 @@ export default {
     randomName: function(table) {      
       switch(table) {
         case "worldname":
-          return this.$options.tables.RandomWorldName(table);      
+          return this.$options.tables.RandomWorldName(table);
+        case "patronname":
+          return this.$options.tables.RandomPatronName(table);
+        case "rivalname":
+          return this.$options.tables.RandomRivalName(table);
         default: 
           return this.$options.tables.RandomName(table);      
       }
@@ -230,7 +236,7 @@ export default {
     async addPatronToWorld(id)
     {
       const patronType = this.rollOnTable("patron");
-      let modelToAdd = { "id": shortid.generate(), "name": "", "type": patronType, "benefit": "", "notes": "" };
+      let modelToAdd = { "id": shortid.generate(), "name": this.randomName("patronname"), "type": patronType, "benefit": "", "notes": "" };
       let world = this.worlds.find(w => w.id === id);
       world.patrons_known.patrons.push(modelToAdd);
     },
@@ -246,7 +252,7 @@ export default {
     async addRivalToWorld(id)
     {
       const rivalType = this.getRivalType();
-      let modelToAdd = { "id": shortid.generate(), "name": "", "type": rivalType, "notes": "" };
+      let modelToAdd = { "id": shortid.generate(), "name": this.randomName("rivalname"), "type": rivalType, "notes": "" };
       let world = this.worlds.find(w => w.id === id);
       world.rivals_known.rivals.push(modelToAdd);
     },

@@ -4,6 +4,9 @@ import random_name from 'rpg-table-randomizer/src/random_name.js';
 import names from './names.js';
 import shipnames from './shipnames.js';
 import worldnames from './worldnames.js';
+import patronnames from './patronnames.js';
+import rivalnames from './rivalnames.js';
+
 
 import { travelTables } from './tablesTravel';
 import { worldTables } from './tablesWorld';
@@ -67,6 +70,16 @@ export class FPFHTables {
     RandomShipName() {
         random_name.setNameData(shipnames);
         return random_name.selectName("ship", "female", "fullname");
+    }
+
+    RandomPatronName() {
+        random_name.setNameData(patronnames);
+        return random_name.selectName("patron", "female", "fullname");
+    }
+
+    RandomRivalName() {
+        random_name.setNameData(rivalnames);
+        return random_name.selectName("rival", "female", "fullname");
     }
 
     RandomWorldName() {
