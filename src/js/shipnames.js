@@ -3,7 +3,7 @@ export default {
 		"ship": "Ship",		
 	},	
 	"ship": {
-		"male": [
+		"female": [
 			"Exuberant",
 			"Chivalrous",
 			"Dependable",

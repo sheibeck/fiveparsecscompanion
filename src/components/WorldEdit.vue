@@ -26,7 +26,10 @@
             <div class="d-flex flex-column flex-md-row flex-fill">
               <div class="d-flex flex-column">
                 <div class="" :class="{ 'd-none': !isEditingWorld(world.id) }">
-                  <div class="form-text">Name</div>
+                  <div class="form-text">
+                    <i class="fas fa-dice pe-auto" @click="world.name = randomName('worldname')"></i>
+                    Name
+                  </div>
                   <input v-model="world.name" type="text" class="form-control" placeholder="" />                                     
                 </div>                                      
 
@@ -197,8 +200,8 @@ export default {
     }, 
     randomName: function(table) {      
       switch(table) {
-        case "shipname":
-          return this.$options.tables.RandomShipName(table);      
+        case "worldname":
+          return this.$options.tables.RandomWorldName(table);      
         default: 
           return this.$options.tables.RandomName(table);      
       }
@@ -261,7 +264,7 @@ export default {
     },
 
     async addWorld() {
-      const name = this.$options.tables.RandomName("name");
+      const name = this.randomName("worldname");
       const world = await DataStore.save(
           new World({
           "user": this.username,

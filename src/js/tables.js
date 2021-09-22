@@ -3,6 +3,7 @@ import RandomTable from 'rpg-table-randomizer/src/random_table.js';
 import random_name from 'rpg-table-randomizer/src/random_name.js';
 import names from './names.js';
 import shipnames from './shipnames.js';
+import worldnames from './worldnames.js';
 
 import { travelTables } from './tablesTravel';
 import { worldTables } from './tablesWorld';
@@ -65,7 +66,17 @@ export class FPFHTables {
 
     RandomShipName() {
         random_name.setNameData(shipnames);
-        return random_name.selectName("ship", "male", "fullname");
+        return random_name.selectName("ship", "female", "fullname");
+    }
+
+    RandomWorldName() {
+        random_name.setNameData(worldnames);
+        const prefix = random_name.selectName("prefix", "male", "first");
+        const part1 = random_name.selectName("world", "male", "first");
+        let part2 = random_name.selectName("world", "female");
+        part2 = part2.charAt(0).toLowerCase() + part2.slice(1);
+        
+        return `${prefix ? prefix + " " : ""}${part1}${part2}`;
     }
 }
 
