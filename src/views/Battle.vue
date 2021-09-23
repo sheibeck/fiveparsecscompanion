@@ -146,6 +146,7 @@
                 <th scope="col" style="text-align: center;">Combat</th>
                 <th scope="col" style="text-align: center;">Toughness</th>
                 <th scope="col" style="text-align: center;">AI</th>
+                <th scope="col" style="text-align: center;">Luck</th>
               </tr>
             </thead>
             <tbody>
@@ -158,6 +159,7 @@
                 <td style="text-align: center;">{{item.combat}}</td>
                 <td style="text-align: center;">{{item.toughness}}</td>
                 <td style="text-align: center;">{{item.ai}}</td>
+                <td style="text-align: center;">{{item.luck}}</td>
               </tr>
               <tr>
                 <th scope="row">*</th>
@@ -189,7 +191,7 @@
             <tbody>
               <tr v-for="(item,idx) in enemyWeaponTablePrint" :key="idx">
                 <th scope="row">{{idx+1}}</th>
-                <td>{{item.name}}</td>
+                <td v-html="item.name"></td>
                 <td style="text-align: center;">{{item.range}}</td>
                 <td style="text-align: center;">{{item.shots}}</td>   
                 <td style="text-align: center;">{{item.damage}}</td>
@@ -297,7 +299,7 @@ export default {
       roll1: 0,
       roll2: 0,
       enemyWeapons: {},
-      specialistWeapons: {},
+      specialistWeapons: {},      
     }        
   },  
   tables: new FPFHTables(),
@@ -554,7 +556,7 @@ export default {
       let opponentData = this.opponent.data;
       let opponentType = this.opponent.type;
       let opponentName = this.opponent.name;
-      let opponentNumber = opponentData.numbers;
+      let opponentNumber = opponentData?.numbers ?? 0;
       
       result += this.battleType !== "Invasion" ? `${opponentType}: ${opponentName}` : "Invasion!";
 
@@ -684,28 +686,31 @@ export default {
       }
       
 
-      //determine unique opponents
-      let uniqueOpponents = 0;      
-      if (this.difficulty === "insanity") {
-        uniqueOpponents++;
-        let rollUnique = this.rollDice(`2d6`);
-        if (rollUnique >= 11) {
+      //determine unique opponents         
+      let uniqueOpponents = 0;    
+      
+      if (this.battleType !== "invasion") {
+        //insanity mode roll
+        if (this.difficulty === "insanity") {
           uniqueOpponents++;
-        }
-      }
-      else {
-        if (opponentType !== "Roving Threats" ||  (opponentType !== "Roving Threats" && difficulty !== "insanity")) {       
-          let rollUnique = this.uniqueRoll;
-          
+          const rollUnique = this.rollDice(`2d6`);
+          if (rollUnique >= 11) {
+            uniqueOpponents++;
+          }
+        }            
+
+        //now see if we have an opponent for the normal roll
+        if (opponentType !== "Roving Threats" ||  (opponentType === "Roving Threats" && difficulty === "insanity")) {        
           if (this.difficulty === "hardcore" || this.difficulty === "insanity") {
             uniqueRollBonus++;
-          }
-          
-          if (rollUnique + uniqueRollBonus >= 9) {
+          }                  
+        
+          if (this.uniqueRoll + uniqueRollBonus >= 9) {
             uniqueOpponents++;
-          }          
+          }
         }
       }
+      
 
 
       //determine standard opponents
@@ -762,11 +767,9 @@ export default {
         });
       }
       for(var i = 0; i<uniqueOpponents; i++) {        
-        this.addPrintableEnemyEntry("Unique", "Unique", "Unique", 1, false);        
-        this.addPrintableWeaponEntry(`*${i+1}:`);
-        this.addPrintableWeaponEntry(`**${i+1}:`);
+        this.addPrintableEnemyEntry("Unique", "Unique", "Unique", 1, false);                              
       }
-
+      
       // formatted results
       const extraRoll = (crewSize !== 5) ? `Roll 2: ${roll2},` : "";      
       result += `<span class="small text-secondary"> (+${opponentData.numbers} numbers, ${opponentData.weapons} weapons, ${pageNumber})</span>`;
@@ -785,7 +788,33 @@ export default {
     addPrintableEnemyEntry(type, name, label, numbers, isLieutenant) {
       let entry = {};
       if (type === "Unique") {
-        entry = { numbers: 1, panic: "NA", speed: "", combat: "", toughness: "", ai: "", weapons: "" };
+        entry = this.getUniqueEnemy();
+        label = entry.name;
+        
+        //enemy type uniques use the speed of the main enemy type
+        if (entry.name.indexOf("Enemy") > -1) {
+          entry.speed = this.enemyTablePrint[0].speed;
+
+          if (entry.name.indexOf("Enemy Boss") > -1) {
+              entry.ai = this.enemyTablePrint[0].ai;
+              entry.combat = `${parseInt(this.enemyTablePrint[0].combat) + parseInt(entry.combat)}`;
+          }
+          else {
+           entry.combat = this.enemyTablePrint[0].combat;
+          }
+        } else {
+          entry.speed += "\"";
+        }
+
+        if (entry.combat.indexOf("+") == -1) {
+          entry.combat = `+${entry.combat}`;
+        }
+        entry["panic"] = "NA";
+        
+        //add unique weapons entries
+        entry.weapons.split(",").forEach( weapon => {
+          this.addPrintableWeaponEntry(weapon, `<small>(${entry.name})</small> `);
+        })        
       }
       else {
         entry = this.getSpecificTableEntry("enemyencountercategory", name, type.replace(/\s/g,'').toLowerCase());
@@ -810,7 +839,7 @@ export default {
       entry.name = label;
       this.enemyTablePrint.push(entry);
     },
-    addPrintableWeaponEntry(entry) {
+    addPrintableWeaponEntry(entry, prefix) {
       //TODO: if we find bonus damage in the name entry, add it to the damage listing for weapon
       let matches = `${entry}`.match(/^([^(]*)/g);
       let weapon = "";
@@ -846,6 +875,9 @@ export default {
         }
 
         if (weaponArray.findIndex(e => e.name === weapon.name) === -1) {
+          if (prefix) {
+            weapon.name = `${prefix}${weapon.name}`;
+          }
           weaponArray.push(weapon);
         }
       });
@@ -863,6 +895,13 @@ export default {
       if (this.hasRolled) {
         this.getSpecificEnemy(enemy);
       }
+    },
+    getUniqueEnemy() {
+      //const enemyTemplate = { numbers: 1, panic: "NA", speed: "", combat: "", toughness: "", ai: "", weapons: "" };
+      let entry = this.$options.tables.GetFullTableResult("enemyencountercategory","uniqueindividuals");
+      let enemy = JSON.parse(entry[0].desc);      
+      enemy["name"] = entry[0].result;     
+      return enemy;
     },
     getSpecificEnemy(enemy) {
       let result = null;
