@@ -37,7 +37,7 @@ export const postBattleTables = [
             ],
             weapons: [
                 { "label": "Slug Weapons", "weight": 35, "subtable": "slugweapons" },
-                { "label": "Energy Weapons", "weight": 15, "subtable": "energyeweapons" },
+                { "label": "Energy Weapons", "weight": 15, "subtable": "energyweapons" },
                 { "label": "Special Weapons", "weight": 15, "subtable": "specialweapons" },
                 { "label": "Melee Weapons", "weight": 20, "subtable": "meleeweapons" },
                 { "label": "Grenades", "weight": 15, "subtable": "grenades" },                
