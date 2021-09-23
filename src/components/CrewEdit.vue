@@ -41,7 +41,7 @@
             <div class="flex-fill">
               <div class="d-flex flex-fill flex-wrap">
                 <div class="d-flex" :class="{ 'd-none': !isEditingCrew(member.id) }">
-                  <i :class="{ 'd-none': !isEditingCrew(member.id) }" class="fas fa-dice pe-auto" @click="member.name = rollOnTable('name')"></i>
+                  <i :class="{ 'd-none': !isEditingCrew(member.id) }" class="fas fa-dice pe-auto" @click="member.name = randomName('name')"></i>
                   <div class="form-text">Name</div>
                   <span :class="{ 'd-none': isEditingCrew(member.id) }">: {{member.name}}</span>
                 </div>                        
@@ -264,17 +264,21 @@ export default {
     isEditingCrew: function(crewId) {
       return this.crewEdit.includes(crewId);
     },  
-    rollOnTable: function(table) {
-      if (table !== "name") {
-        this.$root.showUserMsg(`Rolled on table ${table}`);
-        return this.$options.tables.GetTableResult(table);
-      } else {
-        return this.$options.tables.RandomName(table);
+    rollOnTable: function(table) {     
+      this.$root.showUserMsg(`Rolled on table ${table}`);
+      return this.$options.tables.GetTableResult(table);          
+    }, 
+    randomName: function(table) {      
+      switch(table) {
+        case "shipname":
+          return this.$options.tables.RandomShipName(table);      
+        default: 
+          return this.$options.tables.RandomName(table);      
       }
-    },      
+    },
     async addCrewMember() {
       const restrictedBackgrounds = ["Peaceful, High-Tech Colony", "Wealthy Merchant Family", "Tech Guild", "Comfortable Megacity Class", "Bureaucrat"];
-      const name = this.$options.tables.RandomName("name");
+      const name = this.randomName("name");
       const species = this.$options.tables.GetTableResult("crewtype");
       let background = this.$options.tables.GetTableResult("background");
       let motivation = this.$options.tables.GetTableResult("motivation");

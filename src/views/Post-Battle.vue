@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1>2. World (Pg.76)</h1>
+    <h1>4. Post-Battle (Pg.119)</h1>
 
     <div class="row row-cols-1 row-cols-md-3 rows-cols-lg-4 g-4"> 
       <div class="col">
@@ -25,7 +25,7 @@ import { Step, SubStep } from "../js/fiveParsecsEnums";
 import StepDetails from '@/components/StepDetails.vue';
 
 export default {
-  name: 'World',  
+  name: 'PostBattle',  
   components: { 
     StepDetails,   
   },
@@ -35,20 +35,21 @@ export default {
     return {
       activeStep: null,
       steps: [
-        new CampaignStepResult(Step.World, SubStep.UpkeepRepairs, this),
-        new CampaignStepResult(Step.World, SubStep.AssignCrewTasksFindPatron, this),
-        new CampaignStepResult(Step.World, SubStep.AssignCrewTasksTrain, this),
-        new CampaignStepResult(Step.World, SubStep.AssignCrewTasksTrade, this),
-        new CampaignStepResult(Step.World, SubStep.AssignCrewTasksRecruit, this),
-        new CampaignStepResult(Step.World, SubStep.AssignCrewTasksExplore, this),
-        new CampaignStepResult(Step.World, SubStep.AssignCrewTasksTrack, this),
-        new CampaignStepResult(Step.World, SubStep.AssignCrewTasksRepair, this),
-        new CampaignStepResult(Step.World, SubStep.AssignCrewTasksDecoy, this),        
-        new CampaignStepResult(Step.World, SubStep.JobOffers, this),
-        new CampaignStepResult(Step.World, SubStep.AssignEquipment, this),
-        new CampaignStepResult(Step.World, SubStep.ResolveRumors, this),
-        new CampaignStepResult(Step.World, SubStep.ChooseBattle, this),
-      ],      
+        new CampaignStepResult(Step.PostBattle, SubStep.ResolveRivalStatus, this),
+        new CampaignStepResult(Step.PostBattle, SubStep.ResolvePatronStatus, this),
+        new CampaignStepResult(Step.PostBattle, SubStep.DetermineQuestProgress, this),
+        new CampaignStepResult(Step.PostBattle, SubStep.GetPaid, this),
+        new CampaignStepResult(Step.PostBattle, SubStep.BattlefieldFinds, this),
+        new CampaignStepResult(Step.PostBattle, SubStep.CheckForInvasion, this),
+        new CampaignStepResult(Step.PostBattle, SubStep.GatherTheLoot, this),
+        new CampaignStepResult(Step.PostBattle, SubStep.DetermineInjuriesAndRecovery, this),
+        new CampaignStepResult(Step.PostBattle, SubStep.ExperienceAndUpgrades, this),
+        new CampaignStepResult(Step.PostBattle, SubStep.AdvancedTraining, this),
+        new CampaignStepResult(Step.PostBattle, SubStep.PurchaseItems, this),
+        new CampaignStepResult(Step.PostBattle, SubStep.CampaignEvent, this),
+        new CampaignStepResult(Step.PostBattle, SubStep.CharacterEvent, this),
+        new CampaignStepResult(Step.PostBattle, SubStep.GalacticWarProgress, this),
+      ],  
     }
   },  
   tables: new FPFHTables(),

@@ -20,7 +20,7 @@
                 <li><a class="dropdown-item" href="/campaign-turn/travel">1. Travel</a></li>
                 <li><a class="dropdown-item" href="/campaign-turn/world">2. World</a></li>
                 <li><a class="dropdown-item" href="/campaign-turn/battle">3. Battle</a></li>                
-                <!--<li><a class="dropdown-item" href="#">4. Post-Battle</a></li>-->
+                <li><a class="dropdown-item" href="/campaign-turn/post-battle">4. Post-Battle</a></li>
               </ul>
             </li>
             <li class="nav-item dropdown">              
@@ -137,6 +137,8 @@ export default {
 </script>
 
 <style>
+@import url('https://fonts.googleapis.com/css2?family=Expletus+Sans:ital,wght@1,700&display=swap');
+
 #app {
   font-family: Roboto, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -145,6 +147,18 @@ export default {
 
 main {
   padding-bottom: 60px;
+}
+
+.h1, h1 {
+  font-size: 1.75rem !important;
+  font-family: 'Expletus Sans', cursive;
+  font-weight: 700;
+}
+
+.navbar-brand, .navbar-nav, .card-header, 
+  h6, .h6, h5, .h5, h4, .h4 {
+  font-family: 'Expletus Sans', cursive;
+  font-weight: 700;
 }
 
 footer {
