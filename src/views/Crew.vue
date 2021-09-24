@@ -142,14 +142,27 @@
         <button v-if="editing" type="button" class="btn btn-primary btn-sm mx-1" @click="saveCrew()">Save Crew Log <i class="fas fa-save"></i></button>        
         <button v-if="!editing" type="button" class="btn btn-primary btn-sm mx-1" @click="toggleEdit()">Edit Crew Log <i class="fas fa-pencil"></i></button>
         <button type="button" class="btn btn-secondary btn-sm mx-1" @click="print()">Print <i class="fas fa-print"></i></button>
-        <button type="button" class="ms-auto btn btn-danger btn-sm mx-1" @click="removeCrew()">Delete Crew Log <i class="fas fa-trash"></i></button>
+       
+        <div class="pt-2">
+          <span>Hide on print: </span>
+          <input v-model="hideSickOnPrint" id="HideSickOnPrint" class="form-check-input" type="checkbox" value="" />
+          <label class="form-check-label ms-1" for="HideSickOnPrint">
+            Sick Bay
+          </label>
+          <input v-model="hideKIAOnPrint" id="HideKIAOnPrint" class="form-check-input ml-2" type="checkbox" value="" />
+          <label class="form-check-label ms-1" for="HideKIAOnPrint">
+            KIA
+          </label>
+        </div>
+          
+        <button type="button" class="ms-auto btn btn-danger btn-sm mx-1" @click="removeCrew()">Delete Crew Log <i class="fas fa-trash"></i></button>        
       </div>
     </div>
 
     <div class="row mt-2 page-break">
       <!-- crew members -->
       <CrewEdit class="d-print-none" v-bind:crewMembers="crewMembers" v-on:fetchcrewmembers="fetchCrewMembers"></CrewEdit>
-      <CrewPrint class="d-none d-print-block" v-bind:crewMembers="crewMembers"></CrewPrint>
+      <CrewPrint class="d-none d-print-block" v-bind:crewMembers="crewMembers" v-bind:hideSickOnPrint="hideSickOnPrint" v-bind:hideKIAOnPrint="hideKIAOnPrint"></CrewPrint>
     </div>
 
     <div class="row mt-2 page-break">
@@ -167,7 +180,6 @@ import { Crew } from '../models';
 import { CrewMember } from '../models';
 import { World } from '../models';
 import { FPFHTables } from '../js/tables.js';
-import { Collapse } from 'bootstrap';
 import CrewEdit from '../components/CrewEdit.vue'
 import CrewPrint from '../components/CrewPrint.vue'
 import WorldEdit from '../components/WorldEdit.vue'
@@ -189,7 +201,9 @@ export default {
       crew: null,      
       crewMembers: [],
       worlds: [],
-      editing: false,      
+      editing: false,  
+      hideSickOnPrint: true,
+      hideKIAOnPrint: true,
     }
   },  
   tables: new FPFHTables(),
@@ -251,9 +265,7 @@ export default {
     async saveCrew() {      
       let UPDATED_CREW = this.crew;
       const CURRENT_CREW = await DataStore.query(Crew, this.crewId);
-      await DataStore.save(Crew.copyOf(CURRENT_CREW, item => {        
-        //item.id = UPDATED_CREW.id,
-        //item.user = UPDATED_CREW.user,
+      await DataStore.save(Crew.copyOf(CURRENT_CREW, item => {                
         item.name = UPDATED_CREW.name,
         item.notes =UPDATED_CREW.notes,
         item.story_points = UPDATED_CREW.story_points,
@@ -274,9 +286,7 @@ export default {
         item.Worlds = UPDATED_CREW.Worlds,
         item.campaign_turn = UPDATED_CREW.campaign_turn,
         item.campaign_difficulty = UPDATED_CREW.campaign_difficulty,
-        item.campaign_victory = UPDATED_CREW.campaign_victory
-        //item.createdAt = UPDATED_CREW.createdAt,
-        //item.updatedAt = UPDATED_CREW.updatedAt
+        item.campaign_victory = UPDATED_CREW.campaign_victory        
       }));
 
       this.$root.showUserMsg(`Crew log saved`);
@@ -300,16 +310,8 @@ export default {
 
       if (this.editing) {
         this.saveCrew();
-      }            
-    
-      const myCollapse = document.getElementById('collapseMembers');
-      const mCollapse = new Collapse(myCollapse, { toggle: false});
-      mCollapse.show();
+      }
 
-      const worldCollapse = document.getElementById('collapseWorlds')
-      const wCollapse = new Collapse(worldCollapse, { toggle: false});
-      wCollapse.show();
-           
       setTimeout(function() {window.print();}, 1000);
     }
   }
