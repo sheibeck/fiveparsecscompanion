@@ -140,11 +140,13 @@
 export default {
   name: 'CrewPrint', 
   props: {
-    crewMembers: Array
+    crewMembers: Array,
+    hideSickOnPrint: Boolean,
+    hideKIAOnPrint: Boolean,      
   },    
   data() {
     return {            
-      crewEdit: [],      
+      crewEdit: [],
     }
   },  
   computed : {   
@@ -154,20 +156,28 @@ export default {
     username: function() {
       return this.$store.state.user.username;
     },
-    chunkCrew: function() {
+    chunkCrew: function() {      
+      let activeCrew = this.crewMembers;
+      if (this.hideSickOnPrint) {
+        activeCrew = activeCrew.filter(member => !member.sick_bay);
+      }
+      if (this.hideKIAOnPrint) {
+        activeCrew = activeCrew.filter(member => !member.kia);
+      }
+      
       var chunks = [];
       var i,j,chunk = 6;
            
       //first page is 6
-      for (i=0,j=Math.min(this.crewMembers.length,6); i<j; i+=chunk) {
-        chunks.push(this.crewMembers.slice(i,i+chunk));   
+      for (i=0,j=Math.min(activeCrew.length,6); i<j; i+=chunk) {
+        chunks.push(activeCrew.slice(i,i+chunk));   
       }
       
       //second and beyond can hold up to 8 crew members
-      if (this.crewMembers.length > 6) {
+      if (activeCrew.length > 6) {
         chunk = 8;
-        for (i=6,j=this.crewMembers.length; i<this.crewMembers.length; i+=chunk) {
-          chunks.push(this.crewMembers.slice(i,i+chunk));   
+        for (i=6,j=activeCrew.length; i<activeCrew.length; i+=chunk) {
+          chunks.push(activeCrew.slice(i,i+chunk));   
         }
       }
       

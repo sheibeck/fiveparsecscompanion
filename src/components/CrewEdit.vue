@@ -3,10 +3,10 @@
   <div class="accordion" id="accordionMembers">
     <div class="accordion-item d-print-none">
       <h2 class="accordion-header d-flex" id="headingMembers">
-        <button type="button" class="btn btn-primary btn-sm mx-1 d-print-none" @click="addCrewMember()">Add <i class="fas fa-plus"></i></button>
-        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseMembers" aria-expanded="true" aria-controls="collapseMembers">
-          Crew Members (Active members: {{crewMembers.filter( c => c.kia !== true ).length}})
-        </button>            
+        <button type="button" class="btn btn-primary btn-sm mx-1 d-print-none" @click="addCrewMember()">Add <i class="fas fa-plus"></i></button>        
+        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseMembers" aria-expanded="true" aria-controls="collapseMembers">            
+          Crew Members (Active members: {{crewMembers.filter( c => c.kia !== true ).length}})          
+        </button>        
       </h2>
     </div>
 
@@ -238,7 +238,7 @@ export default {
   },
   data() {
     return {            
-      crewEdit: [],      
+      crewEdit: []     
     }
   },  
   tables: new FPFHTables(),
