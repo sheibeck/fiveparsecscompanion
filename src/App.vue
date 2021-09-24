@@ -151,13 +151,13 @@ main {
 
 .h1, h1 {
   font-size: 1.75rem !important;
-  font-family: 'Expletus Sans', cursive;
+  font-family: 'Expletus Sans', Roboto, Helvetica, sans-serif;
   font-weight: 700;
 }
 
 .navbar-brand, .navbar-nav, .card-header, 
   h6, .h6, h5, .h5, h4, .h4 {
-  font-family: 'Expletus Sans', cursive;
+  font-family: 'Expletus Sans', Roboto, Helvetica, sans-serif;
   font-weight: 700;
 }
 
