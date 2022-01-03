@@ -4,6 +4,18 @@ import { ModelInit, MutableModel, PersistentModelConstructor } from "@aws-amplif
 
 
 
+type WorldMetaData = {
+  readOnlyFields: 'createdAt' | 'updatedAt';
+}
+
+type CrewMemberMetaData = {
+  readOnlyFields: 'createdAt' | 'updatedAt';
+}
+
+type CrewMetaData = {
+  readOnlyFields: 'createdAt' | 'updatedAt';
+}
+
 export declare class World {
   readonly id: string;
   readonly crewID?: string;
@@ -20,8 +32,8 @@ export declare class World {
   readonly current_location?: boolean;
   readonly createdAt?: string;
   readonly updatedAt?: string;
-  constructor(init: ModelInit<World>);
-  static copyOf(source: World, mutator: (draft: MutableModel<World>) => MutableModel<World> | void): World;
+  constructor(init: ModelInit<World, WorldMetaData>);
+  static copyOf(source: World, mutator: (draft: MutableModel<World, WorldMetaData>) => MutableModel<World, WorldMetaData> | void): World;
 }
 
 export declare class CrewMember {
@@ -48,8 +60,8 @@ export declare class CrewMember {
   readonly sick_bay?: boolean;
   readonly createdAt?: string;
   readonly updatedAt?: string;
-  constructor(init: ModelInit<CrewMember>);
-  static copyOf(source: CrewMember, mutator: (draft: MutableModel<CrewMember>) => MutableModel<CrewMember> | void): CrewMember;
+  constructor(init: ModelInit<CrewMember, CrewMemberMetaData>);
+  static copyOf(source: CrewMember, mutator: (draft: MutableModel<CrewMember, CrewMemberMetaData>) => MutableModel<CrewMember, CrewMemberMetaData> | void): CrewMember;
 }
 
 export declare class Crew {
@@ -78,6 +90,6 @@ export declare class Crew {
   readonly Worlds?: (World | null)[];
   readonly createdAt?: string;
   readonly updatedAt?: string;
-  constructor(init: ModelInit<Crew>);
-  static copyOf(source: Crew, mutator: (draft: MutableModel<Crew>) => MutableModel<Crew> | void): Crew;
+  constructor(init: ModelInit<Crew, CrewMetaData>);
+  static copyOf(source: Crew, mutator: (draft: MutableModel<Crew, CrewMetaData>) => MutableModel<Crew, CrewMetaData> | void): Crew;
 }
