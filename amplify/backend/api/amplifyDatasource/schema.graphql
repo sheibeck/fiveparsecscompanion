@@ -1,4 +1,4 @@
-type World @model @auth(rules: [{allow: public}]) @key(name: "byCrew", fields: ["crewID"]) {
+type World @model @auth(rules: [{allow: public, provider: iam}]) @key(name: "byCrew", fields: ["crewID"]) {
   id: ID!
   crewID: ID
   name: String!
@@ -14,7 +14,7 @@ type World @model @auth(rules: [{allow: public}]) @key(name: "byCrew", fields: [
   current_location: Boolean
 }
 
-type CrewMember @model @auth(rules: [{allow: public}]) @key(name: "byCrew", fields: ["crewID"]) {
+type CrewMember @model @auth(rules: [{allow: public, provider: iam}]) @key(name: "byCrew", fields: ["crewID"]) {
   id: ID!
   user: String!
   name: String!
@@ -38,7 +38,7 @@ type CrewMember @model @auth(rules: [{allow: public}]) @key(name: "byCrew", fiel
   sick_bay: Boolean
 }
 
-type Crew @model @auth(rules: [{allow: public}]) {
+type Crew @model @auth(rules: [{allow: public, provider: iam}]) {
   id: ID!
   user: String!
   name: String!
