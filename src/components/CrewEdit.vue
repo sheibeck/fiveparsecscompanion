@@ -41,7 +41,7 @@
             <div class="flex-fill">
               <div class="d-flex flex-fill flex-wrap">
                 <div class="d-flex" :class="{ 'd-none': !isEditingCrew(member.id) }">
-                  <i :class="{ 'd-none': !isEditingCrew(member.id) }" class="fas fa-dice pe-auto" @click="member.name = randomName('name')"></i>
+                  <i :class="{ 'd-none': !isEditingCrew(member.id) }" class="fas fa-dice pe-auto" @click="member.name = randomName('name')" title="Click to roll"></i>
                   <div class="form-text">Name</div>
                   <span :class="{ 'd-none': isEditingCrew(member.id) }">: {{member.name}}</span>
                 </div>                        
@@ -49,7 +49,7 @@
               
                 <div class="d-print-none flex-fill">
                   <div class="d-flex">
-                    <i :class="{ 'd-none': !isEditingCrew(member.id) }" class="fas fa-dice pe-auto" @click="member.species = rollOnTable('crewtype')"></i>
+                    <i :class="{ 'd-none': !isEditingCrew(member.id) }" class="fas fa-dice pe-auto" @click="member.species = rollOnTable('crewtype')" title="Click to roll"></i>
                     <div class="form-text">Species</div>
                     <span :class="{ 'd-none': isEditingCrew(member.id) }">: {{member.species}}</span>
                   </div>                        
@@ -66,7 +66,7 @@
               <div class="d-flex flex-column d-print-none">
                 <div class="">
                   <div class="d-flex">
-                    <i :class="{ 'd-none': !isEditingCrew(member.id) }" class="fas fa-dice pe-auto" @click="member.background = rollOnTable('background')"></i>
+                    <i :class="{ 'd-none': !isEditingCrew(member.id) }" class="fas fa-dice pe-auto" @click="member.background = rollOnTable('background')" title="Click to roll"></i>
                     <div class="form-text">Background</div>
                     <span :class="{ 'd-none': isEditingCrew(member.id) }">: {{member.background}}</span>
                   </div>                        
@@ -75,7 +75,7 @@
                 <div class="">
                   <div class="">
                     <div class="d-flex">
-                      <i :class="{ 'd-none': !isEditingCrew(member.id) }" class="fas fa-dice pe-auto" @click="member.motivation = rollOnTable('motivation')"></i>
+                      <i :class="{ 'd-none': !isEditingCrew(member.id) }" class="fas fa-dice pe-auto" @click="member.motivation = rollOnTable('motivation')" title="Click to roll"></i>
                       <div class="form-text">Motivation</div>
                       <span :class="{ 'd-none': isEditingCrew(member.id) }">: {{member.motivation}}</span>
                     </div>                      
@@ -85,7 +85,7 @@
                 <div class="">
                   <div class="">
                     <div class="d-flex">
-                      <i :class="{ 'd-none': !isEditingCrew(member.id) }" class="fas fa-dice pe-auto" @click="member.class = rollOnTable('class')"></i>
+                      <i :class="{ 'd-none': !isEditingCrew(member.id) }" class="fas fa-dice pe-auto" @click="member.class = rollOnTable('class')" title="Click to roll"></i>
                       <div class="form-text">Class</div>
                       <span :class="{ 'd-none': isEditingCrew(member.id) }">: {{member.class}}</span>
                     </div>                     
@@ -180,14 +180,14 @@
                 <div class="form-text">Gear/Gadgets</div>            
                 <p class="card-text">
                   <textarea v-model="member.gear" type="text" class="form-control" :class="{ 'd-none': !isEditingCrew(member.id) }" placeholder=""></textarea>
-                  <span :class="{ 'd-none': isEditingCrew(member.id) }">{{member.gear}}</span>
+                  <span v-html="formattedText(member.gear)" :class="{ 'd-none': isEditingCrew(member.id) }"></span>
                 </p>
               </div>
               <div class="h-50 mt-2">
                 <div class="form-text">Notes</div>
                 <p class="card-text">
                   <textarea v-model="member.notes" type="text" class="form-control" :class="{ 'd-none': !isEditingCrew(member.id) }" placeholder=""></textarea>
-                  <span :class="{ 'd-none': isEditingCrew(member.id) }">{{member.notes}}</span>
+                  <span v-html="formattedText(member.notes)" :class="{ 'd-none': isEditingCrew(member.id) }"></span>
                 </p>
               </div>
             </div>
@@ -455,6 +455,11 @@ export default {
       this.crewEdit.forEach( (id) => {
         this.saveCrewMember(id);
       });              
+    },
+
+    formattedText(text) {
+      // Replace LF (line feed) and CR (carriage return) with <br/>
+      return text.replace(/(\r\n|\n|\r)/g, '<br/>');
     }
   }
 }

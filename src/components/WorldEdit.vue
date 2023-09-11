@@ -27,7 +27,7 @@
               <div class="d-flex flex-column">
                 <div class="" :class="{ 'd-none': !isEditingWorld(world.id) }">
                   <div class="form-text">
-                    <i class="fas fa-dice pe-auto" @click="world.name = randomName('worldname')"></i>
+                    <i class="fas fa-dice pe-auto" @click="world.name = randomName('worldname')" title="Click to roll"></i>
                     Name
                   </div>
                   <input v-model="world.name" type="text" class="form-control" placeholder="" />                                     
@@ -91,7 +91,7 @@
               <div class="d-flex flex-column flex-fill border border-1" v-for="patron in world.patrons_known.patrons" :key="patron.id">                    
                 <div class="d-flex">
                   <div class="d-flex">                        
-                    <i class="fas fa-dice pe-auto" @click="patron.name = randomName('patronname')"></i>
+                    <i class="fas fa-dice pe-auto" @click="patron.name = randomName('patronname')" title="Click to roll"></i>
                     <div class="form-text">
                       Name
                     </div>
@@ -102,7 +102,7 @@
                 </div>    
                 <div class="d-flex">
                   <div class="d-flex">
-                    <i :class="{ 'd-none': !isEditingWorld(world.id) }" class="fas fa-dice pe-auto" @click="patron.type = rollOnTable('patron')"></i>
+                    <i :class="{ 'd-none': !isEditingWorld(world.id) }" class="fas fa-dice pe-auto" @click="patron.type = rollOnTable('patron')" title="Click to roll"></i>
                     <div class="form-text">Type</div>
                     <span :class="{ 'd-none': isEditingWorld(world.id) }">: {{patron.type}}</span>
                   </div>                        
@@ -124,7 +124,7 @@
               <div class="d-flex flex-column flex-fill border border-1" v-for="rival in world.rivals_known.rivals" :key="rival.id">
                 <div class="d-flex">
                   <div class="d-flex">                        
-                    <i :class="{ 'd-none': !isEditingWorld(world.id) }" class="fas fa-dice pe-auto" @click="rival.name = randomName('rivalname')"></i>
+                    <i :class="{ 'd-none': !isEditingWorld(world.id) }" class="fas fa-dice pe-auto" @click="rival.name = randomName('rivalname')" title="Click to roll"></i>
                     <div class="form-text">Name</div>
                     <span :class="{ 'd-none': isEditingWorld(world.id) }">: {{rival.name}} </span>
                   </div>                        
@@ -133,7 +133,7 @@
                 </div>    
                 <div class="d-flex">
                   <div class="d-flex">
-                    <i :class="{ 'd-none': !isEditingWorld(world.id) }" class="fas fa-dice pe-auto" @click="rival.type = getRivalType()"></i>
+                    <i :class="{ 'd-none': !isEditingWorld(world.id) }" class="fas fa-dice pe-auto" @click="rival.type = getRivalType()" title="Click to roll"></i>
                     <div class="form-text">Type</div>
                     <span :class="{ 'd-none': isEditingWorld(world.id) }">: {{rival.type}}</span>
                   </div>                        

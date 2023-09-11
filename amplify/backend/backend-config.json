@@ -1,33 +1,33 @@
 {
   "api": {
     "amplifyDatasource": {
-      "service": "AppSync",
-      "providerPlugin": "awscloudformation",
       "output": {
         "authConfig": {
           "additionalAuthenticationProviders": [
             {
-              "authenticationType": "API_KEY",
               "apiKeyConfig": {
-                "apiKeyExpirationDays": 365,
                 "apiKeyExpirationDate": "2023-01-04T01:05:08.047Z",
+                "apiKeyExpirationDays": 365,
                 "description": "5 parsecs api key"
-              }
+              },
+              "authenticationType": "API_KEY"
             }
           ],
           "defaultAuthentication": {
             "authenticationType": "AWS_IAM"
           }
         }
-      }
+      },
+      "providerPlugin": "awscloudformation",
+      "service": "AppSync"
     }
   },
   "auth": {
     "fiveparsecscompanion": {
-      "service": "Cognito",
-      "providerPlugin": "awscloudformation",
+      "customAuth": false,
       "dependsOn": [],
-      "customAuth": false
+      "providerPlugin": "awscloudformation",
+      "service": "Cognito"
     }
   }
 }

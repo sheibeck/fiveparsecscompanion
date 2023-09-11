@@ -50,7 +50,7 @@
             <div class="d-flex flex-fill flex-column w-100">
               <label for="crewStash" class="form-text small">Stash</label>
               <textarea v-model="crew.stash" class="form-control" :class="{ 'd-none': !editing }" id="crewStash" placeholder="" rows="7"></textarea>
-              <span :class="{ 'd-none': editing }">{{crew.stash}}</span>       
+              <span v-html="formattedText(crew.stash)" :class="{ 'd-none': editing }"></span>       
             </div>
           
             <div class="d-flex flex-column flex-shrink-1">
@@ -80,7 +80,7 @@
         <div class="d-flex">
           <div class="d-flex flex-fill me-auto">
             <label for="shipName" class="form-text small">
-              <i :class="{ 'd-none': !editing }" class="fas fa-dice pe-auto" @click="crew.ship_name = randomName('shipname')"></i>
+              <i :class="{ 'd-none': !editing }" class="fas fa-dice pe-auto" @click="crew.ship_name = randomName('shipname')" title="Click to roll"></i>
               Ship Name
             </label>
             <input v-model="crew.ship_name" type="text" class="form-control" :class="{ 'd-none': !editing }"  id="shipName" placeholder="" />
@@ -313,6 +313,11 @@ export default {
       }
 
       setTimeout(function() {window.print();}, 1000);
+    },
+
+    formattedText(text) {
+      // Replace LF (line feed) and CR (carriage return) with <br/>
+      return text.replace(/(\r\n|\n|\r)/g, '<br/>');
     }
   }
 }

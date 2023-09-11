@@ -339,7 +339,7 @@ export const battleTables = [
                 { "label": "Machine pistol", "description": "{ \"name\": \"Machine pistol\", \"range\": \"8\", \"shots\": \"2\", \"damage\": \"0\", \"traits\": \"Pistol focused\" }","weight": 1 },
                 { "label": "Marksman's rifle", "description": "{ \"name\": \"Marksman's rifle\", \"range\": \"36\", \"shots\": \"1\", \"damage\": \"0\", \"traits\": \"Heavy\" }","weight": 1 },                
                 { "label": "Military rifle", "description": "{ \"name\": \"Military rifle\",\"range\": \"24\", \"shots\": \"1\", \"damage\": \"0\", \"traits\": \"-\" }","weight": 1 },
-                { "label": "Needle rifle", "description": "{ \"name\": \"Neelde rifle\", \"range\": \"18\", \"shots\": \"2\", \"damage\": \"0\", \"traits\": \"Critical\" }","weight": 1 },
+                { "label": "Needle rifle", "description": "{ \"name\": \"Needle rifle\", \"range\": \"18\", \"shots\": \"2\", \"damage\": \"0\", \"traits\": \"Critical\" }","weight": 1 },
                 { "label": "Plasma rifle", "description": "{ \"name\": \"Plasma rifle\", \"range\": \"20\", \"shots\": \"2\", \"damage\": \"1\", \"traits\": \"Focused, Piercing\" }","weight": 1 },
                 { "label": "Power claw", "description": "{ \"name\": \"Power claw\", \"range\": \"Brawl\", \"shots\": \"-\", \"damage\": \"3\", \"traits\": \"Melee, Clumsy\" }","weight": 1 },
                 { "label": "Rattle gun", "description": "{ \"name\": \"Rattle gun\", \"range\": \"24\", \"shots\": \"3\", \"damage\": \"0\", \"traits\": \"Heavy\" }","weight": 1 },
