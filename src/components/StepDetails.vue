@@ -5,10 +5,10 @@
                 <h6>{{activeStep.stepDetails.title}}</h6>
                 <template v-for="(input, index) in activeStep.inputs" :index="index">
                     <div class="card-body" v-if="input.inputType == inputTypes.Roll" :key="index">
-                      <i class="fas fa-dice pe-auto d-print-none fa-2x" @click="activeStep.processInput(input, $event)"></i> {{input.text}}
+                      <i class="fas fa-dice pe-auto d-print-none fa-2x" @click="activeStep.processInput(input, $event)" title="Click to roll"></i> {{input.text}}
                     </div>
                     <div class="card-body" v-if="input.inputType == inputTypes.TableResult"  :key="index">
-                      <i class="fas fa-dice pe-auto d-print-none fa-2x" @click="activeStep.processInput(input, $event)"></i> {{input.text}}
+                      <i class="fas fa-dice pe-auto d-print-none fa-2x" @click="activeStep.processInput(input, $event)" title="Click to roll"></i> {{input.text}}
                     </div>   
                     <div class="card-body" v-if="input.inputType == inputTypes.Input" :key="index">
                       <div class="input-group input-group-sm">

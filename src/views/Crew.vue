@@ -80,7 +80,7 @@
         <div class="d-flex">
           <div class="d-flex flex-fill me-auto">
             <label for="shipName" class="form-text small">
-              <i :class="{ 'd-none': !editing }" class="fas fa-dice pe-auto" @click="crew.ship_name = randomName('shipname')"></i>
+              <i :class="{ 'd-none': !editing }" class="fas fa-dice pe-auto" @click="crew.ship_name = randomName('shipname')" title="Click to roll"></i>
               Ship Name
             </label>
             <input v-model="crew.ship_name" type="text" class="form-control" :class="{ 'd-none': !editing }"  id="shipName" placeholder="" />

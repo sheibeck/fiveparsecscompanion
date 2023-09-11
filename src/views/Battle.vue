@@ -3,7 +3,7 @@
     <h1 class="d-print-none">3. Battle (Pg.87)</h1>
     <h4 class="d-none d-print-block">Encounter Log</h4>
     <div class="d-flex flex-column flex-md-row d-print-none">
-      <i class="fas fa-dice me-1 mt-1 d-print-none fa-2x text-center mb-2 mb-md-0" @click="readyForBattle()"></i>
+      <i class="fas fa-dice me-1 mt-1 d-print-none fa-2x text-center mb-2 mb-md-0" @click="readyForBattle()" title="Click to roll"></i>
       <div class="d-flex flex-column flex-md-row">
         <div class="input-group me-3 mb-1">
           <label class="input-group-text" for="battleType">Battle Type</label>
@@ -96,7 +96,7 @@
             <ul class="list-group">
               <li v-for="(item, idx) in tableResults" :key="item.key" class="d-flex flex-column flex-md-row list-group-item" :class="{'bg-light': idx%2 == 0}">
                 <div class="col col-md-6">
-                  <i class="fas fa-dice me-1 mt-1 d-print-none" @click="rollOnTable(item)"></i>                
+                  <i class="fas fa-dice me-1 mt-1 d-print-none" @click="rollOnTable(item)" title="Click to roll"></i>                
                   <span class="h5">{{item.label}}</span>
                 </div>
                 <label class="" v-html="item.result"></label>                
