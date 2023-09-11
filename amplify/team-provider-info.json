@@ -1,37 +1,22 @@
 {
-  "staging": {
+  "dev": {
     "awscloudformation": {
-      "AuthRoleName": "amplify-fiveparsecscompanion-staging-13958-authRole",
-      "UnauthRoleArn": "arn:aws:iam::210120940769:role/amplify-fiveparsecscompanion-staging-13958-unauthRole",
-      "AuthRoleArn": "arn:aws:iam::210120940769:role/amplify-fiveparsecscompanion-staging-13958-authRole",
+      "AuthRoleName": "amplify-fiveparsecscompanion-dev-191811-authRole",
+      "UnauthRoleArn": "arn:aws:iam::210120940769:role/amplify-fiveparsecscompanion-dev-191811-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::210120940769:role/amplify-fiveparsecscompanion-dev-191811-authRole",
       "Region": "us-east-1",
-      "DeploymentBucketName": "amplify-fiveparsecscompanion-staging-13958-deployment",
-      "UnauthRoleName": "amplify-fiveparsecscompanion-staging-13958-unauthRole",
-      "StackName": "amplify-fiveparsecscompanion-staging-13958",
-      "StackId": "arn:aws:cloudformation:us-east-1:210120940769:stack/amplify-fiveparsecscompanion-staging-13958/464e0910-c27a-11eb-b18e-0a292b885373",
+      "DeploymentBucketName": "amplify-fiveparsecscompanion-dev-191811-deployment",
+      "UnauthRoleName": "amplify-fiveparsecscompanion-dev-191811-unauthRole",
+      "StackName": "amplify-fiveparsecscompanion-dev-191811",
+      "StackId": "arn:aws:cloudformation:us-east-1:210120940769:stack/amplify-fiveparsecscompanion-dev-191811/7d3c32c0-50f9-11ee-a16f-0ee10c8e4d59",
       "AmplifyAppId": "d1tp5cd86hfjxz"
     },
     "categories": {
       "auth": {
         "fiveparsecscompanion": {}
-      }
-    }
-  },
-  "develop": {
-    "awscloudformation": {
-      "AuthRoleName": "amplify-fiveparsecscompanion-develop-211853-authRole",
-      "UnauthRoleArn": "arn:aws:iam::716137441626:role/amplify-fiveparsecscompanion-develop-211853-unauthRole",
-      "AuthRoleArn": "arn:aws:iam::716137441626:role/amplify-fiveparsecscompanion-develop-211853-authRole",
-      "Region": "ap-southeast-2",
-      "DeploymentBucketName": "amplify-fiveparsecscompanion-develop-211853-deployment",
-      "UnauthRoleName": "amplify-fiveparsecscompanion-develop-211853-unauthRole",
-      "StackName": "amplify-fiveparsecscompanion-develop-211853",
-      "StackId": "arn:aws:cloudformation:ap-southeast-2:716137441626:stack/amplify-fiveparsecscompanion-develop-211853/f3669c40-e302-11eb-9578-0ab92fce2ab0",
-      "AmplifyAppId": "duyat42c8em82"
-    },
-    "categories": {
-      "auth": {
-        "fiveparsecscompanion": {}
+      },
+      "api": {
+        "amplifyDatasource": {}
       }
     }
   }
