@@ -50,7 +50,7 @@
             <div class="d-flex flex-fill flex-column w-100">
               <label for="crewStash" class="form-text small">Stash</label>
               <textarea v-model="crew.stash" class="form-control" :class="{ 'd-none': !editing }" id="crewStash" placeholder="" rows="7"></textarea>
-              <span :class="{ 'd-none': editing }">{{formattedText(crew.stash)}}</span>       
+              <span v-html="formattedText(crew.stash)" :class="{ 'd-none': editing }"></span>       
             </div>
           
             <div class="d-flex flex-column flex-shrink-1">
@@ -317,7 +317,7 @@ export default {
 
     formattedText(text) {
       // Replace LF (line feed) and CR (carriage return) with <br/>
-      return text.value.replace(/(\r\n|\n|\r)/g, '<br/>');
+      return text.replace(/(\r\n|\n|\r)/g, '<br/>');
     }
   }
 }

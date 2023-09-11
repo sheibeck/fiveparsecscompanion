@@ -180,14 +180,14 @@
                 <div class="form-text">Gear/Gadgets</div>            
                 <p class="card-text">
                   <textarea v-model="member.gear" type="text" class="form-control" :class="{ 'd-none': !isEditingCrew(member.id) }" placeholder=""></textarea>
-                  <span :class="{ 'd-none': isEditingCrew(member.id) }">{{formattedText(member.gear)}}</span>
+                  <span v-html="formattedText(member.gear)" :class="{ 'd-none': isEditingCrew(member.id) }"></span>
                 </p>
               </div>
               <div class="h-50 mt-2">
                 <div class="form-text">Notes</div>
                 <p class="card-text">
                   <textarea v-model="member.notes" type="text" class="form-control" :class="{ 'd-none': !isEditingCrew(member.id) }" placeholder=""></textarea>
-                  <span :class="{ 'd-none': isEditingCrew(member.id) }">{{formattedText(member.notes)}}</span>
+                  <span v-html="formattedText(member.notes)" :class="{ 'd-none': isEditingCrew(member.id) }"></span>
                 </p>
               </div>
             </div>
@@ -459,7 +459,7 @@ export default {
 
     formattedText(text) {
       // Replace LF (line feed) and CR (carriage return) with <br/>
-      return text.value.replace(/(\r\n|\n|\r)/g, '<br/>');
+      return text.replace(/(\r\n|\n|\r)/g, '<br/>');
     }
   }
 }
