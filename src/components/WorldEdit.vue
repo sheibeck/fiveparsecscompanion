@@ -93,7 +93,7 @@
               <div class="d-flex flex-column flex-fill border border-1" v-for="patron in world.patrons_known.patrons" :key="patron.id">                    
                 <div class="d-flex">
                   <div class="d-flex">                        
-                    <i class="fas fa-dice pe-auto d-print-none" @click="patron.name = randomName('patronname')" title="Click to roll"></i>
+                    <i class="fas fa-dice pe-auto" :class="{ 'd-none': !isEditingWorld(world.id) }" @click="patron.name = randomName('patronname')" title="Click to roll"></i>
                     <div class="form-text">
                       Name
                     </div>
