@@ -4,19 +4,21 @@
     <div class="accordion-item d-print-none">
       <h2 class="accordion-header d-flex" id="headingWorlds">
         <button type="button" class="btn btn-primary btn-sm mx-1 d-print-none" @click="addWorld()">Add <i class="fas fa-plus"></i></button>
-        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseWorlds" aria-expanded="false" aria-controls="collapseWorlds">              
+        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseWorlds" aria-expanded="true" aria-controls="collapseWorlds">              
           Worlds (Tracked Worlds: {{worlds.length}})
         </button>
       </h2>
-    </div>    
-    <h5 class="d-none d-print-block worldrecordsheet mb-1">World Record Sheet</h5>
-    <div id="collapseWorlds" class="accordion-collapse collapse p-1" aria-labelledby="headingWorlds" data-bs-parent="#accordionWorlds">
+    </div>
+
+    <div id="collapseWorlds" class="accordion-collapse collapse show p-1" aria-labelledby="headingWorlds" data-bs-parent="#accordionWorlds">
       <div class="accordion-body d-flex flex-wrap p-1">
-        <div class="border border-1 p-1 col-12 col-md-6 d-flex flex-column my-1" :class="{ 'bg-leader': world.current_location }" v-for="world in worlds" :key="world.id">
-          <div class="d-flex rounded h5 px-1 mb-0">
+        <div v-for="world in worlds" :key="world.id"
+            class="world border border-1 p-1 col-12 col-md-6 d-flex flex-column my-1" 
+            :class="{ 'bg-leader': world.current_location }">
+          <div class="d-flex rounded h5 px-1 mb-0 border">
             {{world.name}}
             <div class="ms-4 small ms-auto">
-              <label class="form-check-label small p-0">
+              <label class="form-check-label small p-0 pe-2">
                 Current Location
               </label>
               <input :disabled="!isEditingWorld(world.id)" v-model="world.current_location" class="form-check-input" type="checkbox" value="" />                  
@@ -91,7 +93,7 @@
               <div class="d-flex flex-column flex-fill border border-1" v-for="patron in world.patrons_known.patrons" :key="patron.id">                    
                 <div class="d-flex">
                   <div class="d-flex">                        
-                    <i class="fas fa-dice pe-auto" @click="patron.name = randomName('patronname')" title="Click to roll"></i>
+                    <i class="fas fa-dice pe-auto d-print-none" @click="patron.name = randomName('patronname')" title="Click to roll"></i>
                     <div class="form-text">
                       Name
                     </div>

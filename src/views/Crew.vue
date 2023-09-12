@@ -1,9 +1,9 @@
 <template>
   <div v-if="crew">    
-    <div class="d-md-flex justify printable">
+    <div class="d-md-flex justify printable page-break">
       <!-- crew log -->      
       <div class="d-flex flex-column flex-fill m-1 border border-2 p-1 col-12 col-md-4">
-        <h4 class="p-1 rounded d-print-none border">Crew Log</h4>
+        <h4 class="p-1 rounded border">Crew Log</h4>
         <div class="d-flex">
           <div class="d-flex flex-fill me-auto">
             <label for="crewName" class="form-text small">Crew Name</label>
@@ -45,7 +45,7 @@
 
       <!-- stash -->
       <div class="d-flex flex-column flex-fill m-1  border border-2 p-1 col-12 col-md-4">        
-          <h4 class="p-1 rounded d-print-none">Stash</h4>
+          <h4 class="p-1 rounded border">Stash</h4>
           <div class="d-flex">
             <div class="d-flex flex-fill flex-column w-100">
               <label for="crewStash" class="form-text small">Stash</label>
@@ -76,7 +76,7 @@
 
       <!-- ship details -->          
       <div class="d-flex flex-column flex-fill m-1 border border-2 p-1 col-12 col-md-4">      
-        <h4 class="p-1 rounded d-print-none">Ship Details</h4>
+        <h4 class="p-1 rounded border">Ship Details</h4>
         <div class="d-flex">
           <div class="d-flex flex-fill me-auto">
             <label for="shipName" class="form-text small">
@@ -98,7 +98,7 @@
           </div>
         </div>
 
-        <div class="d-flex h-100">
+        <div class="d-flex">
           <div class="d-flex w-100 me-auto">
             <label for="shipTraits" class="form-text small">Traits</label>
             <textarea v-model="crew.ship_traits" class="form-control" id="shipTraits" :class="{ 'd-none': !editing }" placeholder=""></textarea>
@@ -143,16 +143,20 @@
         <button v-if="!editing" type="button" class="btn btn-primary btn-sm mx-1" @click="toggleEdit()">Edit Crew Log <i class="fas fa-pencil"></i></button>
         <button type="button" class="btn btn-secondary btn-sm mx-1" @click="print()">Print <i class="fas fa-print"></i></button>
        
-        <div class="pt-2">
+        <div class="pt-2 d-flex">
           <span>Hide on print: </span>
-          <input v-model="hideSickOnPrint" id="HideSickOnPrint" class="form-check-input" type="checkbox" value="" />
-          <label class="form-check-label ms-1" for="HideSickOnPrint">
-            Sick Bay
-          </label>
-          <input v-model="hideKIAOnPrint" id="HideKIAOnPrint" class="form-check-input ml-2" type="checkbox" value="" />
-          <label class="form-check-label ms-1" for="HideKIAOnPrint">
-            KIA
-          </label>
+          <div class="ms-3">
+            <input v-model="hideSickOnPrint" id="HideSickOnPrint" class="form-check-input" type="checkbox" value="" />
+            <label class="form-check-label ms-1 pr-3" for="HideSickOnPrint">
+              Sick Bay
+            </label>
+          </div>
+          <div class="ms-3">
+            <input v-model="hideKIAOnPrint" id="HideKIAOnPrint" class="form-check-input ml-2 pl-3" type="checkbox" value="" />
+            <label class="form-check-label ms-1" for="HideKIAOnPrint">
+              KIA
+            </label>
+          </div>
         </div>
           
         <button type="button" class="ms-auto btn btn-danger btn-sm mx-1" @click="removeCrew()">Delete Crew Log <i class="fas fa-trash"></i></button>        
@@ -161,14 +165,12 @@
 
     <div class="row mt-2 page-break">
       <!-- crew members -->
-      <CrewEdit class="d-print-none" v-bind:crewMembers="crewMembers" v-on:fetchcrewmembers="fetchCrewMembers"></CrewEdit>
-      <CrewPrint class="d-none d-print-block" v-bind:crewMembers="crewMembers" v-bind:hideSickOnPrint="hideSickOnPrint" v-bind:hideKIAOnPrint="hideKIAOnPrint"></CrewPrint>
+      <CrewEdit v-bind:crewMembers="crewMembers" v-on:fetchcrewmembers="fetchCrewMembers" :hideSickOnPrint="hideSickOnPrint" :hideKIAOnPrint="hideKIAOnPrint" ></CrewEdit>
     </div>
 
     <div class="row mt-2 page-break">
       <!-- worlds -->
-      <WorldEdit class="d-print-none" v-bind:worlds="worlds" v-on:fetchworlds="fetchWorlds"></WorldEdit>
-      <WorldPrint class="d-none d-print-block" v-bind:worlds="worlds"></WorldPrint>
+      <WorldEdit v-bind:worlds="worlds" v-on:fetchworlds="fetchWorlds"></WorldEdit>
     </div>
 </div>
    
@@ -181,24 +183,20 @@ import { CrewMember } from '../models';
 import { World } from '../models';
 import { FPFHTables } from '../js/tables.js';
 import CrewEdit from '../components/CrewEdit.vue'
-import CrewPrint from '../components/CrewPrint.vue'
 import WorldEdit from '../components/WorldEdit.vue'
-import WorldPrint from '../components/WorldPrint.vue'
 
 export default {
   name: 'Crew', 
   components: {
     CrewEdit,
-    CrewPrint,
     WorldEdit,
-    WorldPrint,
   },
   mounted() {    
     this.fetchCrew();
   }, 
   data() {
     return {
-      crew: null,      
+      crew: null,
       crewMembers: [],
       worlds: [],
       editing: false,  
@@ -240,7 +238,7 @@ export default {
       this.crew = JSON.parse(JSON.stringify(crew));      
 
       this.fetchCrewMembers();
-      this.fetchWorlds();      
+      this.fetchWorlds();
     },
 
     async fetchCrewMembers() {
@@ -378,22 +376,32 @@ export default {
   }
 
   @media print
-  {    
+  {
     .page-break {
-      page-break-after: always !important;
-      break-after: page !important;
-    } 
-
+      page-break-before: always;
+    }
+    
     .crewmember, .printable, .world {
       font-size: .75em !important;
-    }    
-  
+    }
+
+    .crewmember:nth-child(2n+1),
+    .world:nth-child(2n+1)  {
+      page-break-inside: avoid;
+    }
+
+    .crewmember,
+    .world {
+      page-break-inside: avoid;
+      flex-wrap: wrap;
+    }
+
     div {
       float: none !important;
     }  
    
     .attributes {
-        flex-wrap: unset !important;
+      flex-wrap: unset !important;
     }      
   }
 </style>

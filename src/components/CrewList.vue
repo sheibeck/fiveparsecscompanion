@@ -6,7 +6,7 @@
     
     <div class="row row-cols-1 row-cols-md-3 g-4">
       <div v-for="crew in crews" :key="crew.id" class="col">
-        <div class="card h-100">
+        <div class="card">
           <div class="card-body">
             <h5 class="card-title">{{crew.name}}</h5>
             <ul v-for="member in crewMembers.filter(m => m.crewID === crew.id)" :key="member.id" class="list-group">

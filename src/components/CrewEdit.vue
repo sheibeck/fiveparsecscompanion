@@ -12,8 +12,10 @@
 
     <div id="collapseMembers" class="accordion-collapse collapse show" aria-labelledby="headingMembers" data-bs-parent="#accordionMembers">
       <div class="accordion-body d-flex flex-wrap p-1">          
-        <div class="border border-1 p-1 col-12 col-md-6 d-flex flex-column my-1" :class="{ 'bg-dead': member.kia, 'bg-leader': member.leader, 'bg-sick': member.sick_bay }" v-for="member in crewMembers" :key="member.id">
-          <div class="d-flex rounded h5 px-1 mb-0">
+        <div v-for="member in crewMembers" :key="member.id"
+            class="crewmember border border-1 p-1 col-12 col-md-6 d-flex flex-column my-1" 
+            :class="{ 'bg-dead': member.kia, 'bg-leader': member.leader, 'bg-sick': member.sick_bay, 'd-print-none': hideOnPrint(member)}">
+          <div class="d-flex rounded h5 px-1 mb-0 border">
             {{member.name}}
             <div class="d-flex small ms-auto">
               <div class="form-check">
@@ -176,14 +178,14 @@
             </div>
             
             <div class="d-flex flex-column flex-fill">
-              <div class="h-50">
+              <div class="">
                 <div class="form-text">Gear/Gadgets</div>            
                 <p class="card-text">
                   <textarea v-model="member.gear" type="text" class="form-control" :class="{ 'd-none': !isEditingCrew(member.id) }" placeholder=""></textarea>
                   <span v-html="formattedText(member.gear)" :class="{ 'd-none': isEditingCrew(member.id) }"></span>
                 </p>
               </div>
-              <div class="h-50 mt-2">
+              <div class="mt-2">
                 <div class="form-text">Notes</div>
                 <p class="card-text">
                   <textarea v-model="member.notes" type="text" class="form-control" :class="{ 'd-none': !isEditingCrew(member.id) }" placeholder=""></textarea>
@@ -229,7 +231,9 @@ var shortid = require('shortid');
 export default {
   name: 'CrewEdit', 
   props: {
-    crewMembers: Array
+    crewMembers: Array,
+    hideSickOnPrint: Boolean,
+    hideKIAOnPrint: Boolean,
   },
   components: {    
   },
@@ -460,6 +464,17 @@ export default {
     formattedText(text) {
       // Replace LF (line feed) and CR (carriage return) with <br/>
       return text.replace(/(\r\n|\n|\r)/g, '<br/>');
+    },
+
+    hideOnPrint(member) {
+      if (this.$props.hideSickOnPrint && member.sick_bay) {
+        return true;
+      }
+      if (this.$props.hideKIAOnPrint && member.kia) {
+        return true;
+      }
+
+      return false;
     }
   }
 }
